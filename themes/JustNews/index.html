@@ -70,7 +70,7 @@
 								{{ #articleList }}
 								<li class="item" id="post-{{&id}}">
 									<div class="item-img">
-										<a class="item-img-inner" href="{{ &url | replace '/article/' }}" title="{{ &title }}" rel="bookmark">
+										<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}" rel="bookmark">
 											<img width="437" height="300" src="{{ &img }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" data-original="{{ &img }}" /></a>
 										{{ #category }}
 											<a class="item-category" href="/category/{{&.}}" >{{&.}}</a>
@@ -79,7 +79,7 @@
 									</div>
 									<div class="item-content">
 										<h2 class="item-title">
-											<a href="{{ &url | replace '/article/' }}" rel="bookmark">{{ &title }}</a></h2>
+											<a href="{{ &url }}" rel="bookmark">{{ &title }}</a></h2>
 										<div class="item-excerpt">
 											<p>{{ &contentText }} ...</p>
 										</div>
