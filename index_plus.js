@@ -1012,7 +1012,7 @@ async function getRecentlyArticles(articles){
         articles_recently[i].title = OPT.top_flag + articles_recently[i].title
       }
       articles_recently[i].createDate10=articles_recently[i].createDate.substr(0,10),
-      articles_recently[i].url="/article/"+articles_recently[i].id+"/"+articles_recently[i].link+".html";
+      articles_recently[i].url="/article/"+articles_recently[i].id+".html";
   }
   return articles_recently;
 }
@@ -1031,7 +1031,7 @@ function processArticleProp(articles){
             articles[i].createDateMonth=articles[i].createDate.substr(5,7),
             articles[i].createDateDay=articles[i].createDate.substr(8,10),
             articles[i].contentLength=articles[i].contentText.length,
-            articles[i].url="/article/"+articles[i].id+"/"+articles[i].link+".html";
+            articles[i].url ="/article/"+articles[i].id+".html";
         }
     }
 }
