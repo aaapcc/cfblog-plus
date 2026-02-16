@@ -112,6 +112,13 @@
           </div>
           <div class="sidebar-post col-xl-4 d-none d-xl-block ">
             
+            <div id="sidebar_search" class="widget card">
+              <h2 class="widget-header text-md text-dark">网站搜索
+                <div class="widget-border"></div></h2>
+              <form role="search" method="get" id="searchform" action="/search">
+                <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="form-control"></form>
+            </div>
+            
             <div id="post_toc-2" class="widget card widget_post_toc">
               <h2 class="widget-header text-md text-dark">文章目录
                 <div class="widget-border"></div></h2>
@@ -142,7 +149,7 @@
     </main>
     <footer class="site-footer py-3 py-md-4">
       <div class="container">
-        <div class="footer-copyright text-center d-none d-md-block text-xs text-muted">
+        <div class="footer-copyright text-center d-md-block text-xs text-muted">
           Copyright © <span class="dqnianfen"><script>window.onload=function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}};</script></span> ( <script language="javascript">host=document.domain;document.write(host)</script>) - Powered by {{ &title }}
         </div>
     </footer>
@@ -159,8 +166,9 @@
       <div class="search-popup-overlay" id="searchOverlay"></div>
       <div class="search-popup-inner ">
         <div class="search-popup-content block p-3 p-xl-4">
-          <form role="search" class="search-popup-form" method="post" action="/search/">
-            <input id="SearchInput" class="search-popup-input form-control" type="text" placeholder="请输入搜索关键词" name="s" /></form>
+          <form role="search" action="/search" method="GET"  class="search-popup-form">
+            <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="search-popup-input form-control">
+          </form>
         </div>
         <button class="search-popup-close btn btn-link btn-icon btn-rounded bg-white" id="searchHide">
           <span>
