@@ -116,7 +116,7 @@
               <h2 class="widget-header text-md text-dark">网站搜索
                 <div class="widget-border"></div></h2>
               <form role="search" method="get" id="searchform" action="/search">
-                <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="form-control"></form>
+                <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="form-control search-input"></form>
             </div>
             
             <div id="post_toc-2" class="widget card widget_post_toc">
@@ -150,7 +150,7 @@
     <footer class="site-footer py-3 py-md-4">
       <div class="container">
         <div class="footer-copyright text-center d-md-block text-xs text-muted">
-          Copyright © <span class="dqnianfen"><script>window.onload=function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}};</script></span> ( <script language="javascript">host=document.domain;document.write(host)</script>) - Powered by {{ &title }}
+          Copyright © <span class="dqnianfen"><script>window.onload=function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}};</script></span> ( <script language="javascript">host=document.domain;document.write(host)</script>) - Powered by {{ &OPT.siteName }}
         </div>
     </footer>
     <ul class="scroll-fixed-menu">
