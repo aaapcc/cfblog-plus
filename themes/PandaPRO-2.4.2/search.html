@@ -1,0 +1,391 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{{ &title }}</title>
+    <meta name="description" content="{{ &OPT.siteDescription }}" />
+    <meta name="keywords" content="{{ &keyWords }}" />
+    <link rel="icon" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ico/icon-192.png" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/style.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/swiper/swiper-bundle.min.css" type="text/css" media="all" />
+    <!-- 搜索结果页自定义样式 -->
+    <style>
+      /* 搜索结果头部样式 */
+      .search-header { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #007bff; }
+      .search-keyword { font-size: 20px; font-weight: bold; color: #007bff; }
+      .search-stats { color: #6c757d; font-size: 14px; margin-top: 5px; }
+      /* 匹配标识样式 */
+      .match-badge { display: inline-block; padding: 2px 8px; margin-left: 8px; background: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 12px; font-weight: normal; }
+      .match-badge.title-match { background: #fff3e0; color: #e65100; }
+      .match-badge.tag-match { background: #e3f2fd; color: #0d47a1; }
+      /* 搜索结果高亮 */
+      .search-highlight { background: #ffeb3b; padding: 2px 4px; border-radius: 3px; font-weight: 500; color: #333; }
+      .result-excerpt { background: #fafafa; padding: 12px; border-radius: 6px; margin-top: 10px; font-size: 14px; line-height: 1.6; color: #555; border-left: 3px solid #dee2e6; }
+      /* 无结果样式 */
+      .no-results { text-align: center; padding: 60px 20px; background: #f8f9fa; border-radius: 12px; margin: 30px 0; }
+      .no-results-icon { font-size: 64px; color: #adb5bd; margin-bottom: 20px; }
+      .no-results h3 { color: #495057; margin-bottom: 15px; }
+      .no-results p { color: #6c757d; max-width: 400px; margin: 0 auto 20px; }
+      .search-suggestions { display: inline-block; padding: 8px 20px; background: #007bff; color: white; border-radius: 30px; text-decoration: none; transition: background 0.3s; }
+      .search-suggestions:hover { background: #0056b3; color: white; }
+      /* 搜索输入框焦点样式 */
+      .search-input:focus { border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+      /* 分页样式优化 */
+      .pagination-info { display: inline-block; padding: 8px 16px; background: #f8f9fa; border-radius: 20px; color: #6c757d; }
+    </style>
+    
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery-migrate.min.js"></script>
+    <script defer="" type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/alpine.min.js"></script>
+    <script>window.$ = jQuery;</script>
+    
+    <!-- 搜索结果页脚本 -->
+    <script>
+      $(document).ready(function() {
+        // 为搜索结果中的关键词添加高亮
+        if (window.location.pathname === '/search') {
+          const urlParams = new URLSearchParams(window.location.search);
+          const keyword = urlParams.get('q');
+          
+          if (keyword) {
+            // 在文章标题和摘要中高亮关键词
+            const regex = new RegExp('(' + keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            
+            $('.list-title a').each(function() {
+              let text = $(this).text();
+              $(this).html(text.replace(regex, '<span class="search-highlight">$1</span>'));
+            });
+            
+            $('.result-excerpt').each(function() {
+              let text = $(this).text();
+              $(this).html(text.replace(regex, '<span class="search-highlight">$1</span>'));
+            });
+          }
+        }
+      });
+    </script>
+    
+    {{ &OPT.codeBeforHead }}
+  </head>
+  
+  <body>
+    <header class="site-navbar navbar navbar-expand-xl">
+      <div class="container">
+        <h1 class="navbar-brand">
+          <a href="/" rel="home">
+            <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/mmlogo.png" class="d-inline-block logo-light nc-no-lazy" alt="小夜博客" />
+          </a>
+        </h1>
+        <div class="collapse navbar-collapse">
+          <ul id="menu-%e5%af%bc%e8%88%aa" class="navbar-site navbar-nav me-auto ms-lg-5">
+            <li class="menu-item"><a href="/">首页</a></li>
+            {{ #widgetCategoryList }}
+            <li class="menu-item"><a href="/category/{{&.}}">{{&.}}</a></li>
+            {{ /widgetCategoryList }}
+          </ul>
+        </div>
+        <ul class="d-flex flex-wrap flex-shrink-0 align-items-center ms-md-4">
+          <li class="nav-item me-2 me-md-3">
+            <a href="javascript:" class="search-button btn btn-link btn-icon btn-sm btn-rounded" id="searchToggle">
+              <span>
+                <i class="iconfont icon-chazhao"></i>
+              </span>
+            </a>
+          </li>
+          <li class="d-xl-none nav-item me-2 me-md-3">
+            <button class="btn btn-link btn-icon btn-sm btn-rounded navbar-toggler" type="button" id="sidebarCollapse">
+              <span>
+                <i class="iconfont icon-caidanzhongxin"></i>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </header>
+    
+    <main class="site-main">
+      <div class="container">
+        <div class="row gx-xl-4">
+          <div class="content-wrapper col-xl-8">
+            
+            <!-- 搜索结果头部 - 新增 -->
+            {{ #keyword }}
+            <div class="search-header">
+              <div>
+                <span class="search-keyword">"{{ keyword }}"</span> 的搜索结果
+              </div>
+              <div class="search-stats">
+                {{ #total }}共找到 {{ total }} 篇相关文章{{ /total }}
+                {{ ^total }}暂无相关内容{{ /total }}
+                {{ #pageNo }} · 第 {{ pageNo }}/{{ totalPages }} 页{{ /pageNo }}
+              </div>
+            </div>
+            {{ /keyword }}
+            
+            <!-- 搜索结果列表 -->
+            <div class="list-home list-grid list-grid-padding">
+              
+              {{ #articles.length }}
+              {{ #articles }}
+              <div class="list-item block" id="post-{{&id}}">
+                <div class="media media-3x2 custom-hover col-4 col-lg-3">
+                  <a href="{{ &url }}" class="media-content">
+                    <img src="{{ &img }}" alt="{{ &title }}" />
+                  </a>
+                </div>
+                <div class="list-content">
+                  <div class="list-body">
+                    <h2 class="list-title font-title text-lg">
+                      <a href="{{ &url }}" class="h-2x">{{ &title }}</a>
+                      <!-- 匹配标识 -->
+                      {{ #matchInfo.title }}
+                      <span class="match-badge title-match">标题匹配</span>
+                      {{ /matchInfo.title }}
+                      {{ #matchInfo.tags }}
+                      <span class="match-badge tag-match">标签匹配</span>
+                      {{ /matchInfo.tags }}
+                    </h2>
+                    
+                    <!-- 文章元信息 -->
+                    <div class="d-flex align-items-center text-muted mt-2">
+                      <span><i class="iconfont icon-shijian"></i> {{ &createDate10 }}</span>
+                      {{ #category }}
+                      <span class="ms-3"><i class="iconfont icon-fenlei"></i> {{&.}}</span>
+                      {{ /category }}
+                      {{ #tags }}
+                      <span class="ms-3"><i class="iconfont icon-biaoqian"></i> {{.}}</span>
+                      {{ /tags }}
+                    </div>
+                    
+                    <!-- 内容摘要（带高亮） -->
+                    {{ #excerpt }}
+                    <div class="result-excerpt d-none d-md-block mt-3">
+                      {{{ excerpt }}}
+                    </div>
+                    {{ /excerpt }}
+                    
+                    <!-- 如果没有摘要，显示原文摘要 -->
+                    {{ ^excerpt }}
+                    <div class="d-none d-md-block text-muted mt-3">
+                      <div class="h-2x">{{ &contentText }}</div>
+                    </div>
+                    {{ /excerpt }}
+                  </div>
+                </div>
+              </div>
+              {{ /articles }}
+              {{ /articles.length }}
+              
+              <!-- 无搜索结果时显示 -->
+              {{ ^articles.length }}
+              {{ #keyword }}
+              <div class="no-results">
+                <div class="no-results-icon">
+                  <i class="iconfont icon-sousuo"></i>
+                </div>
+                <h3>未找到相关文章</h3>
+                <p>抱歉，没有找到与 "{{ keyword }}" 相关的文章。请尝试其他关键词。</p>
+                <a href="/" class="search-suggestions">返回首页</a>
+              </div>
+              {{ /keyword }}
+              {{ ^keyword }}
+              <div class="no-results">
+                <div class="no-results-icon">
+                  <i class="iconfont icon-sousuo"></i>
+                </div>
+                <h3>请输入搜索关键词</h3>
+                <p>在上方搜索框中输入关键词，搜索你感兴趣的内容。</p>
+              </div>
+              {{ /keyword }}
+              {{ /articles.length }}
+
+            </div>
+            
+            <!-- 分页部分 - 优化显示 -->
+            <div class="row mt-4">
+              <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="pagination-info">
+                    {{ #total }}共 {{ total }} 篇{{ /total }}
+                  </div>
+                  <div>
+                    {{ #hasPrev }}
+                    <a class="btn btn-sm btn-primary me-2" href="{{ prevPage }}">
+                      <i class="iconfont icon-arrow-left"></i> 上一页
+                    </a>
+                    {{ /hasPrev }}
+                    
+                    {{ #hasNext }}
+                    <a class="btn btn-sm btn-primary" href="{{ nextPage }}">
+                      下一页 <i class="iconfont icon-arrow-right"></i>
+                    </a>
+                    {{ /hasNext }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 侧边栏保持不变 -->
+          <div class="sidebar col-xl-4 d-none d-xl-block ">
+            
+            <div id="sidebar_search" class="widget card">
+              <h2 class="widget-header text-md text-dark">网站搜索
+                <div class="widget-border"></div>
+              </h2>
+              <form role="search" method="get" id="searchform" action="/search">
+                <input type="text" 
+                       name="q" 
+                       placeholder="请输入搜索关键词" 
+                       value="{{keyword}}" 
+                       minlength="{{OPT.searchMinLength}}" 
+                       class="form-control search-input">
+              </form>
+            </div>
+
+            <div id="recommended_posts-2" class="widget card widget_recommended_posts">
+              <h2 class="widget-header font-title text-md text-dark">最新文章
+                <div class="widget-border"></div>
+              </h2>
+              <div class="list-grid list-grid-padding list-bordered">
+                {{ #widgetRecentlyList }}
+                <div class="list-item">
+                  <div class="media media-3x2 col-5">
+                    <a href="{{ &url }}" class="media-content">
+                      <img src="{{ &img }}" alt="{{ &title }}">
+                    </a>
+                  </div>
+                  <div class="list-content">
+                    <div class="list-body">
+                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a>
+                    </div>
+                    <div class="list-footer text-muted text-xs">{{ &createDate10 }}</div>
+                  </div>
+                </div>
+                {{ /widgetRecentlyList }}
+              </div>
+            </div>
+
+            <div id="archives-2" class="widget card widget_archive">
+              <h2 class="widget-header text-md text-dark">友情链接
+                <div class="widget-border"></div>
+              </h2>
+              <ul class="row px-3">
+                {{ #widgetLinkList }}
+                <li class="col-6"><a href="{{ &url }}" target="_blank">{{ &title }}</a></li>
+                {{ /widgetLinkList }}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <footer class="site-footer py-3 py-md-4">
+      <div class="container">
+        <div class="footer-copyright text-center d-md-block text-xs text-muted">
+          Copyright © <span class="dqnianfen"></span> (<script>document.write(host=document.domain)</script>) - Powered by {{ &title }}
+        </div>
+      </div>
+    </footer>
+    
+    <!-- 返回顶部按钮 -->
+    <ul class="scroll-fixed-menu">
+      <li id="scrollToTOP" class="scroll-to-top">
+        <button class="btn btn-primary btn-icon btn-rounded">
+          <span><i class="iconfont icon-shangmian1"></i></span>
+        </button>
+      </li>
+    </ul>
+    
+    <!-- 搜索弹窗 -->
+    <div class="search-popup" id="searchModal">
+      <div class="search-popup-overlay" id="searchOverlay"></div>
+      <div class="search-popup-inner">
+        <div class="search-popup-content block p-3 p-xl-4">
+          <form role="search" action="/search" method="GET" class="search-popup-form">
+            <input type="text" 
+                   name="q" 
+                   placeholder="请输入搜索关键词" 
+                   value="{{keyword}}" 
+                   minlength="{{OPT.searchMinLength}}" 
+                   class="search-popup-input form-control">
+          </form>
+        </div>
+        <button class="search-popup-close btn btn-link btn-icon btn-rounded bg-white" id="searchHide">
+          <span><i class="iconfont icon-guanbi"></i></span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 移动端侧边栏 -->
+    <div class="mobile-overlay"></div>
+    <div class="mobile-sidebar">
+      <div class="mobile-sidebar-inner">
+        <div class="mobile-sidebar-header canreg">
+          <div class="mobile-sidebar-author-cover">
+            <div class="media media-2x1">
+              <div class="media-content">
+                <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/cate10.png" decoding="async" loading="lazy" />
+              </div>
+              <div class="media-overlay overlay-top p-2">
+                <div class="flex-fill"></div>
+                <button type="button" class="btn btn-text btn-icon switch-dark-mode">
+                  <span class="icon-light-mode"><i class="iconfont icon-night-circle-fill"></i></span>
+                  <span class="icon-dark-mode"><i class="text-warning iconfont icon-night-circle-fill"></i></span>
+                </button>
+                <button type="button" class="btn btn-text btn-icon text-white sidebar-close">
+                  <span><i class="iconfont icon-guanbi-circle-fill"></i></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-sidebar-author-body">
+            <div class="mobile-sidebar-author-meta py-4">
+              <a href="#" class="btn btn-primary btn-sm btn-rounded">大全</a>
+            </div>
+          </div>
+        </div>
+        <div class="mobile-sidebar-menu">
+          <ul class="mobile-menu-inner">
+            <li class="menu-item"><a href="/">首页</a></li>
+            {{ #widgetCategoryList }}
+            <li class="menu-item"><a href="/category/{{&.}}">{{&.}}</a></li>
+            {{ /widgetCategoryList }}
+          </ul>
+        </div>
+        <div class="py-5"></div>
+      </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jimu.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/swiper/swiper-bundle.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/email-autocomplete/jquery.email-autocomplete.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/theia-sticky-sidebar/ResizeSensor.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/theia-sticky-sidebar/theia-sticky-sidebar.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/vanilla-lazyload/lazyload.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/tocbot/tocbot.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/hooks.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/i18n.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/nicetheme.js"></script>
+    
+    <!-- 年份脚本 -->
+    <script>
+      window.addEventListener('load', function() {
+        var currentYear = new Date().getFullYear();
+        var yearElement = document.querySelector('.dqnianfen');
+        if (yearElement) {
+          yearElement.textContent = currentYear;
+        }
+      });
+    </script>
+    
+    {{ &OPT.codeBeforBody }}
+  </body>
+</html>
