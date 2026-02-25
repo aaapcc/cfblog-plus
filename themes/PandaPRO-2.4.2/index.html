@@ -7,7 +7,7 @@
     <title>{{ &title }}</title>
     <meta name="description" content="{{ &OPT.siteDescription }}" />
     <meta name="keywords" content="{{ &keyWords }}" />
-    <link rel="icon" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ico/icon-192.png" />
+    <link rel="icon" href="{{ &OPT.siteFavicon }}" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
@@ -19,7 +19,6 @@
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery-migrate.min.js"></script>
     <script defer="" type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/alpine.min.js"></script>
     <!-- <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ai.js"></script> -->
-    <script src='https://gh.lib.aaqq.site/mustache/4.1.0/mustache.min.js'></script>
     <style>@font-face { font-family: 'HarmonyOS Sans'; src: url(https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/fonts/HarmonyOS_Sans.woff2) format("woff2"); font-style: normal; } body { font-family: -apple-system, 'HarmonyOS Sans', BlinkMacSystemFont, Segoe UI, Roboto, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Source Han Sans CN, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol; }</style>
     <script>window.$ = jQuery;</script>
     {{ &OPT.codeBeforHead }}
@@ -194,7 +193,7 @@
           <div class="mobile-sidebar-author-cover">
             <div class="media media-2x1">
               <div class="media-content">
-                <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/cate10.png" decoding="async" loading="lazy" /></div>
+                <img src="{{ &OPT.siteDefaultCover }}" decoding="async" loading="lazy" /></div>
               <div class="media-overlay overlay-top p-2">
                 <div class="flex-fill"></div>
                 <button type="button" class="btn btn-text btn-icon switch-dark-mode">
