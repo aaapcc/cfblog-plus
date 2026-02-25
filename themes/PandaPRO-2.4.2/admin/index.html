@@ -212,6 +212,64 @@
             border: 1px solid #ddd !important;
             border-radius: 5px !important;
         }
+
+                /* 评论管理样式 */
+        .comment-item {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+        .comment-item.pending {
+            border-left: 3px solid #ff9800;
+            background: #fffbf5;
+        }
+        .comment-item.approved {
+            border-left: 3px solid #4caf50;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .comment-author {
+            font-weight: bold;
+            color: #333;
+        }
+        .comment-email {
+            color: #666;
+            font-size: 12px;
+        }
+        .comment-date {
+            color: #999;
+            font-size: 12px;
+        }
+        .comment-content {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .reply-indent {
+            margin-left: 30px;
+            padding-left: 15px;
+            border-left: 2px solid #e0e0e0;
+        }
+        .reply-badge {
+            background: #e0e0e0;
+            color: #666;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -239,6 +297,11 @@
                 <i class="fa fa-cog"></i>
                 <span>系统设置</span>
             </div>
+            <div class="menu-item" data-target="#comments">
+		        <i class="fa fa-comments"></i>
+		        <span>评论管理</span>
+		        <span class="badge" id="pendingCommentsCount">0</span>
+		    </div>
             <div class="menu-item" data-target="#pub">
                 <i class="fa fa-cloud-upload"></i>
                 <span>发布</span>
@@ -495,6 +558,82 @@
                 </div>
             </div>
         </div>
+
+        <!-- 评论管理页 - 新增 -->
+        <div class="tab-pane" id="comments">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-comments"></i> 评论管理</h3>
+                </div>
+                
+                <!-- 评论统计卡片 -->
+                <div class="stats-grid" style="margin-bottom: 20px;">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa fa-clock-o"></i></div>
+                        <div class="stat-info">
+                            <h4>待审核评论</h4>
+                            <div class="stat-number" id="pendingCount">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <h4>已审核评论</h4>
+                            <div class="stat-number" id="approvedCount">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa fa-ban"></i></div>
+                        <div class="stat-info">
+                            <h4>垃圾评论</h4>
+                            <div class="stat-number" id="spamCount">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 评论列表标签页 -->
+                <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+                    <li class="active"><a href="#pendingComments" data-toggle="tab">待审核 <span class="badge" id="pendingTabCount">0</span></a></li>
+                    <li><a href="#allComments" data-toggle="tab">全部评论</a></li>
+                </ul>
+                
+                <div class="tab-content">
+                    <!-- 待审核评论列表 -->
+                    <div class="tab-pane active" id="pendingComments">
+                        <div class="table-container">
+                            <table class="table" id="pendingCommentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>文章</th>
+                                        <th>昵称</th>
+                                        <th>邮箱</th>
+                                        <th>评论内容</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingCommentsList">
+                                    <tr><td colspan="6" class="text-center">加载中...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 全部评论列表 -->
+                    <div class="tab-pane" id="allComments">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <select class="form-control" id="articleSelector" style="width: 300px;">
+                                <option value="">选择文章查看评论</option>
+                            </select>
+                        </div>
+                        <div id="articleCommentsList" style="max-height: 600px; overflow-y: auto;">
+                            <p class="text-muted text-center">请先选择一篇文章</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 评论管理页结束 -->
     </div>
     
     <!-- 提示框 -->
@@ -892,6 +1031,209 @@
                 alert.fadeOut();
             }, 3000);
         }
+    </script>
+    <script type="text/javascript">
+    	        // ========== 评论管理功能 ==========
+        
+        // 加载待审核评论
+        function loadPendingComments() {
+            $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
+            
+            fetch('/api/admin/comments/pending')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.comments.length === 0) {
+                            $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">暂无待审核评论</td></tr>');
+                            $('#pendingCount').text('0');
+                            $('#pendingTabCount').text('');
+                            $('#pendingCommentsCount').text('');
+                            return;
+                        }
+                        
+                        let html = '';
+                        data.comments.forEach(c => {
+                            html += `
+                                <tr id="pending-comment-${c.id}">
+                                    <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
+                                    <td>${c.author}</td>
+                                    <td>${c.email || '-'}</td>
+                                    <td>${c.content.replace(/\n/g, '<br>')}</td>
+                                    <td>${c.date}</td>
+                                    <td>
+                                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
+                                            <i class="fa fa-check"></i> 通过
+                                        </button>
+                                        <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
+                                            <i class="fa fa-trash"></i> 删除
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        $('#pendingCommentsList').html(html);
+                        $('#pendingCount').text(data.comments.length);
+                        $('#pendingTabCount').text(data.comments.length);
+                        $('#pendingCommentsCount').text(data.comments.length);
+                    } else {
+                        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
+                    }
+                })
+                .catch(() => {
+                    $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
+                });
+        }
+        
+        // 审核评论
+        function reviewComment(articleId, commentId, action) {
+            let actionText = action === 'approve' ? '通过' : '删除';
+            if (!confirm(`确定要${actionText}这条评论吗？`)) return;
+            
+            fetch('/api/admin/comments/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ articleId, commentId, action })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    $(`#pending-comment-${commentId}`).fadeOut(300, function() {
+                        $(this).remove();
+                        loadPendingComments(); // 重新加载计数
+                    });
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            })
+            .catch(() => {
+                showAlert('操作失败', 'error');
+            });
+        }
+        
+        // 加载文章列表到选择器
+        function loadArticleSelector() {
+            let selector = $('#articleSelector');
+            selector.empty().append('<option value="">选择文章查看评论</option>');
+            
+            if (allArticles && allArticles.length) {
+                allArticles.forEach(article => {
+                    selector.append(`<option value="${article.id}">${article.title}</option>`);
+                });
+            }
+        }
+        
+        // 加载文章的评论
+        function loadArticleComments(articleId) {
+            if (!articleId) {
+                $('#articleCommentsList').html('<p class="text-muted text-center">请先选择一篇文章</p>');
+                return;
+            }
+            
+            $('#articleCommentsList').html('<p class="text-muted text-center">加载中...</p>');
+            
+            fetch(`/api/admin/comments/article/${articleId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.comments.length === 0) {
+                            $('#articleCommentsList').html('<p class="text-muted text-center">暂无评论</p>');
+                            return;
+                        }
+                        
+                        let html = '';
+                        data.comments.forEach(c => {
+                            let statusClass = c.approved ? 'approved' : 'pending';
+                            let statusText = c.approved ? '已审核' : '待审核';
+                            let actionButtons = '';
+                            
+                            if (!c.approved) {
+                                actionButtons = `
+                                    <button class="btn btn-success btn-xs" onclick="reviewComment('${articleId}', '${c.id}', 'approve')">
+                                        <i class="fa fa-check"></i> 通过
+                                    </button>
+                                `;
+                            }
+                            actionButtons += `
+                                <button class="btn btn-danger btn-xs" onclick="reviewComment('${articleId}', '${c.id}', 'delete')">
+                                    <i class="fa fa-trash"></i> 删除
+                                </button>
+                            `;
+                            
+                            html += `
+                                <div class="comment-item ${statusClass}" id="article-comment-${c.id}">
+                                    <div class="comment-header">
+                                        <div>
+                                            <span class="comment-author">${c.author}</span>
+                                            ${c.email ? `<span class="comment-email">(${c.email})</span>` : ''}
+                                            <span class="badge" style="margin-left: 8px; background: ${c.approved ? '#4caf50' : '#ff9800'}">${statusText}</span>
+                                        </div>
+                                        <span class="comment-date">${c.date}</span>
+                                    </div>
+                                    <div class="comment-content">
+                                        ${c.parentId !== '0' ? '<span class="reply-badge">回复</span>' : ''}
+                                        ${c.content.replace(/\n/g, '<br>')}
+                                    </div>
+                                    <div class="comment-actions">
+                                        ${actionButtons}
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // 如果有回复，显示回复（简化版，不展示二级回复的审核操作）
+                            if (data.replies && data.replies[c.id]) {
+                                data.replies[c.id].forEach(reply => {
+                                    html += `
+                                        <div class="comment-item ${reply.approved ? 'approved' : 'pending'} reply-indent">
+                                            <div class="comment-header">
+                                                <div>
+                                                    <span class="comment-author">${reply.author}</span>
+                                                    ${reply.email ? `<span class="comment-email">(${reply.email})</span>` : ''}
+                                                </div>
+                                                <span class="comment-date">${reply.date}</span>
+                                            </div>
+                                            <div class="comment-content">${reply.content.replace(/\n/g, '<br>')}</div>
+                                        </div>
+                                    `;
+                                });
+                            }
+                        });
+                        
+                        $('#articleCommentsList').html(html);
+                    } else {
+                        $('#articleCommentsList').html('<p class="text-muted text-center">加载失败</p>');
+                    }
+                })
+                .catch(() => {
+                    $('#articleCommentsList').html('<p class="text-muted text-center">加载失败</p>');
+                });
+        }
+        
+        // 初始化评论管理的事件
+        function initCommentManagement() {
+            // 文章选择器变更事件
+            $('#articleSelector').on('change', function() {
+                loadArticleComments($(this).val());
+            });
+            
+            // 当切换到评论管理标签页时加载数据
+            $('.menu-item[data-target="#comments"]').click(function() {
+                loadPendingComments();
+                loadArticleSelector();
+            });
+            
+            // 当切换到全部评论标签页时刷新文章列表
+            $('a[href="#allComments"]').on('shown.bs.tab', function() {
+                loadArticleSelector();
+            });
+        }
+        
+        // 在页面加载完成后初始化评论管理
+        $(function() {
+            // 原有的代码后面添加
+            initCommentManagement();
+        });
     </script>
 </body>
 </html>
