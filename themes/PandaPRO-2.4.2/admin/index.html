@@ -1,337 +1,1142 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<title>CF-blog后台</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CF-Blog 后台管理</title>
     <link rel="icon" type="image/x-icon" href="https://gh.static.aaqq.site/cfblog/themes/JustNews/gdtool/zhaopp/cfblog/favicon.ico" />
-	<link rel="shortcut icon" type="image/x-icon"  href="https://gh.static.aaqq.site/cfblog/themes/JustNews/gdtool/zhaopp/cfblog/favicon.ico"/>
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="https://gh.static.aaqq.site/editor.md-1.5.0/examples/css/style.css" />-->
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://gh.static.aaqq.site/editor.md-1.5.0/css/editormd.css" />
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/JustNews/npm/bootstrap-select/1.13.14/dist/css/bootstrap-select.min.css">
     
-    <script src="https://gh.lib.aaqq.site/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://gh.lib.aaqq.site/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://gh.static.aaqq.site/cfblog/themes/JustNews/npm/bootstrap-select/1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script src="https://gh.static.aaqq.site/cfblog/themes/JustNews/npm/bootstrap-select/1.13.14/dist/js/i18n/defaults-zh_CN.min.js"></script>
-	<style>
-		.bootstrap-select>.dropdown-toggle {
-		z-index:auto;
-		}
-	</style>
-	
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f5f7fb;
+            overflow-x: hidden;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 260px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 18px;
+            font-weight: 300;
+            margin: 0;
+        }
+        
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .menu-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: #ffd700;
+        }
+        
+        .menu-item i {
+            width: 24px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        .menu-item span {
+            flex: 1;
+        }
+        
+        .menu-item .badge {
+            background: #ffd700;
+            color: #333;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            margin-left: 260px;
+            padding: 20px 30px;
+            transition: all 0.3s;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .page-title i {
+            color: #667eea;
+            margin-right: 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .user-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 150px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-menu a {
+            padding: 10px 15px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-menu a:hover {
+            background: #f5f7fb;
+            color: #667eea;
+        }
+        
+        .dropdown-menu a i {
+            width: 20px;
+            margin-right: 5px;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-header h3 {
+            font-size: 16px;
+            margin: 0;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .card-header h3 i {
+            color: #667eea;
+            margin-right: 8px;
+        }
+        
+        /* 表格样式 */
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th {
+            background: #f8f9fa;
+            padding: 12px;
+            font-weight: 500;
+            color: #555;
+            font-size: 13px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+        }
+        
+        .btn-default {
+            background: #f0f2f5;
+            color: #666;
+        }
+        
+        .btn-default:hover {
+            background: #e4e6e9;
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        /* 标签页 */
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        /* 加载更多 */
+        .load-more {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        /* 提示框 */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .alert.success {
+            background: #4caf50;
+        }
+        
+        .alert.error {
+            background: #f44336;
+        }
+        
+        .alert.info {
+            background: #2196f3;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block !important;
+            }
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #667eea;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .stat-info h4 {
+            font-size: 14px;
+            color: #999;
+            margin: 0 0 5px 0;
+            font-weight: 400;
+        }
+        
+        .stat-info .stat-number {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* 编辑器样式 */
+        .editormd {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
-<nav class="navbar navbar-default " role="navigation">
-	<div class="container-fluid">
-
-	<div>
-		<ul id="myTab" class="nav nav-tabs">
-			<li>
-				<a href="/" >CF-blog</a>
-			</li>
-			<li>
-				<a href="#list" data-toggle="tab">我的文章</a>
-			</li>
-			<li  class="active">
-				<a href="#new" data-toggle="tab">新建</a>
-			</li>
-			<li>
-				<a href="#config" data-toggle="tab">设置</a>
-			</li>
-			<li>
-				<a href="#pub" data-toggle="tab">发布</a>
-			</li>
-		</ul>
-	</div>
-	</div>
-</nav>
-<div id="myTabContent" class="tab-content" style="padding-top: 60px;">
-	<div class="tab-pane fade" id="list">
-		<div class="container" >
-			<table class="table  table-striped" id="articleList">
-				  <tr><td>ID</td><td>标题</td><td>创建日期</td></tr>
-			</table>
-			<input type="hidden"  name="page" id="page" value='1'>
-			<a id="loadmore" class="btn btn-default">加载更多...</a>
-		</div> 
-	</div>
-	<div class="tab-pane fade in active" id="new">
-		<div class="container">
-			<h3 id="labelNew">新增<span style="color: red;">*</span></h3>   
-			<form id="addNewForm"  class="form-inline" >
-				<div class="form-group" style="width: 98%">
-					<input type="hidden" class="form-control" name="id" id="id" >
-					<input type="text" class="form-control" name="title" id="title" placeholder="标题" style="width: 100%;" required="true">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">特色图片</label>
-					<input type="url" class="form-control" style="width: 400px;"  name="img" id="img" placeholder="" >
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">永久链接</label>
-					<input type="text" class="form-control" name="link" id="link" placeholder="" required="true">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">创建日期<span style="color: red;">*</span></label>
-					<input type="datetime-local" class="form-control" id="createDate" name="createDate" placeholder=""  required="true">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">分类<span style="color: red;">*</span></label>
-					<select class="selectpicker" multiple name="category[]" id="category">
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">标签</label>
-					<input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">权重</label>
-					<input type="text" class="form-control" name="priority" id="priority" value='0.5' placeholder="权重">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">更新频率</label>
-					    <select class="form-control" id="changefreq" name="changefreq">
-						<option value="daily" selected  = "selected" >daily</option>
-						<option value="hourly" >hourly</option>
-						<option value="weekly" >weekly</option>
-						<option value="monthly" >monthly</option>
-						<option value="yearly" >yearly</option>
-						<option value="never" >never</option>
-						<option value="always" >always</option>
-					    </select>
-				</div>
-					<a  tabindex="0"  role="button"  type="submit" id="btn_saveAddNew" class="btn btn-default" onclick="saveAddNew()">保存</a>
-					
-				<div id="content"><textarea style="display:none;"></textarea></div>
-			</form>
-		</div>
-	</div>
-	
-	<div class="tab-pane fade" id="config">
-		
-		<div class="container" >
-			<form id="configForm" role="form" >
-				<div class="form-group">
-				    <label for="name">分类, 例:<code>["类别A","类别B","类别C","类别D"]</code></label>
-					<textarea class="form-control" id="WidgetCategory" name="WidgetCategory" rows="3" placeholder='["分类A","分类B"]'></textarea>
-				</div>
-	
-				<div class="form-group">
-				    <label for="name">菜单, 例:<code>[{"title":"技术文章","url":"/category/技术文章"},{"title":"管理","url":"/admin"}]</code></label>
-					<textarea class="form-control" id="WidgetMenu" name="WidgetMenu" rows="5"  placeholder='[
-	{"title":"菜单A"	,"url":"/category/菜单A"},
-	{"title":"菜单B"	,"url":"/category/菜单B"}
-]'></textarea>
-				</div>
-				<div class="form-group">
-				    <label for="name">其他链接, 例:<code>[{"title":"我的好友","url":"https://blog.gezhong.vip/"},{"title":"谷歌","url":"https://www.google.com/"}]</code></label>
-					<textarea class="form-control" id="WidgetLink" name="WidgetLink" rows="5"  placeholder='[
-	{"title":"好友"	,"url":"https://blog.gezhong.vip/"},
-	{"title":"谷歌"	,"url":"https://www.google.com/"}
-]'></textarea>
-				</div>
-				<a  tabindex="0"  role="button"  type="submit" id="btn_saveConfig" class="btn btn-default" onclick="saveConfig()">保存</a>
-			</form>
-			
-
-			<form id="importForm" role="form" >
-				<div class="form-group">
-				    <label for="name">导出/导入</label>
-					<textarea class="form-control" id="importJson" name="importJson" rows="3" placeholder='复制完整的导出json'></textarea>
-				</div>
-
-				<a  tabindex="0"  role="button"  type="submit" id="btn_import" class="btn btn-default" onclick="importBlog()">导入</a>
-				<a  tabindex="0"  role="button"  type="submit" id="btn_export" class="btn btn-default"  href="/admin/export/" >导出</a>
-			</form>
-
-			
-		</div>
-	</div>
-
-	<div class="tab-pane fade" id="pub">
-		<div class="container" >
-			<div class="jumbotron" >
-				<p class="lead">
-				由于前端使用缓存,以下操作需要发布:新建文章、发布文章、修改后台配置、修改workers配置</br>
-				前端生效需要ctrl+F5 强制刷新
-				</p>
-				
-				<a href="#" class="btn btn-default" onclick="publish()">发布</a>
-			</div>
-		</div>
-	</div>	
-</div>
-
-<script src="https://gh.static.aaqq.site/editor.md-1.5.0/editormd.js"></script>   
-<script type="text/javascript">
-	$(function() {
-		$('#myTab li:eq(0) 1').tab('show');
-		//获取分类
-		var categoryJson = <!--{categoryJson}-->;
-		//获取菜单
-		var menuJson = <!--{menuJson}-->;
-		var linkJson = <!--{linkJson}-->;
-		var mdEditor = editormd("content", {
-				// width  : "90%",
-				 height : 640,
-				path   : "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
-				appendMarkdown : "# MarkDown", 
-				saveHTMLToTextarea : true,
-				mode : "markdown",
-				tex  : true,
-				tocm : true, 
-				codeFold : true
-			});
-		//表单赋值
-		$('#createDate').val(new Date());
-		
-		$('#WidgetCategory').val(JSON.stringify(categoryJson));
-		$('#WidgetMenu').val(JSON.stringify(menuJson));
-		$('#WidgetLink').val(JSON.stringify(linkJson));
-		var category = $('#category');
-		category.empty();
-		for (var i = 0; i < categoryJson.length; i++) {
-			category.append('<option id=' + categoryJson[i] + ' value=' + categoryJson[i] + '>' + categoryJson[i] + '</option>');
-		}
-		$("#loadmore").click();//初始加载一页
-	});
-    //加载文章列表	
-    $("#loadmore").click(function(){
-        var page=$("#page").val();
-        $.ajax({
-            url:"/admin/getList/" + page + "/",
-            type:'GET',
-            dataType:"json",
-            //data:{"page":page,"typeid":typeid},
-            success:function(data){
-    
-                    tableContent="";
-                    $.each(data,function(i){
-                        var Info = data[i];
-                        var num = i+1;
-                        tableContent += '<tr><td>'+Info.id+'</td><td><a href="/admin/edit/'+Info.id+'/">'+Info.title+'</a></td><td>'+Info.createDate.replace("T","")+'</td></tr>';
-     
-                    })
-                    $("#articleList").append(tableContent);
-                    $("#page").val(++page);
-      
-            }
-        });
-    })
-    //新建文章
-    function saveAddNew(){
-        if(
-            $('#WidgetMenu').val() == "" || $('#WidgetMenu').val() == null
-            || $('#title').val() == "" || $('#title').val() == null
-            || $('#createDate').val() == "" || $('#createDate').val() == null
-            || $('#category').val() == "" || $('#category').val() == null
+    <!-- 侧边栏 -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://gh.static.aaqq.site/cfblog/themes/JustNews/files/logo2.png" alt="Logo">
+            <h3>CF-Blog</h3>
+            <p>后台管理系统</p>
+        </div>
         
-        ){
-           alert("信息不全");
-           return;
-            
-        }
-        var postURL = "/admin/saveEdit/";
-        if ($('#id').val() == "" || $('#id').val() == null)
-            postURL=  "/admin/saveAddNew/";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: postURL ,//url
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify($("#addNewForm").serializeArray()), 
-            success: function (result) {
-                if("msg" in result){
-                  if ("id" in result){
-                    $('#id').val(result.id);
-                    $('#labelNew').text("编辑:"+result.id);
-                  }
-                  alert(result.msg);
-                }else {
-                  alert("失败");
-                }
-            }
-        });
-    }
-    //保存设置
-    function saveConfig(){
-        if(!isJSON($('#WidgetCategory').val()))
-        {
-            alert("分类格式错误"); 
-            return false;
-        }
-        if(!isJSON($('#WidgetMenu').val()))
-        {
-            alert("菜单格式错误"); 
-            return false;
-        }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-			contentType: "application/json; charset=utf-8",
-            url: "/admin/saveConfig/" ,//url
-			data: JSON.stringify($("#configForm").serializeArray()), 
-            success: function (result) {
-                alert(result.msg);
-            }
-        });
-    }
-    //导入json
-    function importBlog(){
-        if(!isJSON($('#importJson').val()))
-        {
-            alert("导入格式错误"); 
-            return false;
-        }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-			contentType: "application/json; charset=utf-8",
-            url: "/admin/import/" ,//url
-			data: JSON.stringify($("#importForm").serializeArray()), 
-            success: function (result) {
-                alert(result.msg);
-            }
-        });
-    }
-    //发布
-    function publish(){
-        if (confirm("确定吗?发布将清理所有静态缓存,重新生成")==false){ 
-            return false; 
-          }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-			contentType: "application/json; charset=utf-8",
-            url: "/admin/publish/" ,//url
-            success: function (result) {
-                alert(result.msg);
-            }
-        });
-    }
-    function isJSON(str) {
-        if (typeof str == 'string') {
-            try {
-                var obj=JSON.parse(str);
-                if(typeof obj == 'object' && obj ){
-                    return true;
-                }else{
-                    return false;
-                }
+        <div class="sidebar-menu">
+            <div class="menu-item active" data-tab="dashboard">
+                <i class="fa fa-dashboard"></i>
+                <span>仪表盘</span>
+            </div>
+            <div class="menu-item" data-tab="list">
+                <i class="fa fa-list"></i>
+                <span>文章管理</span>
+                <span class="badge" id="articleCount">0</span>
+            </div>
+            <div class="menu-item" data-tab="new">
+                <i class="fa fa-pencil"></i>
+                <span>写文章</span>
+            </div>
+            <div class="menu-item" data-tab="config">
+                <i class="fa fa-cog"></i>
+                <span>系统设置</span>
+            </div>
+            <div class="menu-item" data-tab="pub">
+                <i class="fa fa-cloud-upload"></i>
+                <span>发布</span>
+            </div>
+        </div>
+    </div>
     
-            } catch(e) {
-               // console.log('error：'+str+'!!!'+e);
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                <i class="fa fa-bars"></i>
+            </div>
+            
+            <div class="page-title">
+                <i class="fa fa-dashboard"></i>
+                <span id="pageTitle">仪表盘</span>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-avatar" onclick="toggleUserMenu()">
+                        A
+                    </div>
+                    <div class="dropdown-menu" id="userMenu">
+                        <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> 退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 仪表盘 -->
+        <div class="tab-pane active" id="tab-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>总文章数</h4>
+                        <div class="stat-number" id="totalArticles">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-eye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>总阅读量</h4>
+                        <div class="stat-number" id="totalViews">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>分类数</h4>
+                        <div class="stat-number" id="totalCategories">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa fa-link"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>友链数</h4>
+                        <div class="stat-number" id="totalLinks">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-clock-o"></i> 最近文章</h3>
+                    <a href="#" onclick="switchTab('list')" class="btn btn-default btn-sm">查看全部</a>
+                </div>
+                <div class="table-container">
+                    <table id="recentArticles">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>标题</th>
+                                <th>分类</th>
+                                <th>阅读量</th>
+                                <th>创建时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 文章列表 -->
+        <div class="tab-pane" id="tab-list">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-list"></i> 文章管理</h3>
+                    <button class="btn btn-primary btn-sm" onclick="switchTab('new')">
+                        <i class="fa fa-plus"></i> 写新文章
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table" id="articleList">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>标题</th>
+                                <th>分类</th>
+                                <th>标签</th>
+                                <th>阅读量</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="load-more">
+                    <input type="hidden" id="page" value="1">
+                    <button class="btn btn-default" id="loadmore" onclick="loadMore()">
+                        <i class="fa fa-refresh"></i> 加载更多
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 写文章 -->
+        <div class="tab-pane" id="tab-new">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-pencil"></i> <span id="labelNew">写新文章</span></h3>
+                </div>
+                
+                <form id="addNewForm">
+                    <input type="hidden" name="id" id="id">
+                    
+                    <div class="form-group">
+                        <label>标题 <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="输入文章标题" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>特色图片</label>
+                                <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>永久链接</label>
+                                <input type="text" class="form-control" name="link" id="link" placeholder="article-url" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>创建日期 <span style="color: red;">*</span></label>
+                                <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>分类 <span style="color: red;">*</span></label>
+                                <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>标签</label>
+                                <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>权重</label>
+                                <input type="text" class="form-control" name="priority" id="priority" value="0.5">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>更新频率</label>
+                                <select class="form-control" id="changefreq" name="changefreq">
+                                    <option value="daily">daily</option>
+                                    <option value="hourly">hourly</option>
+                                    <option value="weekly">weekly</option>
+                                    <option value="monthly">monthly</option>
+                                    <option value="yearly">yearly</option>
+                                    <option value="never">never</option>
+                                    <option value="always">always</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div id="content"></div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="saveAddNew()">
+                        <i class="fa fa-save"></i> 保存文章
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 系统设置 -->
+        <div class="tab-pane" id="tab-config">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-cog"></i> 系统设置</h3>
+                </div>
+                
+                <form id="configForm">
+                    <div class="form-group">
+                        <label>分类</label>
+                        <textarea class="form-control" id="WidgetCategory" name="WidgetCategory" rows="3" placeholder='["分类A","分类B"]'></textarea>
+                        <small class="text-muted">JSON 格式，例如：["技术","生活","旅行"]</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>菜单</label>
+                        <textarea class="form-control" id="WidgetMenu" name="WidgetMenu" rows="5" placeholder='[{"title":"首页","url":"/"}]'></textarea>
+                        <small class="text-muted">JSON 格式，例如：[{"title":"首页","url":"/"},{"title":"关于","url":"/about"}]</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>友情链接</label>
+                        <textarea class="form-control" id="WidgetLink" name="WidgetLink" rows="5" placeholder='[{"title":"Google","url":"https://google.com"}]'></textarea>
+                        <small class="text-muted">JSON 格式，例如：[{"title":"Google","url":"https://google.com"}]</small>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="saveConfig()">
+                        <i class="fa fa-save"></i> 保存设置
+                    </button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-download"></i> 数据导入/导出</h3>
+                </div>
+                
+                <form id="importForm">
+                    <div class="form-group">
+                        <label>导入数据</label>
+                        <textarea class="form-control" id="importJson" rows="5" placeholder='粘贴导出的JSON数据'></textarea>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="importBlog()">
+                        <i class="fa fa-upload"></i> 导入
+                    </button>
+                    <a href="/admin/export/" class="btn btn-default">
+                        <i class="fa fa-download"></i> 导出
+                    </a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 发布 -->
+        <div class="tab-pane" id="tab-pub">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-cloud-upload"></i> 发布更新</h3>
+                </div>
+                
+                <div style="text-align: center; padding: 40px 0;">
+                    <i class="fa fa-info-circle" style="font-size: 48px; color: #667eea; margin-bottom: 20px;"></i>
+                    <p style="color: #666; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                        发布操作将清除所有缓存，使修改的内容在前端生效。由于前端使用缓存，发布后需要按 Ctrl+F5 强制刷新才能看到最新内容。
+                    </p>
+                    <button class="btn btn-primary btn-lg" onclick="publish()">
+                        <i class="fa fa-cloud-upload"></i> 立即发布
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 提示框 -->
+    <div class="alert" id="alertMessage"></div>
+    
+    <script src="https://gh.lib.aaqq.site/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://gh.lib.aaqq.site/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://gh.static.aaqq.site/editor.md-1.5.0/editormd.js"></script>
+    <script src="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/js/bootstrap-select.min.js"></script>
+    <script src="https://gh.static.aaqq.site/cfblog/themes/JustNews/npm/bootstrap-select/1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://gh.static.aaqq.site/cfblog/themes/JustNews/npm/bootstrap-select/1.13.14/dist/js/i18n/defaults-zh_CN.min.js"></script>
+    
+    <script>
+        // 全局变量
+        var mdEditor = null;
+        var categoryJson = <!--{categoryJson}--> || [];
+        var menuJson = <!--{menuJson}--> || [];
+        var linkJson = <!--{linkJson}--> || [];
+        
+        $(function() {
+            // 初始化编辑器
+            if ($('#content').length) {
+                mdEditor = editormd("content", {
+                    height: 500,
+                    path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
+                    saveHTMLToTextarea: true,
+                    tex: true,
+                    codeFold: true,
+                    emoji: true,
+                    taskList: true,
+                    flowChart: true,
+                    sequenceDiagram: true
+                });
+            }
+            
+            // 初始化分类下拉框
+            initCategorySelect();
+            
+            // 加载统计数据
+            loadStats();
+            
+            // 加载最近文章
+            loadRecentArticles();
+            
+            // 加载文章列表
+            loadArticles(1);
+            
+            // 设置默认日期
+            $('#createDate').val(new Date().toISOString().slice(0, 16));
+            
+            // 初始化设置表单
+            $('#WidgetCategory').val(JSON.stringify(categoryJson));
+            $('#WidgetMenu').val(JSON.stringify(menuJson));
+            $('#WidgetLink').val(JSON.stringify(linkJson));
+        });
+        
+        // 切换标签页
+        function switchTab(tabName) {
+            $('.tab-pane').removeClass('active');
+            $(`#tab-${tabName}`).addClass('active');
+            
+            $('.menu-item').removeClass('active');
+            $(`.menu-item[data-tab="${tabName}"]`).addClass('active');
+            
+            // 更新页面标题
+            var titles = {
+                'dashboard': '仪表盘',
+                'list': '文章管理',
+                'new': '写文章',
+                'config': '系统设置',
+                'pub': '发布'
+            };
+            $('#pageTitle').text(titles[tabName] || 'CF-Blog');
+            $('#pageTitle').prev('i').attr('class', `fa fa-${tabName === 'dashboard' ? 'dashboard' : tabName === 'list' ? 'list' : tabName === 'new' ? 'pencil' : tabName === 'config' ? 'cog' : 'cloud-upload'}`);
+        }
+        
+        // 侧边栏切换（移动端）
+        function toggleSidebar() {
+            $('#sidebar').toggleClass('show');
+        }
+        
+        // 用户菜单
+        function toggleUserMenu() {
+            $('#userMenu').toggleClass('show');
+        }
+        
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.location.href = '/admin/logout/';
+            }
+        }
+        
+        // 显示提示
+        function showAlert(message, type = 'success') {
+            var alert = $('#alertMessage');
+            alert.removeClass('success error info').addClass(type).text(message).fadeIn();
+            setTimeout(function() {
+                alert.fadeOut();
+            }, 3000);
+        }
+        
+        // 初始化分类下拉框
+        function initCategorySelect() {
+            var category = $('#category');
+            category.empty();
+            for (var i = 0; i < categoryJson.length; i++) {
+                category.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
+            }
+            category.selectpicker('refresh');
+        }
+        
+        // 加载统计数据
+        function loadStats() {
+            $.ajax({
+                url: '/admin/getList/1/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#totalArticles').text(data.length || 0);
+                    
+                    var totalViews = 0;
+                    if (data && data.length) {
+                        totalViews = data.reduce((sum, article) => sum + (article.views || 0), 0);
+                    }
+                    $('#totalViews').text(totalViews);
+                }
+            });
+            
+            $('#totalCategories').text(categoryJson.length || 0);
+            $('#totalLinks').text(linkJson.length || 0);
+        }
+        
+        // 加载最近文章
+        function loadRecentArticles() {
+            $.ajax({
+                url: '/admin/getList/1/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var tbody = $('#recentArticles tbody');
+                    tbody.empty();
+                    
+                    if (data && data.length) {
+                        var recent = data.slice(0, 5);
+                        $.each(recent, function(i, article) {
+                            tbody.append(`
+                                <tr>
+                                    <td>${article.id}</td>
+                                    <td><a href="/admin/edit/${article.id}/">${article.title}</a></td>
+                                    <td>${article.category ? article.category.join(', ') : '-'}</td>
+                                    <td>${article.views || 0}</td>
+                                    <td>${article.createDate ? article.createDate.replace('T', ' ') : '-'}</td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="5" style="text-align: center;">暂无文章</td></tr>');
+                    }
+                }
+            });
+        }
+        
+        // 加载文章列表
+        function loadArticles(page) {
+            $.ajax({
+                url: '/admin/getList/' + page + '/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var tbody = $('#articleList tbody');
+                    if (page === 1) tbody.empty();
+                    
+                    if (data && data.length) {
+                        $.each(data, function(i, article) {
+                            tbody.append(`
+                                <tr>
+                                    <td>${article.id}</td>
+                                    <td><a href="/admin/edit/${article.id}/">${article.title}</a></td>
+                                    <td>${article.category ? article.category.join(', ') : '-'}</td>
+                                    <td>${article.tags ? article.tags.join(', ') : '-'}</td>
+                                    <td>${article.views || 0}</td>
+                                    <td>${article.createDate ? article.createDate.replace('T', ' ') : '-'}</td>
+                                    <td>
+                                        <a href="/admin/edit/${article.id}/" class="btn btn-default btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteArticle('${article.id}')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                        
+                        $('#articleCount').text(data.length);
+                    } else {
+                        if (page === 1) {
+                            tbody.append('<tr><td colspan="7" style="text-align: center;">暂无文章</td></tr>');
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 加载更多
+        function loadMore() {
+            var page = parseInt($('#page').val()) + 1;
+            loadArticles(page);
+            $('#page').val(page);
+        }
+        
+        // 删除文章
+        function deleteArticle(id) {
+            if (confirm('确定要删除这篇文章吗？')) {
+                $.ajax({
+                    url: '/admin/delete/' + id + '/',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(result) {
+                        showAlert(result.msg || '删除成功');
+                        loadArticles(1);
+                    },
+                    error: function() {
+                        showAlert('删除失败', 'error');
+                    }
+                });
+            }
+        }
+        
+        // 保存文章
+        function saveAddNew() {
+            if (!$('#title').val()) {
+                showAlert('请输入标题', 'error');
+                return;
+            }
+            if (!$('#category').val()) {
+                showAlert('请选择分类', 'error');
+                return;
+            }
+            
+            var postURL = '/admin/saveEdit/';
+            if (!$('#id').val()) {
+                postURL = '/admin/saveAddNew/';
+            }
+            
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: postURL,
+                contentType: 'application/json',
+                data: JSON.stringify($('#addNewForm').serializeArray()),
+                success: function(result) {
+                    if (result.msg) {
+                        showAlert(result.msg);
+                        if (result.id) {
+                            $('#id').val(result.id);
+                            $('#labelNew').text('编辑文章 - ' + result.id);
+                        }
+                    }
+                },
+                error: function() {
+                    showAlert('保存失败', 'error');
+                }
+            });
+        }
+        
+        // 保存设置
+        function saveConfig() {
+            if (!isJSON($('#WidgetCategory').val())) {
+                showAlert('分类格式错误', 'error');
+                return;
+            }
+            if (!isJSON($('#WidgetMenu').val())) {
+                showAlert('菜单格式错误', 'error');
+                return;
+            }
+            if (!isJSON($('#WidgetLink').val())) {
+                showAlert('链接格式错误', 'error');
+                return;
+            }
+            
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/admin/saveConfig/',
+                contentType: 'application/json',
+                data: JSON.stringify($('#configForm').serializeArray()),
+                success: function(result) {
+                    showAlert(result.msg || '保存成功');
+                },
+                error: function() {
+                    showAlert('保存失败', 'error');
+                }
+            });
+        }
+        
+        // 导入
+        function importBlog() {
+            if (!isJSON($('#importJson').val())) {
+                showAlert('导入格式错误', 'error');
+                return;
+            }
+            
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/admin/import/',
+                contentType: 'application/json',
+                data: JSON.stringify($('#importForm').serializeArray()),
+                success: function(result) {
+                    showAlert(result.msg || '导入成功');
+                },
+                error: function() {
+                    showAlert('导入失败', 'error');
+                }
+            });
+        }
+        
+        // 发布
+        function publish() {
+            if (!confirm('确定要发布吗？发布将清理所有静态缓存，使修改生效。')) {
+                return;
+            }
+            
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/admin/publish/',
+                success: function(result) {
+                    showAlert(result.msg || '发布成功，请按 Ctrl+F5 强制刷新');
+                },
+                error: function() {
+                    showAlert('发布失败', 'error');
+                }
+            });
+        }
+        
+        // JSON 验证
+        function isJSON(str) {
+            if (typeof str !== 'string') return false;
+            try {
+                var obj = JSON.parse(str);
+                return typeof obj === 'object' && obj !== null;
+            } catch (e) {
                 return false;
             }
         }
-        return false;
-    }
-</script>
- 
-
+        
+        // 点击其他地方关闭下拉菜单
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.user-dropdown').length) {
+                $('#userMenu').removeClass('show');
+            }
+        });
+    </script>
 </body>
-
 </html>
