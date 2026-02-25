@@ -8,7 +8,7 @@
     <title>{{ &title }}</title>
     <meta name="description" content="{{ &OPT.siteDescription }}" />
     <meta name="keywords" content="{{ &keyWords }}" />
-    <link rel="icon" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ico/icon-192.png" />
+    <link rel="icon" href="{{ &OPT.siteFavicon }}" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
@@ -20,7 +20,6 @@
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery-migrate.min.js"></script>
     <script defer="" type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/alpine.min.js"></script>
     <!-- <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ai.js"></script> -->
-    <script src='https://gh.lib.aaqq.site/mustache/4.1.0/mustache.min.js'></script>
     <style>@font-face { font-family: 'HarmonyOS Sans'; src: url(https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/fonts/HarmonyOS_Sans.woff2) format("woff2"); font-style: normal; } body { font-family: -apple-system, 'HarmonyOS Sans', BlinkMacSystemFont, Segoe UI, Roboto, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Source Han Sans CN, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol; }</style>
     <script>window.$ = jQuery;</script>
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/highlight.js/10.3.2/styles/tomorrow-night-bright.min.css">
@@ -73,7 +72,7 @@
                 <div class="post-meta d-flex align-items-center">
                   <div class="d-flex align-items-center justify-content-between">
                       <div class="flex-avatar w-40 me-2">
-                        <img alt="" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" class="avatar avatar-40 photo nc-no-lazy" height="40" width="40" decoding="async" />
+                        <img alt="" src="{{ &OPT.siteAuthorImage }}" class="avatar avatar-40 photo nc-no-lazy" height="40" width="40" decoding="async" />
                         <div class="avatar-badge" flow="up"></div>
                       </div>
                       <div>Admin
@@ -94,10 +93,10 @@
               </div>
 
               <div class="post-author-meta rounded-1 mt-4">
-                <div class="author-meta-bg" style="background-image:url('https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/cate10.png')"></div>
+                <div class="author-meta-bg" style="background-image:url('{{ &OPT.siteDefaultCover }}')"></div>
                 <div class="author-meta-inner d-flex flex-fill p-3 p-md-4">
                   <a href="https://www.vpshu.com/" class="flex-avatar w-56 ">
-                    <img alt="" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" srcset="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" class="avatar avatar-56 photo" height="56" width="56" decoding="async" />
+                    <img alt="" src="{{ &OPT.siteAuthorImage }}" srcset="{{ &OPT.siteAuthorImage }}" class="avatar avatar-56 photo" height="56" width="56" decoding="async" />
                     <div class="avatar-badge" tooltip="站长" flow="up"></div>
                     <div class="avatar-badge" tooltip="站长" flow="up"></div>
                   </a>
@@ -202,7 +201,7 @@
           <div class="mobile-sidebar-author-cover">
             <div class="media media-2x1">
               <div class="media-content">
-                <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/cate10.png" decoding="async" loading="lazy" /></div>
+                <img src="{{ &OPT.siteDefaultCover }}" decoding="async" loading="lazy" /></div>
               <div class="media-overlay overlay-top p-2">
                 <div class="flex-fill"></div>
                 <button type="button" class="btn btn-text btn-icon switch-dark-mode">
