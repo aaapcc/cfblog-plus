@@ -620,16 +620,26 @@
                     </div>
                     
                     <!-- 全部评论列表 -->
-                    <div class="tab-pane" id="allComments">
-                        <div class="form-group" style="margin-bottom: 15px;">
-                            <select class="form-control" id="articleSelector" style="width: 300px;">
-                                <option value="">选择文章查看评论</option>
-                            </select>
-                        </div>
-                        <div id="articleCommentsList" style="max-height: 600px; overflow-y: auto;">
-                            <p class="text-muted text-center">请先选择一篇文章</p>
-                        </div>
-                    </div>
+					<div class="tab-pane" id="allComments">
+					    <div class="table-container">
+					        <table class="table" id="allCommentsTable">
+					            <thead>
+					                <tr>
+					                    <th>文章</th>
+					                    <th>昵称</th>
+					                    <th>邮箱</th>
+					                    <th>评论内容</th>
+					                    <th>时间</th>
+					                    <th>状态</th>
+					                    <th>操作</th>
+					                </tr>
+					            </thead>
+					            <tbody id="allCommentsList">
+					                <tr><td colspan="7" class="text-center">加载中...</td></tr>
+					            </tbody>
+					        </table>
+					    </div>
+					</div>
                 </div>
             </div>
         </div>
