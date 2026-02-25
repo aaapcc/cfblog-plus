@@ -114,6 +114,65 @@
               </div>
             </div>
 
+            <!-- 评论 -->
+            <div id="comments" class="comments card mt-3">
+              <div class="card-header">
+                <h2 class="d-flex align-items-center text-lg">
+                  <i class="fw-normal text-primary iconfont icon-pinglun1 me-1"></i>评论 (<span class="comments-count">0</span>)</h2>
+              </div>
+              <div class="card-body">
+                <div id="respond" class="comment-respond">
+                  <form id="commentForm" class="comment-form" onsubmit="return submitComment(event)">
+                    <input type="hidden" id="parentId" value="0">
+                    <div class="comment-avatar flex-avatar w-48 ">
+                      <img src="https://img.vpsr.com.cnhttps://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/images/default-avatar.png" /></div>
+                    <div class="comment-body">
+                      <div class="comment-input mb-3">
+                        <div class="mb-3">
+                          <input class="form-control" id="author" placeholder="昵称" name="author" type="text" value="" required="required" />】
+                        </div>
+                        <div class="">
+                          <div class="eac-input-wrap">
+                            <input id="email" class="form-control" name="mail" placeholder="邮箱（用于回复通知）" type="email" value="" required="required" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <textarea class="form-control" id="content" rows="3" placeholder="说点什么..." required></textarea>
+                      </div>
+                      <div class="form-submit text-end">
+                        <button type="submit" class="btn btn-primary">提交评论</button>
+                      </div>
+                    </div>
+                    <span class="text-muted ms-3" id="commentMsg"></span>
+                  </form>
+                </div>
+                <!-- 评论内容 Begin -->
+                <ul class="comment-list mt-2 mt-md-3 mt-md-5">
+                  <ol class="comment-list" id="commentsList">
+                    <li id="comment-392" class="comment">
+                      <article id="div-comment-392" class="comment-body">
+                        <div class="comment-avatar flex-avatar disabled me-2 me-md-3">
+                          <img class="avatar" loading="lazy" src="https://weavatar.com/avatar/109a2c584bd9fe6541503d8a58413bc7?s=128&amp;r=G&amp;d=mm" alt="小夜博客" width="128" height="128">
+                        </div>
+                        <div class="comment-content">
+                          <div>
+                            <div class="comment-chat bg-light">
+                              <div class="comment-info d-flex flex-fill align-items-center mb-1">小夜博客</div>
+                              <div class="comment-text text-secondary">
+                                <p>声明 不是我买的</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">2022-09-19 03:04</div></div>
+                      </article>
+                    </li>
+                  </ol>
+                </ul>
+                <!-- 评论内容 End -->
+              </div>
+            </div>
+
           </div>
           <div class="sidebar-post col-xl-4 d-none d-xl-block ">
             
