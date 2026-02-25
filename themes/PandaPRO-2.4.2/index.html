@@ -65,18 +65,9 @@
               
               {{ #articleList }}
               <div class="list-item block" id="post-{{&id}}">
-                <div class="media media-3x2 custom-hover col-4 col-lg-3 article-thumb" 
-                     data-img="{{ &img }}" 
-                     data-content="{{ &contentHtml }}"
-                     data-article-id="{{ &id }}"
-                     data-url="{{ &url }}"
-                     data-title="{{ &title }}"
-                     style="{{ ^img }}display: none;{{ /img }}">
-                  <a href="{{ &url }}" class="media-content">
-                    <img src="{{ &img }}" alt="{{ &title }}" class="thumb-img" />
-                  </a>
+                <div class="media media-3x2 custom-hover col-4 col-lg-3">
+                  <a href="{{ &url }}" class="media-content"><img src="{{ &img }}" alt="{{ &title }}" /></a>
                 </div>
-                <div class="list-content {{ ^img }}col-12{{ /img }} {{ #img }}col-8 col-lg-9{{ /img }}">
                 <div class="list-content">
                   <div class="list-body">
                     <h2 class="list-title font-title text-lg">
@@ -104,7 +95,7 @@
             </div>
             <div class="row mt-3">
               <div class="col-6 text-start">
-                <x class="btn btn-sm btn-light">{{ #currentPage }}{{ currentPage }}/{{ totalPages }}页{{ /currentPage }}, {{ #total }}共{{ total }}篇{{ /total }}</x>
+                <x class="btn btn-sm btn-light">{{ #currentPage }}第 {{ currentPage }} 页 / 共 {{ totalPages }} 页{{ /currentPage }}, {{ #total }}共{{ total }}篇{{ /total }}</x>
               </div>
               <div class="col-6 text-end">
                 {{ #pageNewer }}
@@ -254,48 +245,6 @@
     <script type="text/javascript">
     window.addEventListener('load',function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}});
     </script>
-    <script>
-      (function() {
-        // 处理所有可能没有缩略图的文章
-        document.querySelectorAll('.article-thumb').forEach(function(thumbDiv) {
-          var img = thumbDiv.dataset.img;
-          var contentHtml = thumbDiv.dataset.content;
-          var imgElement = thumbDiv.querySelector('.thumb-img');
-          
-          // 如果没有自定义缩略图或为空
-          if (!img || img === '') {
-            // 从内容中提取第一张图片
-            var tempDiv = document.createElement('div');
-            tempDiv.innerHTML = contentHtml;
-            var firstImg = tempDiv.querySelector('img');
-            
-            if (firstImg && firstImg.src) {
-              // 找到图片，显示缩略图区域并设置图片
-              imgElement.src = firstImg.src;
-              thumbDiv.style.display = 'block';
-              
-              // 同时调整内容区域的列宽
-              var listContent = thumbDiv.nextElementSibling;
-              if (listContent && listContent.classList.contains('list-content')) {
-                listContent.className = listContent.className.replace('col-12', 'col-8 col-lg-9');
-              }
-            } else {
-              // 没有图片，确保缩略图隐藏
-              thumbDiv.style.display = 'none';
-              
-              // 确保内容区域占满
-              var listContent = thumbDiv.nextElementSibling;
-              if (listContent && listContent.classList.contains('list-content')) {
-                listContent.className = listContent.className.replace('col-8 col-lg-9', 'col-12');
-              }
-            }
-          } else {
-            // 有自定义缩略图，确保显示
-            thumbDiv.style.display = 'block';
-          }
-        });
-      })();
-      </script>
   </body>
 
 </html>
