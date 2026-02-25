@@ -1043,192 +1043,226 @@
         }
     </script>
     <script type="text/javascript">
-    	// ========== 评论管理功能 ==========
-        
-        // 加载待审核评论
-        function loadPendingComments() {
-            $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
-            
-            fetch('/api/admin/comments/pending')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.comments.length === 0) {
-                            $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">暂无待审核评论</td></tr>');
-                            $('#pendingCount').text('0');
-                            $('#pendingTabCount').text('');
-                            $('#pendingCommentsCount').text('');
-                            return;
-                        }
-                        
-                        let html = '';
-                        data.comments.forEach(c => {
-                            html += `
-                                <tr id="pending-comment-${c.id}">
-                                    <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
-                                    <td>${c.author}</td>
-                                    <td>${c.email || '-'}</td>
-                                    <td>${c.content.replace(/\n/g, '<br>')}</td>
-                                    <td>${c.date}</td>
-                                    <td>
-                                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
-                                            <i class="fa fa-check"></i> 通过
-                                        </button>
-                                        <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        
-                        $('#pendingCommentsList').html(html);
-                        $('#pendingCount').text(data.comments.length);
-                        $('#pendingTabCount').text(data.comments.length);
-                        $('#pendingCommentsCount').text(data.comments.length);
-                    } else {
-                        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
-                    }
-                })
-                .catch(() => {
-                    $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
-                });
-        }
-        
-        // 审核评论
-        function reviewComment(articleId, commentId, action) {
-            let actionText = action === 'approve' ? '通过' : '删除';
-            if (!confirm(`确定要${actionText}这条评论吗？`)) return;
-            
-            fetch('/api/admin/comments/review', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ articleId, commentId, action })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showAlert(data.message, 'success');
-                    $(`#pending-comment-${commentId}`).fadeOut(300, function() {
-                        $(this).remove();
-                        loadPendingComments(); // 重新加载计数
-                    });
-                    // 如果是在全部评论列表里，也移除对应的行
-                    $(`#all-comment-${commentId}`).fadeOut(300, function() {
-                        $(this).remove();
-                    });
-                } else {
-                    showAlert(data.message, 'error');
-                }
-            })
-            .catch(() => {
-                showAlert('操作失败', 'error');
-            });
-        }
-        
-        // 加载全部评论
-        function loadAllComments() {
-            $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载中...</td></tr>');
-            
-            // 如果没有文章数据，先加载文章列表
-            if (!allArticles || allArticles.length === 0) {
-                $('#allCommentsList').html('<tr><td colspan="7" class="text-center">请先刷新页面</td></tr>');
-                return;
-            }
-            
-            let allComments = [];
-            let processed = 0;
-            
-            // 遍历每一篇文章，获取它的评论
-            allArticles.forEach(article => {
-                fetch(`/api/admin/comments/article/${article.id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success && data.comments && data.comments.length) {
-                            // 给每条评论加上文章标题
-                            data.comments.forEach(comment => {
-                                allComments.push({
-                                    ...comment,
-                                    articleTitle: article.title,
-                                    articleUrl: `/article/${article.id}.html`
-                                });
-                            });
-                        }
-                    })
-                    .catch(err => console.log('获取评论失败:', err))
-                    .finally(() => {
-                        processed++;
-                        // 所有文章都处理完了，渲染评论列表
-                        if (processed === allArticles.length) {
-                            renderAllComments(allComments);
-                        }
-                    });
-            });
-        }
-        
-        // 渲染全部评论
-        function renderAllComments(comments) {
-            if (comments.length === 0) {
-                $('#allCommentsList').html('<tr><td colspan="7" class="text-center">暂无评论</td></tr>');
-                return;
-            }
-            
-            // 按时间倒序（最新的在前面）
-            comments.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-            
-            let html = '';
-            comments.forEach(c => {
-                let statusText = c.approved ? '已审核' : '待审核';
-                let statusClass = c.approved ? 'label-success' : 'label-warning';
-                let actionButtons = '';
-                
-                if (!c.approved) {
-                    actionButtons += `
-                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
-                            <i class="fa fa-check"></i> 通过
-                        </button>
-                    `;
-                }
-                actionButtons += `
-                    <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
-                        <i class="fa fa-trash"></i> 删除
-                    </button>
-                `;
-                
-                html += `
-                    <tr id="all-comment-${c.id}">
-                        <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
-                        <td>${c.author}</td>
-                        <td>${c.email || '-'}</td>
-                        <td>${c.content.replace(/\n/g, '<br>')}</td>
-                        <td>${c.date}</td>
-                        <td><span class="label ${statusClass}">${statusText}</span></td>
-                        <td>${actionButtons}</td>
-                    </tr>
-                `;
-            });
-            
-            $('#allCommentsList').html(html);
-        }
-        
-        // 初始化评论管理的事件
-        function initCommentManagement() {
-            // 当切换到评论管理标签页时加载待审核
-            $('.menu-item[data-target="#comments"]').click(function() {
-                loadPendingComments();
-            });
-            
-            // 当切换到全部评论标签页时加载全部评论
-            $('a[href="#allComments"]').on('shown.bs.tab', function() {
-                loadAllComments();
-            });
-        }
-        
-        // 在页面加载完成后初始化评论管理
-        $(function() {
-            // 原有的代码后面添加
-            initCommentManagement();
-        });
-    </script>
+	    // ========== 评论管理功能 ==========
+	    
+	    // 加载待审核评论
+	    function loadPendingComments() {
+	        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
+	        
+	        fetch('/api/admin/comments/pending')
+	            .then(res => res.json())
+	            .then(data => {
+	                if (data.success) {
+	                    if (data.comments.length === 0) {
+	                        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">暂无待审核评论</td></tr>');
+	                        $('#pendingCount').text('0');
+	                        $('#pendingTabCount').text('');
+	                        $('#pendingCommentsCount').text('');
+	                    } else {
+	                        let html = '';
+	                        data.comments.forEach(c => {
+	                            html += `
+	                                <tr id="pending-comment-${c.id}">
+	                                    <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
+	                                    <td>${c.author}</td>
+	                                    <td>${c.email || '-'}</td>
+	                                    <td>${c.content.replace(/\n/g, '<br>')}</td>
+	                                    <td>${c.date}</td>
+	                                    <td>
+	                                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
+	                                            <i class="fa fa-check"></i> 通过
+	                                        </button>
+	                                        <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
+	                                            <i class="fa fa-trash"></i> 删除
+	                                        </button>
+	                                    </td>
+	                                </tr>
+	                            `;
+	                        });
+	                        
+	                        $('#pendingCommentsList').html(html);
+	                        $('#pendingCount').text(data.comments.length);
+	                        $('#pendingTabCount').text(data.comments.length);
+	                        $('#pendingCommentsCount').text(data.comments.length);
+	                    }
+	                    
+	                    // 加载完待审核后，再加载一次全部评论来更新统计数字
+	                    loadCommentStats();
+	                } else {
+	                    $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
+	                }
+	            })
+	            .catch(() => {
+	                $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
+	            });
+	    }
+	    
+	    // 审核评论
+	    function reviewComment(articleId, commentId, action) {
+	        let actionText = action === 'approve' ? '通过' : '删除';
+	        if (!confirm(`确定要${actionText}这条评论吗？`)) return;
+	        
+	        fetch('/api/admin/comments/review', {
+	            method: 'POST',
+	            headers: { 'Content-Type': 'application/json' },
+	            body: JSON.stringify({ articleId, commentId, action })
+	        })
+	        .then(res => res.json())
+	        .then(data => {
+	            if (data.success) {
+	                showAlert(data.message, 'success');
+	                $(`#pending-comment-${commentId}`).fadeOut(300, function() {
+	                    $(this).remove();
+	                    loadPendingComments(); // 重新加载计数
+	                });
+	                $(`#all-comment-${commentId}`).fadeOut(300, function() {
+	                    $(this).remove();
+	                });
+	            } else {
+	                showAlert(data.message, 'error');
+	            }
+	        })
+	        .catch(() => {
+	            showAlert('操作失败', 'error');
+	        });
+	    }
+	    
+	    // 加载评论统计数字
+	    function loadCommentStats() {
+	        if (!allArticles || allArticles.length === 0) return;
+	        
+	        let pendingCount = 0;
+	        let approvedCount = 0;
+	        let spamCount = 0;
+	        let processed = 0;
+	        
+	        allArticles.forEach(article => {
+	            fetch(`/api/admin/comments/article/${article.id}`)
+	                .then(res => res.json())
+	                .then(data => {
+	                    if (data.success && data.comments && data.comments.length) {
+	                        data.comments.forEach(comment => {
+	                            if (comment.approved) {
+	                                approvedCount++;
+	                            } else {
+	                                pendingCount++;
+	                            }
+	                        });
+	                    }
+	                })
+	                .catch(err => console.log('获取评论失败:', err))
+	                .finally(() => {
+	                    processed++;
+	                    if (processed === allArticles.length) {
+	                        $('#pendingCount').text(pendingCount);
+	                        $('#approvedCount').text(approvedCount);
+	                        $('#spamCount').text(spamCount);
+	                        $('#pendingTabCount').text(pendingCount);
+	                        $('#pendingCommentsCount').text(pendingCount);
+	                    }
+	                });
+	        });
+	    }
+	    
+	    // 加载全部评论
+	    function loadAllComments() {
+	        $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载中...</td></tr>');
+	        
+	        if (!allArticles || allArticles.length === 0) {
+	            $('#allCommentsList').html('<tr><td colspan="7" class="text-center">请先刷新页面</td></tr>');
+	            return;
+	        }
+	        
+	        let allComments = [];
+	        let processed = 0;
+	        
+	        allArticles.forEach(article => {
+	            fetch(`/api/admin/comments/article/${article.id}`)
+	                .then(res => res.json())
+	                .then(data => {
+	                    if (data.success && data.comments && data.comments.length) {
+	                        data.comments.forEach(comment => {
+	                            allComments.push({
+	                                ...comment,
+	                                articleTitle: article.title,
+	                                articleUrl: `/article/${article.id}.html`
+	                            });
+	                        });
+	                    }
+	                })
+	                .catch(err => console.log('获取评论失败:', err))
+	                .finally(() => {
+	                    processed++;
+	                    if (processed === allArticles.length) {
+	                        renderAllComments(allComments);
+	                        loadCommentStats();
+	                    }
+	                });
+	        });
+	    }
+	    
+	    // 渲染全部评论
+	    function renderAllComments(comments) {
+	        if (comments.length === 0) {
+	            $('#allCommentsList').html('<tr><td colspan="7" class="text-center">暂无评论</td></tr>');
+	            return;
+	        }
+	        
+	        // 按时间倒序（最新的在前面）
+	        comments.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+	        
+	        let html = '';
+	        comments.forEach(c => {
+	            let statusText = c.approved ? '已审核' : '待审核';
+	            let statusClass = c.approved ? 'label-success' : 'label-warning';
+	            let actionButtons = '';
+	            
+	            if (!c.approved) {
+	                actionButtons += `
+	                    <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
+	                        <i class="fa fa-check"></i> 通过
+	                    </button>
+	                `;
+	            }
+	            actionButtons += `
+	                <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
+	                    <i class="fa fa-trash"></i> 删除
+	                </button>
+	            `;
+	            
+	            html += `
+	                <tr id="all-comment-${c.id}">
+	                    <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
+	                    <td>${c.author}</td>
+	                    <td>${c.email || '-'}</td>
+	                    <td>${c.content.replace(/\n/g, '<br>')}</td>
+	                    <td>${c.date}</td>
+	                    <td><span class="label ${statusClass}">${statusText}</span></td>
+	                    <td>${actionButtons}</td>
+	                </tr>
+	            `;
+	        });
+	        
+	        $('#allCommentsList').html(html);
+	    }
+	    
+	    // 初始化评论管理的事件
+	    function initCommentManagement() {
+	        // 当切换到评论管理标签页时加载待审核
+	        $('.menu-item[data-target="#comments"]').click(function() {
+	            loadPendingComments();
+	        });
+	        
+	        // 当切换到全部评论标签页时加载全部评论
+	        $('a[href="#allComments"]').on('shown.bs.tab', function() {
+	            loadAllComments();
+	        });
+	    }
+	    
+	    // 在页面加载完成后初始化评论管理
+	    $(function() {
+	        initCommentManagement();
+	    });
+	</script>
 </body>
 </html>
