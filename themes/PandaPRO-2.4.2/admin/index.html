@@ -448,6 +448,8 @@
         var menuJson = <!--{menuJson}--> || [];
         var linkJson = <!--{linkJson}--> || [];
         var allArticles = []; // 存储所有文章数据
+        var currentPage = 1;
+        var hasMore = true;
         
         $(function() {
             // 初始化编辑器
@@ -513,25 +515,86 @@
             });
         });
         
-        // 加载所有数据
+        // 加载所有数据 - 修改这里，获取所有页的数据
         function loadAllData() {
+            // 先获取第一页
             $.ajax({
                 url: '/admin/getList/1/',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    allArticles = data || [];
-                    
-                    // 更新文章列表
-                    displayArticles(allArticles.slice(0, 20));
-                    
-                    // 更新统计信息
-                    updateStats();
-                    
-                    // 更新最近文章
-                    updateRecentArticles();
+                    if (data && data.length) {
+                        allArticles = data;
+                        
+                        // 如果返回的数据长度等于20，说明可能还有更多，继续获取第二页
+                        if (data.length === 20) {
+                            loadMorePages(2);
+                        } else {
+                            // 数据加载完成，更新界面
+                            afterDataLoaded();
+                        }
+                    } else {
+                        allArticles = [];
+                        afterDataLoaded();
+                    }
+                },
+                error: function() {
+                    allArticles = [];
+                    afterDataLoaded();
                 }
             });
+        }
+        
+        // 递归加载更多页
+        function loadMorePages(page) {
+            $.ajax({
+                url: '/admin/getList/' + page + '/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.length) {
+                        // 合并数据
+                        allArticles = allArticles.concat(data);
+                        
+                        // 如果这一页也满了，继续加载下一页
+                        if (data.length === 20) {
+                            loadMorePages(page + 1);
+                        } else {
+                            // 所有页加载完成
+                            afterDataLoaded();
+                        }
+                    } else {
+                        // 没有更多数据了
+                        afterDataLoaded();
+                    }
+                },
+                error: function() {
+                    // 出错时也结束加载
+                    afterDataLoaded();
+                }
+            });
+        }
+        
+        // 数据加载完成后的处理
+        function afterDataLoaded() {
+            console.log('总文章数:', allArticles.length);
+            
+            // 更新文章列表（只显示第一页）
+            displayArticles(allArticles.slice(0, 20));
+            
+            // 更新统计信息
+            updateStats();
+            
+            // 更新最近文章
+            updateRecentArticles();
+            
+            // 判断是否还有更多
+            hasMore = allArticles.length > 20;
+            if (!hasMore) {
+                $('#loadmore').hide();
+            } else {
+                $('#loadmore').show();
+            }
         }
         
         // 显示文章列表
@@ -555,7 +618,7 @@
                     '</tr>');
                 });
                 
-                $('#articleCount').text(articles.length);
+                $('#articleCount').text(allArticles.length);
             } else {
                 tbody.append('<tr><td colspan="7" style="text-align: center;">暂无文章</td></tr>');
                 $('#articleCount').text('0');
@@ -632,6 +695,11 @@
                         '</td>' +
                     '</tr>');
                 });
+            }
+            
+            // 如果已经加载完所有文章，隐藏加载更多按钮
+            if ($('#articleList tbody tr').length >= allArticles.length) {
+                $('#loadmore').hide();
             }
         });
         
