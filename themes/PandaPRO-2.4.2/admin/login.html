@@ -203,6 +203,7 @@
             }
             
             $('#loading').css('display', 'flex');
+            $('#loginError').hide();
             
             // 发送登录请求
             $.ajax({
@@ -214,10 +215,11 @@
                 }),
                 contentType: 'application/json',
                 success: function(response) {
+                    $('#loading').hide();
                     if (response.success) {
-                        window.location.href = '/admin/';
+                        // 登录成功，跳转到后台首页
+                        window.location.href = response.redirect || '/admin/';
                     } else {
-                        $('#loading').hide();
                         $('#loginError').text(response.message || '登录失败').show();
                     }
                 },
