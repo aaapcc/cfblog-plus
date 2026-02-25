@@ -7,13 +7,19 @@
     <title>{{ &title }}</title>
     <meta name="description" content="{{ &OPT.siteDescription }}" />
     <meta name="keywords" content="{{ &keyWords }}" />
-    <link rel="icon" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ico/icon-192.png" />
+    <link rel="icon" href="{{ &OPT.siteFavicon }}" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/style.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/swiper/swiper-bundle.min.css" type="text/css" media="all" />
-    <!-- 搜索结果页自定义样式 -->
+    <!-- <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ai.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/o.css" type="text/css" media="all" /> -->
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery-migrate.min.js"></script>
+    <script defer="" type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/alpine.min.js"></script>
+    <!-- <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ai.js"></script> -->
+    <style>@font-face { font-family: 'HarmonyOS Sans'; src: url(https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/fonts/HarmonyOS_Sans.woff2) format("woff2"); font-style: normal; } body { font-family: -apple-system, 'HarmonyOS Sans', BlinkMacSystemFont, Segoe UI, Roboto, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Source Han Sans CN, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol; }</style>
     <style>
       /* 搜索结果头部样式 */
       .search-header { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #007bff; }
@@ -38,14 +44,7 @@
       /* 分页样式优化 */
       .pagination-info { display: inline-block; padding: 8px 16px; background: #f8f9fa; border-radius: 20px; color: #6c757d; }
     </style>
-    
-    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jquery-migrate.min.js"></script>
-    <script defer="" type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/alpine.min.js"></script>
-    <script src='https://gh.lib.aaqq.site/mustache/4.1.0/mustache.min.js'></script>
     <script>window.$ = jQuery;</script>
-    
-    <!-- 搜索结果页脚本 -->
     <script>
       $(document).ready(function() {
         // 为搜索结果中的关键词添加高亮
@@ -70,7 +69,6 @@
         }
       });
     </script>
-    
     {{ &OPT.codeBeforHead }}
   </head>
   
@@ -82,7 +80,7 @@
         </h1>
         <div class="collapse navbar-collapse">
           <ul id="menu-%e5%af%bc%e8%88%aa" class="navbar-site navbar-nav me-auto ms-lg-5">
-            <li class="menu-item"><a href="/">首页</a></li>
+            <li class="menu-item current-menu-item"><a href="/">首页</a></li>
             {{ #widgetCategoryList }}
             <li class="menu-item"><a href="/category/{{&.}}">{{&.}}</a></li>
             {{ /widgetCategoryList }}
@@ -106,12 +104,10 @@
         </ul>
       </div>
     </header>
-    
     <main class="site-main">
       <div class="container">
         <div class="row gx-xl-4">
           <div class="content-wrapper col-xl-8">
-            
             <!-- 搜索结果头部 - 新增 -->
             {{ #keyword }}
             <div class="search-header">
@@ -125,7 +121,7 @@
               </div>
             </div>
             {{ /keyword }}
-            
+
             <!-- 搜索结果列表 -->
             <div class="list-home list-grid list-grid-padding">
               
@@ -204,62 +200,44 @@
               {{ /articles.length }}
 
             </div>
-            
+
             <!-- 分页部分 - 优化显示 -->
-            <div class="row mt-4">
-              <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="pagination-info">
-                    {{ #total }}共 {{ total }} 篇{{ /total }}
-                  </div>
-                  <div>
-                    {{ #hasPrev }}
-                    <a class="btn btn-sm btn-primary me-2" href="{{ prevPage }}">
-                      <i class="iconfont icon-arrow-left"></i> 上一页
-                    </a>
-                    {{ /hasPrev }}
-                    
-                    {{ #hasNext }}
-                    <a class="btn btn-sm btn-primary" href="{{ nextPage }}">
-                      下一页 <i class="iconfont icon-arrow-right"></i>
-                    </a>
-                    {{ /hasNext }}
-                  </div>
-                </div>
+            <div class="row mt-3">
+              <div class="col-6 text-start">
+                <x class="btn btn-sm btn-light">{{ #total }}共 {{ total }} 篇{{ /total }}</x>
+              </div>
+              <div class="col-6 text-end">
+                {{ #hasPrev }}
+                <a class="prev" href="{{ &url }}"><x class="btn btn-sm btn-primary me-3"><i class="iconfont icon-arrow-left"></i> 上一页</x></a>
+                {{ /hasPrev }}
+                {{ #hasNext }}
+                <a class="next" title="" href="{{ &url }}"><x class="btn btn-sm btn-primary">下一页 <i class="iconfont icon-arrow-right"></i></x></a>
+                {{ /hasNext }}
               </div>
             </div>
           </div>
-          
-          <!-- 侧边栏保持不变 -->
           <div class="sidebar col-xl-4 d-none d-xl-block ">
-            
+
             <div id="sidebar_search" class="widget card">
               <h2 class="widget-header text-md text-dark">网站搜索
-                <div class="widget-border"></div>
-              </h2>
+                <div class="widget-border"></div></h2>
               <form role="search" method="get" id="searchform" action="/search">
-                <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="form-control search-input">
-              </form>
+                <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="form-control search-input"></form>
             </div>
 
             <div id="recommended_posts-2" class="widget card widget_recommended_posts">
               <h2 class="widget-header font-title text-md text-dark">最新文章
-                <div class="widget-border"></div>
-              </h2>
+                <div class="widget-border"></div></h2>
               <div class="list-grid list-grid-padding list-bordered">
                 {{ #widgetRecentlyList }}
                 <div class="list-item">
                   <div class="media media-3x2 col-5">
-                    <a href="{{ &url }}" class="media-content">
-                      <img src="{{ &img }}" alt="{{ &title }}">
-                    </a>
+                    <a href="{{ &url }}" class="media-content"><img src="{{ &img }}" alt="{{ &title }}"></a>
                   </div>
                   <div class="list-content">
                     <div class="list-body">
-                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a>
-                    </div>
-                    <div class="list-footer text-muted text-xs">{{ &createDate10 }}</div>
-                  </div>
+                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a></div>
+                    <div class="list-footer text-muted text-xs ">{{ &createDate10 }}</div></div>
                 </div>
                 {{ /widgetRecentlyList }}
               </div>
@@ -267,8 +245,7 @@
 
             <div id="archives-2" class="widget card widget_archive">
               <h2 class="widget-header text-md text-dark">友情链接
-                <div class="widget-border"></div>
-              </h2>
+                <div class="widget-border"></div></h2>
               <ul class="row px-3">
                 {{ #widgetLinkList }}
                 <li class="col-6"><a href="{{ &url }}" target="_blank">{{ &title }}</a></li>
@@ -279,40 +256,36 @@
         </div>
       </div>
     </main>
-    
     <footer class="site-footer py-3 py-md-4">
       <div class="container">
         <div class="footer-copyright text-center d-md-block text-xs text-muted">
-          Copyright © <span class="dqnianfen"></span> (<script>document.write(host=document.domain)</script>) - Powered by {{ &OPT.siteName }}
+          Copyright © <span class="dqnianfen"><script>window.onload=function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}};</script></span> ( <script language="javascript">host=document.domain;document.write(host)</script>) - Powered by {{ &OPT.siteName }}
         </div>
-      </div>
     </footer>
-    
-    <!-- 返回顶部按钮 -->
     <ul class="scroll-fixed-menu">
       <li id="scrollToTOP" class="scroll-to-top">
         <button class="btn btn-primary btn-icon btn-rounded">
-          <span><i class="iconfont icon-shangmian1"></i></span>
+          <span>
+            <i class="iconfont icon-shangmian1"></i>
+          </span>
         </button>
       </li>
     </ul>
-    
-    <!-- 搜索弹窗 -->
     <div class="search-popup" id="searchModal">
       <div class="search-popup-overlay" id="searchOverlay"></div>
-      <div class="search-popup-inner">
+      <div class="search-popup-inner ">
         <div class="search-popup-content block p-3 p-xl-4">
-          <form role="search" action="/search" method="GET" class="search-popup-form">
+          <form role="search" action="/search" method="GET"  class="search-popup-form">
             <input type="text" name="q" placeholder="请输入搜索关键词" value="{{keyword}}" minlength="{{OPT.searchMinLength}}" class="search-popup-input form-control">
           </form>
         </div>
         <button class="search-popup-close btn btn-link btn-icon btn-rounded bg-white" id="searchHide">
-          <span><i class="iconfont icon-guanbi"></i></span>
+          <span>
+            <i class="iconfont icon-guanbi"></i>
+          </span>
         </button>
       </div>
     </div>
-    
-    <!-- 移动端侧边栏 -->
     <div class="mobile-overlay"></div>
     <div class="mobile-sidebar">
       <div class="mobile-sidebar-inner">
@@ -320,24 +293,28 @@
           <div class="mobile-sidebar-author-cover">
             <div class="media media-2x1">
               <div class="media-content">
-                <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/cate10.png" decoding="async" loading="lazy" />
-              </div>
+                <img src="{{ &OPT.siteDefaultCover }}" decoding="async" loading="lazy" /></div>
               <div class="media-overlay overlay-top p-2">
                 <div class="flex-fill"></div>
                 <button type="button" class="btn btn-text btn-icon switch-dark-mode">
-                  <span class="icon-light-mode"><i class="iconfont icon-night-circle-fill"></i></span>
-                  <span class="icon-dark-mode"><i class="text-warning iconfont icon-night-circle-fill"></i></span>
+                  <span class="icon-light-mode">
+                    <i class="iconfont icon-night-circle-fill "></i>
+                  </span>
+                  <span class="icon-dark-mode">
+                    <i class="text-warning iconfont icon-night-circle-fill "></i>
+                  </span>
                 </button>
                 <button type="button" class="btn btn-text btn-icon text-white sidebar-close">
-                  <span><i class="iconfont icon-guanbi-circle-fill"></i></span>
+                  <span>
+                    <i class="iconfont icon-guanbi-circle-fill"></i>
+                  </span>
                 </button>
               </div>
             </div>
           </div>
           <div class="mobile-sidebar-author-body">
             <div class="mobile-sidebar-author-meta py-4">
-              <a href="#" class="btn btn-primary btn-sm btn-rounded">大全</a>
-            </div>
+              <a href="#" class="btn btn-primary btn-sm btn-rounded">大全</a></div>
           </div>
         </div>
         <div class="mobile-sidebar-menu">
@@ -351,8 +328,6 @@
         <div class="py-5"></div>
       </div>
     </div>
-    
-    <!-- Scripts -->
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/jimu.js"></script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/email-autocomplete/jquery.email-autocomplete.min.js"></script>
@@ -360,57 +335,16 @@
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/theia-sticky-sidebar/theia-sticky-sidebar.min.js"></script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/vanilla-lazyload/lazyload.min.js"></script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/tocbot/tocbot.min.js"></script>
-    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/hooks.min.js"></script>
-    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/i18n.min.js"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/hooks.min.js?ver=2810c76e705dd1a53b18"></script>
+    <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/i18n.min.js?ver=5e580eb46a90c2b997e6"></script>
+    <script type="text/javascript" id="wp-i18n-js-after">wp.i18n.setLocaleData({
+        'text direction\u0004ltr': ['ltr']
+      });</script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/nicetheme.js"></script>
-    
-    <!-- 年份脚本 -->
-    <script>
-      window.addEventListener('load', function() {
-        var currentYear = new Date().getFullYear();
-        var yearElement = document.querySelector('.dqnianfen');
-        if (yearElement) {
-          yearElement.textContent = currentYear;
-        }
-      });
+    <!-- Year -->
+    <script type="text/javascript">
+    window.addEventListener('load',function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}});
     </script>
-    <script>
-      $(document).ready(function() {
-        // 强制所有链接和表单进行完整的页面刷新
-        $('a').each(function() {
-          // 只处理站内链接
-          if (this.hostname === window.location.hostname) {
-            $(this).off('click').on('click', function(e) {
-              // 如果不是新窗口打开
-              if (!e.metaKey && !e.ctrlKey) {
-                e.preventDefault();
-                window.location.href = this.href;
-              }
-            });
-          }
-        });
-        
-        // 强制搜索表单进行完整提交
-        $('#searchform').off('submit').on('submit', function(e) {
-          e.preventDefault();
-          window.location.href = this.action + '?' + $(this).serialize();
-        });
-      });
-    </script>
-    <script>
-      function forceRefresh(form) {
-        // 添加时间戳参数，强制刷新
-        document.getElementById('timeStamp').value = new Date().getTime();
-        return true; // 让表单正常提交
-      }
-
-      // 或者拦截所有可能的路由变化
-      window.addEventListener('popstate', function() {
-        // 当URL变化时，重新加载页面
-        window.location.reload();
-      });
-    </script>
-    
-    {{ &OPT.codeBeforBody }}
   </body>
+
 </html>
