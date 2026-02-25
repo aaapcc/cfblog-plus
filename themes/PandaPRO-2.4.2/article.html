@@ -28,6 +28,12 @@
       pre { padding: 15px; background: #2b303b; border-radius: 5px; border: 0; color: #eee; overflow-x: scroll; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
       pre code{ border-radius: 4px; }
     </style>
+    <style>
+    .comment-item { transition: all 0.2s; }
+    .comment-item:hover { background: #f9f9f9; }
+    .replies { margin-left: 20px; }
+    #commentMsg { font-size: 0.9em; }
+    </style>
     {{ &OPT.codeBeforHead }}
   </head>
   <body>
@@ -164,6 +170,39 @@
         </div>
       </div>
     </main>
+
+
+    <!-- 评论区域 -->
+    <div class="comments-section mt-5">
+      <h3 class="comments-title">评论 <span class="comments-count">0</span></h3>
+      
+      <!-- 评论列表 -->
+      <div class="comments-list" id="commentsList"></div>
+      
+      <!-- 评论表单 -->
+      <div class="comment-form card p-3 mt-4">
+        <h4>发表评论</h4>
+        <form id="commentForm" onsubmit="return submitComment(event)">
+          <input type="hidden" id="parentId" value="0">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <input type="text" class="form-control" id="author" placeholder="昵称 *" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="email" class="form-control" id="email" placeholder="邮箱（用于回复通知）">
+            </div>
+          </div>
+          <div class="mb-3">
+            <textarea class="form-control" id="content" rows="4" placeholder="说点什么..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">提交评论</button>
+          <span class="text-muted ms-3" id="commentMsg"></span>
+        </form>
+      </div>
+    </div>
+
+
+
     <footer class="site-footer py-3 py-md-4">
       <div class="container">
         <div class="footer-copyright text-center d-md-block text-xs text-muted">
@@ -269,6 +308,104 @@
         document.querySelectorAll('pre code').forEach((block) => {
           hljs.highlightBlock(block);
         });
+      }
+    });
+  </script>
+  <script>
+    // 加载评论
+    async function loadComments(articleId) {
+      let res = await fetch(`/api/comments/get/${articleId}`);
+      let data = await res.json();
+      
+      let html = '';
+      data.comments.forEach(comment => {
+        html += renderComment(comment, data.replies[comment.id] || []);
+      });
+      
+      document.getElementById('commentsList').innerHTML = html || '<p class="text-muted">暂无评论，来抢个沙发吧~</p>';
+      document.querySelector('.comments-count').textContent = data.comments.length;
+    }
+
+    // 渲染单条评论
+    function renderComment(comment, replies) {
+      return `
+        <div class="comment-item card mb-3 p-3" id="comment-${comment.id}">
+          <div class="comment-header d-flex justify-content-between">
+            <strong>${comment.author}</strong>
+            <small class="text-muted">${comment.date}</small>
+          </div>
+          <div class="comment-content mt-2">${comment.content.replace(/\n/g, '<br>')}</div>
+          <div class="comment-footer mt-2">
+            <a href="javascript:;" onclick="replyTo('${comment.id}', '${comment.author}')">回复</a>
+          </div>
+          ${replies.length ? `
+            <div class="replies ml-4 pl-3 mt-2" style="border-left: 2px solid #eee;">
+              ${replies.map(r => renderComment(r, [])).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // 回复
+    function replyTo(parentId, author) {
+      document.getElementById('parentId').value = parentId;
+      document.getElementById('content').focus();
+      document.getElementById('commentMsg').innerHTML = `正在回复 ${author}`;
+    }
+
+    // 提交评论
+    async function submitComment(e) {
+      e.preventDefault();
+      
+      let articleId = window.location.pathname.split('/')[2]; // 获取文章ID
+      let btn = e.target.querySelector('button[type="submit"]');
+      let msgEl = document.getElementById('commentMsg');
+      
+      btn.disabled = true;
+      msgEl.innerHTML = '提交中...';
+      
+      try {
+        let res = await fetch(`/api/comments/post/${articleId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            author: document.getElementById('author').value,
+            email: document.getElementById('email').value,
+            content: document.getElementById('content').value,
+            parentId: document.getElementById('parentId').value
+          })
+        });
+        
+        let data = await res.json();
+        
+        if (data.success) {
+          msgEl.innerHTML = data.message;
+          if (!data.needReview) {
+            // 不需要审核，刷新评论
+            loadComments(articleId);
+            e.target.reset();
+            document.getElementById('parentId').value = '0';
+          } else {
+            // 需要审核，清空表单但提示等待
+            document.getElementById('content').value = '';
+            document.getElementById('parentId').value = '0';
+          }
+        } else {
+          msgEl.innerHTML = data.message;
+        }
+      } catch (err) {
+        msgEl.innerHTML = '提交失败，请重试';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // 页面加载时加载评论
+    document.addEventListener('DOMContentLoaded', function() {
+      let articleId = window.location.pathname.split('/')[2];
+      if (articleId) {
+        loadComments(articleId);
       }
     });
   </script>
