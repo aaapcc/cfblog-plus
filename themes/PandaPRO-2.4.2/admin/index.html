@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
     
     <style>
-        /* 原来的完整美化样式 - 完全保留 */
+        /* 基础布局 - 完全不影响编辑器 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fb; }
         
@@ -19,8 +19,7 @@
         .sidebar {
             position: fixed; left: 0; top: 0; bottom: 0; width: 260px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            z-index: 1000;
+            color: white; z-index: 1000;
         }
         
         .sidebar-header {
@@ -33,65 +32,40 @@
             border: 2px solid rgba(255,255,255,0.3); margin-bottom: 10px;
         }
         
-        .sidebar-header h3 { font-size: 16px; font-weight: 300; margin: 0; }
+        .sidebar-header h3 { font-size: 16px; margin: 0; }
         
         .sidebar-menu { padding: 20px 0; }
         
         .menu-item {
             padding: 12px 25px; cursor: pointer; display: flex; align-items: center;
             color: rgba(255,255,255,0.8); border-left: 3px solid transparent;
-            transition: all 0.3s;
         }
         
-        .menu-item:hover { background: rgba(255,255,255,0.1); color: white; }
+        .menu-item:hover { background: rgba(255,255,255,0.1); }
         .menu-item.active {
-            background: rgba(255,255,255,0.15); color: white;
+            background: rgba(255,255,255,0.15);
             border-left-color: #ffd700;
         }
         
         .menu-item i { width: 24px; margin-right: 10px; }
-        .menu-item .badge {
-            background: #ffd700; color: #333; margin-left: auto;
-            font-size: 11px; padding: 2px 6px; border-radius: 10px;
-        }
         
         /* 主内容区 */
         .main-content { margin-left: 260px; padding: 20px; }
         
         /* 顶部导航 */
         .top-nav {
-            background: white; border-radius: 10px; padding: 15px 25px;
-            margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex; align-items: center; justify-content: space-between;
+            background: white; border-radius: 5px; padding: 15px 25px;
+            margin-bottom: 20px; display: flex; align-items: center;
+            justify-content: space-between;
         }
         
-        .page-title { font-size: 18px; color: #333; }
-        .page-title i { color: #667eea; margin-right: 10px; }
-        
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        .user-avatar {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: bold; cursor: pointer;
-        }
-        .user-dropdown { position: relative; }
-        .dropdown-menu {
-            position: absolute; right: 0; top: 50px; background: white;
-            border-radius: 5px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            width: 150px; display: none; z-index: 1000;
-        }
-        .dropdown-menu.show { display: block; }
-        .dropdown-menu a {
-            padding: 10px 15px; display: block; color: #333;
-            text-decoration: none; transition: all 0.3s;
-        }
-        .dropdown-menu a:hover { background: #f5f7fb; color: #667eea; }
+        .page-title { font-size: 18px; }
+        .page-title i { margin-right: 8px; color: #667eea; }
         
         /* 卡片 */
         .card {
-            background: white; border-radius: 10px; padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
+            background: white; border-radius: 5px; padding: 20px;
+            margin-bottom: 20px;
         }
         
         .card-header {
@@ -106,62 +80,80 @@
         /* 统计卡片 */
         .stats-grid {
             display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 20px; margin-bottom: 25px;
+            gap: 20px; margin-bottom: 20px;
         }
+        
         .stat-card {
-            background: white; border-radius: 10px; padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: white; border-radius: 5px; padding: 20px;
             display: flex; align-items: center; gap: 15px;
         }
+        
         .stat-icon {
-            width: 50px; height: 50px; border-radius: 10px;
+            width: 50px; height: 50px; border-radius: 5px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex; align-items: center; justify-content: center;
             color: white; font-size: 24px;
         }
+        
         .stat-info h4 {
-            font-size: 14px; color: #999; margin: 0 0 5px 0; font-weight: 400;
+            font-size: 14px; color: #999; margin: 0 0 5px;
+            font-weight: 400;
         }
+        
         .stat-info .stat-number {
-            font-size: 24px; font-weight: 600; color: #333;
+            font-size: 24px; font-weight: 600;
         }
         
         /* 表格 */
         .table-container { overflow-x: auto; }
-        .table-container table { width: 100%; border-collapse: collapse; }
-        .table-container th {
+        table { width: 100%; border-collapse: collapse; }
+        th {
             background: #f8f9fa; padding: 10px; font-weight: 500;
-            color: #555; font-size: 13px; border-bottom: 2px solid #eee;
+            color: #555; border-bottom: 2px solid #eee;
         }
-        .table-container td {
+        td {
             padding: 10px; border-bottom: 1px solid #eee;
-            color: #666; font-size: 13px;
         }
-        .table-container tr:hover { background: #f8f9fa; }
         
         /* 按钮 */
         .btn {
             padding: 6px 15px; border-radius: 5px; font-size: 13px;
             border: none; cursor: pointer; display: inline-flex;
-            align-items: center; gap: 5px; transition: all 0.3s;
+            align-items: center; gap: 5px;
         }
         .btn-primary { background: #667eea; color: white; }
-        .btn-primary:hover { background: #5a6fd8; }
         .btn-default { background: #f0f2f5; color: #666; }
-        .btn-default:hover { background: #e4e6e9; }
         .btn-danger { background: #f44336; color: white; }
-        .btn-danger:hover { background: #d32f2f; }
         
-        /* 表单 */
+        /* 表单 - 只对直接子元素生效 */
         .form-group { margin-bottom: 15px; }
         .form-group label {
-            display: block; margin-bottom: 5px; color: #555;
-            font-size: 13px; font-weight: 500;
+            display: block; margin-bottom: 5px; font-weight: 500;
         }
         .form-control {
             width: 100%; padding: 8px 12px; border: 1px solid #ddd;
-            border-radius: 5px; font-size: 13px;
+            border-radius: 5px;
         }
+        
+        /* 用户菜单 */
+        .user-info { position: relative; }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer;
+        }
+        .dropdown-menu {
+            display: none; position: absolute; right: 0; top: 50px;
+            background: white; border-radius: 5px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 150px; z-index: 1000;
+        }
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a {
+            padding: 10px 15px; display: block; color: #333;
+            text-decoration: none;
+        }
+        .dropdown-menu a:hover { background: #f5f7fb; }
         
         /* 标签页 */
         .tab-pane { display: none; }
@@ -170,27 +162,18 @@
         /* 提示框 */
         .alert {
             position: fixed; top: 20px; right: 20px; padding: 12px 20px;
-            border-radius: 5px; color: white; z-index: 9999;
-            display: none; animation: slideIn 0.3s;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            border-radius: 5px; color: white; z-index: 9999; display: none;
         }
         .alert.success { background: #4caf50; }
         .alert.error { background: #f44336; }
-        .alert.info { background: #2196f3; }
         
-        /* ✨ 编辑器修复 - 只添加这几行，其他都保持原样 */
-        .editormd {
+        /* 编辑器容器 - 关键修复 */
+        .editor-container {
             border: 1px solid #ddd;
             border-radius: 5px;
-            margin-top: 10px;
-        }
-        .editormd .editormd-toolbar {
-            background: #f5f5f5;
-            border-bottom: 1px solid #ddd;
-            border-radius: 5px 5px 0 0;
+            background: #fff;
+            min-height: 500px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -198,50 +181,26 @@
     <!-- 侧边栏 -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <img src="https://gh.static.aaqq.site/cfblog/themes/JustNews/files/logo2.png" alt="Logo">
+            <img src="https://gh.static.aaqq.site/cfblog/themes/JustNews/files/logo2.png">
             <h3>CF-Blog 后台</h3>
         </div>
         <div class="sidebar-menu">
-            <div class="menu-item active" data-target="#dashboard">
-                <i class="fa fa-dashboard"></i>
-                <span>仪表盘</span>
-            </div>
-            <div class="menu-item" data-target="#list">
-                <i class="fa fa-list"></i>
-                <span>文章管理</span>
-                <span class="badge" id="articleCount">0</span>
-            </div>
-            <div class="menu-item" data-target="#new">
-                <i class="fa fa-pencil"></i>
-                <span>写文章</span>
-            </div>
-            <div class="menu-item" data-target="#config">
-                <i class="fa fa-cog"></i>
-                <span>系统设置</span>
-            </div>
-            <div class="menu-item" data-target="#pub">
-                <i class="fa fa-cloud-upload"></i>
-                <span>发布</span>
-            </div>
+            <div class="menu-item active" data-target="#dashboard"><i class="fa fa-dashboard"></i> 仪表盘</div>
+            <div class="menu-item" data-target="#list"><i class="fa fa-list"></i> 文章管理 <span class="badge" id="articleCount">0</span></div>
+            <div class="menu-item" data-target="#new"><i class="fa fa-pencil"></i> 写文章</div>
+            <div class="menu-item" data-target="#config"><i class="fa fa-cog"></i> 系统设置</div>
+            <div class="menu-item" data-target="#pub"><i class="fa fa-cloud-upload"></i> 发布</div>
         </div>
     </div>
     
     <!-- 主内容区 -->
     <div class="main-content">
         <div class="top-nav">
-            <div class="page-title">
-                <i class="fa fa-dashboard"></i>
-                <span>仪表盘</span>
-            </div>
-            
+            <div class="page-title"><i class="fa fa-dashboard"></i> 仪表盘</div>
             <div class="user-info">
-                <div class="user-dropdown" id="userDropdown">
-                    <div class="user-avatar" onclick="$('#userMenu').toggleClass('show')">
-                        A
-                    </div>
-                    <div class="dropdown-menu" id="userMenu">
-                        <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> 退出登录</a>
-                    </div>
+                <div class="user-avatar" onclick="$('#userMenu').toggleClass('show')">A</div>
+                <div class="dropdown-menu" id="userMenu">
+                    <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> 退出登录</a>
                 </div>
             </div>
         </div>
@@ -286,34 +245,28 @@
                 </div>
                 <div class="table-container">
                     <table id="recentArticles">
-                        <thead>
-                            <tr><th>ID</th><th>标题</th><th>分类</th><th>阅读量</th><th>创建时间</th></tr>
-                        </thead>
+                        <thead><tr><th>ID</th><th>标题</th><th>分类</th><th>阅读量</th><th>创建时间</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
         </div>
         
-        <!-- 文章列表页 -->
+        <!-- 文章列表 -->
         <div class="tab-pane" id="list">
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fa fa-list"></i> 文章列表</h3>
-                    <button class="btn btn-primary btn-sm" onclick="$('.menu-item[data-target=\"#new\"]').click()">
-                        <i class="fa fa-plus"></i> 写新文章
-                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="$('.menu-item[data-target=\"#new\"]').click()">写新文章</button>
                 </div>
                 <div class="table-container">
                     <table id="articleList">
-                        <thead>
-                            <tr><th>ID</th><th>标题</th><th>分类</th><th>标签</th><th>阅读量</th><th>创建时间</th><th>操作</th></tr>
-                        </thead>
+                        <thead><tr><th>ID</th><th>标题</th><th>分类</th><th>标签</th><th>阅读量</th><th>创建时间</th><th>操作</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 <input type="hidden" id="page" value="1">
-                <div style="text-align: center; margin-top: 15px;">
+                <div style="text-align:center; margin-top:15px;">
                     <a id="loadmore" class="btn btn-default">加载更多</a>
                 </div>
             </div>
@@ -328,22 +281,26 @@
                 <form id="addNewForm">
                     <input type="hidden" name="id" id="id">
                     
-                    <div class="form-group">
-                        <label>标题 <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" name="title" id="title" required>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>标题</label>
+                                <input type="text" class="form-control" name="title" id="title" required>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>特色图片</label>
-                                <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
+                                <input type="url" class="form-control" name="img" id="img">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>永久链接</label>
-                                <input type="text" class="form-control" name="link" id="link" placeholder="url-slug">
+                                <input type="text" class="form-control" name="link" id="link">
                             </div>
                         </div>
                     </div>
@@ -392,9 +349,12 @@
                         </div>
                     </div>
                     
-                    <div id="content"></div>
+                    <!-- 编辑器容器 - 完全隔离 -->
+                    <div class="editor-container">
+                        <div id="content"></div>
+                    </div>
                     
-                    <div style="text-align: center; margin-top: 20px;">
+                    <div style="text-align:center; margin-top:20px;">
                         <button type="button" class="btn btn-primary" onclick="saveAddNew()">保存文章</button>
                     </div>
                 </form>
@@ -409,16 +369,19 @@
                 </div>
                 <form id="configForm">
                     <div class="form-group">
-                        <label>分类 <small>JSON格式：["分类A","分类B"]</small></label>
+                        <label>分类</label>
                         <textarea class="form-control" id="WidgetCategory" rows="3"></textarea>
+                        <small>JSON格式：["分类A","分类B"]</small>
                     </div>
                     <div class="form-group">
-                        <label>菜单 <small>JSON格式：[{"title":"首页","url":"/"}]</small></label>
+                        <label>菜单</label>
                         <textarea class="form-control" id="WidgetMenu" rows="5"></textarea>
+                        <small>JSON格式：[{"title":"首页","url":"/"}]</small>
                     </div>
                     <div class="form-group">
-                        <label>友情链接 <small>JSON格式：[{"title":"谷歌","url":"https://google.com"}]</small></label>
+                        <label>友情链接</label>
                         <textarea class="form-control" id="WidgetLink" rows="5"></textarea>
+                        <small>JSON格式：[{"title":"谷歌","url":"https://google.com"}]</small>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="saveConfig()">保存</button>
                 </form>
@@ -426,7 +389,7 @@
                 <form id="importForm">
                     <div class="form-group">
                         <label>导入/导出</label>
-                        <textarea class="form-control" id="importJson" rows="3" placeholder="粘贴导出的JSON数据"></textarea>
+                        <textarea class="form-control" id="importJson" rows="3"></textarea>
                     </div>
                     <button type="button" class="btn btn-default" onclick="importBlog()">导入</button>
                     <a href="/admin/export/" class="btn btn-default">导出</a>
@@ -436,9 +399,8 @@
         
         <!-- 发布 -->
         <div class="tab-pane" id="pub">
-            <div class="card" style="text-align: center; padding: 40px;">
-                <p>由于前端使用缓存，发布操作会清除所有缓存，使修改生效。</p>
-                <p>前端生效需要按 Ctrl+F5 强制刷新。</p>
+            <div class="card" style="text-align:center; padding:40px">
+                <p>发布操作会清除所有缓存，使修改在前端生效。需要按 Ctrl+F5 强制刷新。</p>
                 <button class="btn btn-primary btn-lg" onclick="publish()">立即发布</button>
             </div>
         </div>
@@ -459,7 +421,7 @@
             allArticles = [];
         
         $(function() {
-            // 初始化编辑器
+            // 初始化编辑器 - 放在单独的容器里
             if ($('#content').length) {
                 mdEditor = editormd("content", {
                     height: 500,
@@ -483,7 +445,7 @@
             // 设置默认日期
             $('#createDate').val(new Date().toISOString().slice(0,16));
             
-            // 加载所有数据
+            // 加载数据
             loadAllData();
             
             // 菜单切换
@@ -494,28 +456,14 @@
                 $('.tab-pane').removeClass('active');
                 $(target).addClass('active');
                 
-                // 更新顶部标题
-                var titles = {
-                    '#dashboard': '仪表盘',
-                    '#list': '文章管理',
-                    '#new': '写文章',
-                    '#config': '系统设置',
-                    '#pub': '发布'
-                };
-                var icons = {
-                    '#dashboard': 'dashboard',
-                    '#list': 'list',
-                    '#new': 'pencil',
-                    '#config': 'cog',
-                    '#pub': 'cloud-upload'
-                };
-                $('.page-title span').text(titles[target]);
-                $('.page-title i').attr('class', 'fa fa-' + icons[target]);
+                var text = $(this).text().trim();
+                var icon = $(this).find('i').attr('class');
+                $('.page-title').html('<i class="' + icon + '"></i> ' + text);
             });
             
             // 点击其他地方关闭下拉菜单
             $(document).click(function(e) {
-                if (!$(e.target).closest('.user-dropdown').length) {
+                if (!$(e.target).closest('.user-info').length) {
                     $('#userMenu').removeClass('show');
                 }
             });
@@ -537,8 +485,6 @@
                 dataType: 'json',
                 success: function(data) {
                     allArticles = data || [];
-                    
-                    // 如果返回20条，继续加载下一页
                     if (data && data.length === 20) {
                         loadMorePages(2);
                     } else {
@@ -569,14 +515,10 @@
         }
         
         function afterDataLoaded() {
-            // 显示第一页
             displayArticles(allArticles.slice(0, 20));
-            
-            // 更新仪表盘
             updateStats();
             updateRecentArticles();
             
-            // 控制加载更多按钮
             if (allArticles.length <= 20) {
                 $('#loadmore').hide();
             } else {
@@ -587,31 +529,16 @@
         function displayArticles(articles) {
             var tbody = $('#articleList tbody').empty();
             $.each(articles, function(i, a) {
-                tbody.append('<tr>' +
-                    '<td>' + a.id + '</td>' +
-                    '<td><a href="/admin/edit/' + a.id + '/">' + a.title + '</a></td>' +
-                    '<td>' + (a.category ? a.category.join(', ') : '-') + '</td>' +
-                    '<td>' + (a.tags ? a.tags.join(', ') : '-') + '</td>' +
-                    '<td>' + (a.views || 0) + '</td>' +
-                    '<td>' + (a.createDate ? a.createDate.replace('T', ' ') : '-') + '</td>' +
-                    '<td>' +
-                        '<a href="/admin/edit/' + a.id + '/" class="btn btn-default btn-sm" style="margin-right:5px;"><i class="fa fa-edit"></i></a>' +
-                        '<button class="btn btn-danger btn-sm" onclick="deleteArticle(\'' + a.id + '\')"><i class="fa fa-trash"></i></button>' +
-                    '</td>' +
-                '</tr>');
+                tbody.append('<tr><td>' + a.id + '</td><td><a href="/admin/edit/' + a.id + '/">' + a.title + '</a></td><td>' + (a.category || []).join(',') + '</td><td>' + (a.tags || []).join(',') + '</td><td>' + (a.views || 0) + '</td><td>' + (a.createDate || '').replace('T', ' ') + '</td><td><a href="/admin/edit/' + a.id + '/" class="btn btn-default btn-sm">编辑</a> <button class="btn btn-danger btn-sm" onclick="deleteArticle(\'' + a.id + '\')">删除</button></td></tr>');
             });
             $('#articleCount').text(allArticles.length);
         }
         
         function updateStats() {
             $('#totalArticles').text(allArticles.length);
-            
             var totalViews = 0;
-            $.each(allArticles, function(i, a) {
-                totalViews += a.views || 0;
-            });
+            $.each(allArticles, function(i, a) { totalViews += a.views || 0; });
             $('#totalViews').text(totalViews);
-            
             $('#totalCategories').text(categoryJson.length);
             $('#totalLinks').text(linkJson.length);
         }
@@ -620,152 +547,54 @@
             var tbody = $('#recentArticles tbody').empty();
             var recent = allArticles.slice(0, 5);
             $.each(recent, function(i, a) {
-                tbody.append('<tr>' +
-                    '<td>' + a.id + '</td>' +
-                    '<td><a href="/admin/edit/' + a.id + '/">' + a.title + '</a></td>' +
-                    '<td>' + (a.category ? a.category.join(', ') : '-') + '</td>' +
-                    '<td>' + (a.views || 0) + '</td>' +
-                    '<td>' + (a.createDate ? a.createDate.replace('T', ' ') : '-') + '</td>' +
-                '</tr>');
+                tbody.append('<tr><td>' + a.id + '</td><td><a href="/admin/edit/' + a.id + '/">' + a.title + '</a></td><td>' + (a.category || []).join(',') + '</td><td>' + (a.views || 0) + '</td><td>' + (a.createDate || '').replace('T', ' ') + '</td></tr>');
             });
         }
         
         $('#loadmore').click(function() {
-            var currentCount = $('#articleList tbody tr').length;
-            var more = allArticles.slice(currentCount, currentCount + 20);
+            var current = $('#articleList tbody tr').length;
+            var more = allArticles.slice(current, current + 20);
             if (more.length) {
                 var tbody = $('#articleList tbody');
                 $.each(more, function(i, a) {
-                    tbody.append('<tr>' +
-                        '<td>' + a.id + '</td>' +
-                        '<td><a href="/admin/edit/' + a.id + '/">' + a.title + '</a></td>' +
-                        '<td>' + (a.category ? a.category.join(', ') : '-') + '</td>' +
-                        '<td>' + (a.tags ? a.tags.join(', ') : '-') + '</td>' +
-                        '<td>' + (a.views || 0) + '</td>' +
-                        '<td>' + (a.createDate ? a.createDate.replace('T', ' ') : '-') + '</td>' +
-                        '<td>' +
-                            '<a href="/admin/edit/' + a.id + '/" class="btn btn-default btn-sm" style="margin-right:5px;"><i class="fa fa-edit"></i></a>' +
-                            '<button class="btn btn-danger btn-sm" onclick="deleteArticle(\'' + a.id + '\')"><i class="fa fa-trash"></i></button>' +
-                        '</td>' +
-                    '</tr>');
+                    tbody.append('<tr><td>' + a.id + '</td><td><a href="/admin/edit/' + a.id + '/">' + a.title + '</a></td><td>' + (a.category || []).join(',') + '</td><td>' + (a.tags || []).join(',') + '</td><td>' + (a.views || 0) + '</td><td>' + (a.createDate || '').replace('T', ' ') + '</td><td><a href="/admin/edit/' + a.id + '/" class="btn btn-default btn-sm">编辑</a> <button class="btn btn-danger btn-sm" onclick="deleteArticle(\'' + a.id + '\')">删除</button></td></tr>');
                 });
             }
-            if ($('#articleList tbody tr').length >= allArticles.length) {
-                $(this).hide();
-            }
+            if ($('#articleList tbody tr').length >= allArticles.length) $(this).hide();
         });
         
         function deleteArticle(id) {
-            if (confirm('确定要删除这篇文章吗？')) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/admin/delete/' + id + '/',
-                    dataType: 'json',
-                    success: function(r) {
-                        showAlert(r.msg || '删除成功', 'success');
-                        loadAllData();
-                    }
-                });
+            if (confirm('确定删除？')) {
+                $.post('/admin/delete/' + id + '/', function(r) { showAlert(r.msg, 'success'); loadAllData(); });
             }
         }
         
         function saveAddNew() {
-            if (!$('#title').val() || !$('#category').val()) {
-                showAlert('请填写标题和分类', 'error');
-                return;
-            }
-            
+            if (!$('#title').val() || !$('#category').val()) { showAlert('请填写标题和分类', 'error'); return; }
             var url = $('#id').val() ? '/admin/saveEdit/' : '/admin/saveAddNew/';
-            
             $.ajax({
-                type: 'POST',
-                url: url,
-                contentType: 'application/json',
+                type: 'POST', url: url, contentType: 'application/json',
                 data: JSON.stringify($('#addNewForm').serializeArray()),
-                dataType: 'json',
-                success: function(r) {
-                    showAlert(r.msg || '保存成功', 'success');
-                    if (r.id) {
-                        $('#id').val(r.id);
-                        $('#labelNew').text('编辑文章 - ' + r.id);
-                    }
-                    loadAllData();
-                }
+                success: function(r) { showAlert(r.msg, 'success'); if (r.id) $('#id').val(r.id); loadAllData(); }
             });
         }
         
         function saveConfig() {
             if (!isJSON($('#WidgetCategory').val()) || !isJSON($('#WidgetMenu').val()) || !isJSON($('#WidgetLink').val())) {
-                showAlert('JSON格式错误', 'error');
-                return;
+                showAlert('格式错误', 'error'); return;
             }
-            
-            $.ajax({
-                type: 'POST',
-                url: '/admin/saveConfig/',
-                contentType: 'application/json',
-                data: JSON.stringify($('#configForm').serializeArray()),
-                dataType: 'json',
-                success: function(r) {
-                    showAlert(r.msg || '保存成功', 'success');
-                }
-            });
+            $.post('/admin/saveConfig/', JSON.stringify($('#configForm').serializeArray()), function(r) { showAlert(r.msg, 'success'); });
         }
         
         function importBlog() {
-            if (!isJSON($('#importJson').val())) {
-                showAlert('导入格式错误', 'error');
-                return;
-            }
-            
-            $.ajax({
-                type: 'POST',
-                url: '/admin/import/',
-                contentType: 'application/json',
-                data: JSON.stringify($('#importForm').serializeArray()),
-                dataType: 'json',
-                success: function(r) {
-                    showAlert(r.msg || '导入成功', 'success');
-                    loadAllData();
-                }
-            });
+            if (!isJSON($('#importJson').val())) { showAlert('格式错误', 'error'); return; }
+            $.post('/admin/import/', JSON.stringify($('#importForm').serializeArray()), function(r) { showAlert(r.msg, 'success'); loadAllData(); });
         }
         
-        function publish() {
-            if (confirm('确定要发布吗？')) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/admin/publish/',
-                    dataType: 'json',
-                    success: function(r) {
-                        showAlert(r.msg || '发布成功', 'success');
-                    }
-                });
-            }
-        }
-        
-        function isJSON(str) {
-            if (typeof str !== 'string') return false;
-            try {
-                JSON.parse(str);
-                return true;
-            } catch(e) {
-                return false;
-            }
-        }
-        
-        function logout() {
-            if (confirm('确定要退出登录吗？')) {
-                window.location.href = '/admin/logout/';
-            }
-        }
-        
-        function showAlert(msg, type) {
-            $('#alertMessage').removeClass('success error info').addClass(type).text(msg).fadeIn();
-            setTimeout(function() {
-                $('#alertMessage').fadeOut();
-            }, 3000);
-        }
+        function publish() { if (confirm('确定发布？')) $.post('/admin/publish/', function(r) { showAlert(r.msg, 'success'); }); }
+        function isJSON(s) { try { JSON.parse(s); return true; } catch(e) { return false; } }
+        function logout() { if (confirm('确定退出？')) window.location.href = '/admin/logout/'; }
+        function showAlert(m, t) { $('#alertMessage').removeClass().addClass('alert ' + t).text(m).fadeIn().delay(2000).fadeOut(); }
     </script>
 </body>
 </html>
