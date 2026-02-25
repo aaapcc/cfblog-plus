@@ -9,11 +9,14 @@
     <link rel="stylesheet" href="https://gh.static.aaqq.site/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://gh.static.aaqq.site/editor.md-1.5.0/css/editormd.css" />
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
+    
+    <!-- 只在最必要的地方添加自定义样式，避免覆盖编辑器样式 -->
     <style>
+        /* 布局相关，不干扰编辑器 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fb; }
         
-        /* 侧边栏 */
+        /* 侧边栏 - 独立样式，不影响主内容区 */
         .sidebar {
             position: fixed; left: 0; top: 0; bottom: 0; width: 260px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -86,7 +89,7 @@
         }
         .dropdown-menu a:hover { background: #f5f7fb; color: #667eea; }
         
-        /* 卡片 */
+        /* 卡片 - 但不对编辑器内部元素生效 */
         .card {
             background: white; border-radius: 10px; padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
@@ -124,20 +127,20 @@
             font-size: 24px; font-weight: 600; color: #333;
         }
         
-        /* 表格 */
+        /* 表格 - 只对后台表格生效 */
         .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        table th {
+        .table-container table { width: 100%; border-collapse: collapse; }
+        .table-container th {
             background: #f8f9fa; padding: 10px; font-weight: 500;
             color: #555; font-size: 13px; border-bottom: 2px solid #eee;
         }
-        table td {
+        .table-container td {
             padding: 10px; border-bottom: 1px solid #eee;
             color: #666; font-size: 13px;
         }
-        table tr:hover { background: #f8f9fa; }
+        .table-container tr:hover { background: #f8f9fa; }
         
-        /* 按钮 */
+        /* 按钮 - 只对特定类生效 */
         .btn {
             padding: 6px 15px; border-radius: 5px; font-size: 13px;
             border: none; cursor: pointer; display: inline-flex;
@@ -150,7 +153,7 @@
         .btn-danger { background: #f44336; color: white; }
         .btn-danger:hover { background: #d32f2f; }
         
-        /* 表单 */
+        /* 表单 - 只对直接子元素生效，不影响编辑器 */
         .form-group { margin-bottom: 15px; }
         .form-group label {
             display: block; margin-bottom: 5px; color: #555;
@@ -158,11 +161,7 @@
         }
         .form-control {
             width: 100%; padding: 8px 12px; border: 1px solid #ddd;
-            border-radius: 5px; font-size: 13px; transition: all 0.3s;
-        }
-        .form-control:focus {
-            border-color: #667eea; outline: none;
-            box-shadow: 0 0 0 2px rgba(102,126,234,0.1);
+            border-radius: 5px; font-size: 13px;
         }
         
         /* 标签页 */
@@ -182,6 +181,37 @@
         .alert.success { background: #4caf50; }
         .alert.error { background: #f44336; }
         .alert.info { background: #2196f3; }
+        
+        /* 修复编辑器样式 - 确保编辑器内的元素不受影响 */
+        .editormd, .editormd * {
+            box-sizing: content-box; /* 编辑器自己控制盒模型 */
+        }
+        
+        .editormd .editormd-toolbar {
+            background: #f5f5f5 !important;
+            border-bottom: 1px solid #ddd !important;
+        }
+        
+        .editormd .editormd-preview {
+            background: #fff !important;
+        }
+        
+        /* 确保编辑器工具栏按钮正常显示 */
+        .editormd .editormd-toolbar i {
+            font-family: "FontAwesome" !important;
+            font-size: 14px !important;
+        }
+        
+        /* 修复分类下拉框样式 */
+        .bootstrap-select {
+            width: 100% !important;
+        }
+        
+        .bootstrap-select .dropdown-toggle {
+            background: white !important;
+            border: 1px solid #ddd !important;
+            border-radius: 5px !important;
+        }
     </style>
 </head>
 <body>
@@ -316,69 +346,80 @@
                 <div class="card-header">
                     <h3><i class="fa fa-pencil"></i> <span id="labelNew">新增文章</span></h3>
                 </div>
-                <form id="addNewForm" class="form-inline">
-                    <div class="form-group" style="width: 100%">
-                        <input type="hidden" class="form-control" name="id" id="id">
-                        <input type="text" class="form-control" name="title" id="title" placeholder="标题" style="width: 100%;" required>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>特色图片</label>
-                                <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>永久链接</label>
-                                <input type="text" class="form-control" name="link" id="link" placeholder="url-slug" required>
-                            </div>
+                <form id="addNewForm" class="form-horizontal">
+                    <input type="hidden" class="form-control" name="id" id="id">
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标题 <span style="color: red;">*</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="title" id="title" placeholder="输入文章标题" required>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>创建日期</label>
-                                <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>分类</label>
-                                <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>标签</label>
-                                <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
-                            </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">特色图片</label>
+                        <div class="col-sm-10">
+                            <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>权重</label>
-                                <input type="text" class="form-control" name="priority" id="priority" value="0.5">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>更新频率</label>
-                                <select class="form-control" id="changefreq" name="changefreq">
-                                    <option value="daily">daily</option>
-                                    <option value="hourly">hourly</option>
-                                    <option value="weekly">weekly</option>
-                                    <option value="monthly">monthly</option>
-                                    <option value="yearly">yearly</option>
-                                    <option value="never">never</option>
-                                    <option value="always">always</option>
-                                </select>
-                            </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">永久链接</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="link" id="link" placeholder="url-slug">
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="saveAddNew()">保存文章</button>
-                    <div id="content"><textarea style="display:none;"></textarea></div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">创建日期</label>
+                        <div class="col-sm-4">
+                            <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
+                        </div>
+                        
+                        <label class="col-sm-2 control-label">权重</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="priority" id="priority" value="0.5">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">分类</label>
+                        <div class="col-sm-4">
+                            <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true"></select>
+                        </div>
+                        
+                        <label class="col-sm-2 control-label">更新频率</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="changefreq" name="changefreq">
+                                <option value="daily">daily</option>
+                                <option value="hourly">hourly</option>
+                                <option value="weekly">weekly</option>
+                                <option value="monthly">monthly</option>
+                                <option value="yearly">yearly</option>
+                                <option value="never">never</option>
+                                <option value="always">always</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标签</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div id="content"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center">
+                            <button type="button" class="btn btn-primary" onclick="saveAddNew()">保存文章</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -389,31 +430,54 @@
                 <div class="card-header">
                     <h3><i class="fa fa-cog"></i> 系统设置</h3>
                 </div>
-                <form id="configForm">
+                <form id="configForm" class="form-horizontal">
                     <div class="form-group">
-                        <label>分类 <small class="text-muted">JSON格式：["分类A","分类B"]</small></label>
-                        <textarea class="form-control" id="WidgetCategory" name="WidgetCategory" rows="3"></textarea>
+                        <label class="col-sm-2 control-label">分类</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="WidgetCategory" name="WidgetCategory" rows="3"></textarea>
+                            <p class="help-block">JSON格式：["分类A","分类B"]</p>
+                        </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label>菜单 <small class="text-muted">JSON格式：[{"title":"首页","url":"/"}]</small></label>
-                        <textarea class="form-control" id="WidgetMenu" name="WidgetMenu" rows="5"></textarea>
+                        <label class="col-sm-2 control-label">菜单</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="WidgetMenu" name="WidgetMenu" rows="5"></textarea>
+                            <p class="help-block">JSON格式：[{"title":"首页","url":"/"}]</p>
+                        </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label>友情链接 <small class="text-muted">JSON格式：[{"title":"谷歌","url":"https://google.com"}]</small></label>
-                        <textarea class="form-control" id="WidgetLink" name="WidgetLink" rows="5"></textarea>
+                        <label class="col-sm-2 control-label">友情链接</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="WidgetLink" name="WidgetLink" rows="5"></textarea>
+                            <p class="help-block">JSON格式：[{"title":"谷歌","url":"https://google.com"}]</p>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="saveConfig()">保存设置</button>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center">
+                            <button type="button" class="btn btn-primary" onclick="saveConfig()">保存设置</button>
+                        </div>
+                    </div>
                 </form>
                 
                 <hr>
                 
-                <form id="importForm">
+                <form id="importForm" class="form-horizontal">
                     <div class="form-group">
-                        <label>导入/导出</label>
-                        <textarea class="form-control" id="importJson" name="importJson" rows="3" placeholder="粘贴导出的JSON数据"></textarea>
+                        <label class="col-sm-2 control-label">导入/导出</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="importJson" name="importJson" rows="3" placeholder="粘贴导出的JSON数据"></textarea>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-default" onclick="importBlog()">导入</button>
-                    <a href="/admin/export/" class="btn btn-default">导出</a>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center">
+                            <button type="button" class="btn btn-default" onclick="importBlog()">导入</button>
+                            <a href="/admin/export/" class="btn btn-default">导出</a>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -447,9 +511,7 @@
         var categoryJson = <!--{categoryJson}--> || [];
         var menuJson = <!--{menuJson}--> || [];
         var linkJson = <!--{linkJson}--> || [];
-        var allArticles = []; // 存储所有文章数据
-        var currentPage = 1;
-        var hasMore = true;
+        var allArticles = [];
         
         $(function() {
             // 初始化编辑器
@@ -461,7 +523,9 @@
                     tex: true,
                     codeFold: true,
                     emoji: true,
-                    taskList: true
+                    taskList: true,
+                    flowChart: true,
+                    sequenceDiagram: true
                 });
             }
             
@@ -515,9 +579,8 @@
             });
         });
         
-        // 加载所有数据 - 修改这里，获取所有页的数据
+        // 加载所有数据
         function loadAllData() {
-            // 先获取第一页
             $.ajax({
                 url: '/admin/getList/1/',
                 type: 'GET',
@@ -526,11 +589,9 @@
                     if (data && data.length) {
                         allArticles = data;
                         
-                        // 如果返回的数据长度等于20，说明可能还有更多，继续获取第二页
                         if (data.length === 20) {
                             loadMorePages(2);
                         } else {
-                            // 数据加载完成，更新界面
                             afterDataLoaded();
                         }
                     } else {
@@ -545,7 +606,6 @@
             });
         }
         
-        // 递归加载更多页
         function loadMorePages(page) {
             $.ajax({
                 url: '/admin/getList/' + page + '/',
@@ -553,51 +613,35 @@
                 dataType: 'json',
                 success: function(data) {
                     if (data && data.length) {
-                        // 合并数据
                         allArticles = allArticles.concat(data);
                         
-                        // 如果这一页也满了，继续加载下一页
                         if (data.length === 20) {
                             loadMorePages(page + 1);
                         } else {
-                            // 所有页加载完成
                             afterDataLoaded();
                         }
                     } else {
-                        // 没有更多数据了
                         afterDataLoaded();
                     }
                 },
                 error: function() {
-                    // 出错时也结束加载
                     afterDataLoaded();
                 }
             });
         }
         
-        // 数据加载完成后的处理
         function afterDataLoaded() {
-            console.log('总文章数:', allArticles.length);
-            
-            // 更新文章列表（只显示第一页）
             displayArticles(allArticles.slice(0, 20));
-            
-            // 更新统计信息
             updateStats();
-            
-            // 更新最近文章
             updateRecentArticles();
             
-            // 判断是否还有更多
-            hasMore = allArticles.length > 20;
-            if (!hasMore) {
+            if (allArticles.length <= 20) {
                 $('#loadmore').hide();
             } else {
                 $('#loadmore').show();
             }
         }
         
-        // 显示文章列表
         function displayArticles(articles) {
             var tbody = $('#articleList tbody');
             tbody.empty();
@@ -625,7 +669,6 @@
             }
         }
         
-        // 更新统计信息
         function updateStats() {
             if (!allArticles || allArticles.length === 0) {
                 $('#totalArticles').text('0');
@@ -644,7 +687,6 @@
             $('#totalLinks').text(linkJson.length || 0);
         }
         
-        // 更新最近文章
         function updateRecentArticles() {
             var tbody = $('#recentArticles tbody');
             tbody.empty();
@@ -665,7 +707,6 @@
             }
         }
         
-        // 初始化分类下拉框
         function initCategorySelect() {
             var category = $('#category');
             category.empty();
@@ -675,7 +716,6 @@
             category.selectpicker('refresh');
         }
         
-        // 加载更多
         $("#loadmore").click(function(){
             var currentCount = $('#articleList tbody tr').length;
             var moreArticles = allArticles.slice(currentCount, currentCount + 20);
@@ -697,13 +737,11 @@
                 });
             }
             
-            // 如果已经加载完所有文章，隐藏加载更多按钮
             if ($('#articleList tbody tr').length >= allArticles.length) {
                 $('#loadmore').hide();
             }
         });
         
-        // 删除文章
         function deleteArticle(id) {
             if (confirm('确定要删除这篇文章吗？')) {
                 $.ajax({
@@ -712,7 +750,7 @@
                     dataType: 'json',
                     success: function(result) {
                         showAlert(result.msg || '删除成功', 'success');
-                        loadAllData(); // 重新加载数据
+                        loadAllData();
                     },
                     error: function() {
                         showAlert('删除失败', 'error');
@@ -721,7 +759,6 @@
             }
         }
         
-        // 保存文章
         function saveAddNew() {
             if (!$('#title').val()) {
                 showAlert('请输入标题', 'error');
@@ -750,7 +787,7 @@
                             $('#id').val(result.id);
                             $('#labelNew').text('编辑文章 - ' + result.id);
                         }
-                        loadAllData(); // 重新加载数据
+                        loadAllData();
                     }
                 },
                 error: function() {
@@ -759,7 +796,6 @@
             });
         }
         
-        // 保存设置
         function saveConfig() {
             if (!isJSON($('#WidgetCategory').val())) {
                 showAlert('分类格式错误', 'error');
@@ -789,7 +825,6 @@
             });
         }
         
-        // 导入
         function importBlog() {
             if (!isJSON($('#importJson').val())) {
                 showAlert('导入格式错误', 'error');
@@ -804,7 +839,7 @@
                 data: JSON.stringify($('#importForm').serializeArray()),
                 success: function(result) {
                     showAlert(result.msg || '导入成功', 'success');
-                    loadAllData(); // 重新加载数据
+                    loadAllData();
                 },
                 error: function() {
                     showAlert('导入失败', 'error');
@@ -812,7 +847,6 @@
             });
         }
         
-        // 发布
         function publish() {
             if (!confirm('确定要发布吗？发布将清理所有静态缓存，使修改生效。')) {
                 return;
@@ -831,7 +865,6 @@
             });
         }
         
-        // JSON 验证
         function isJSON(str) {
             if (typeof str !== 'string') return false;
             try {
@@ -842,19 +875,16 @@
             }
         }
         
-        // 用户菜单
         function toggleUserMenu() {
             $('#userMenu').toggleClass('show');
         }
         
-        // 退出登录
         function logout() {
             if (confirm('确定要退出登录吗？')) {
                 window.location.href = '/admin/logout/';
             }
         }
         
-        // 显示提示
         function showAlert(message, type) {
             var alert = $('#alertMessage');
             alert.removeClass('success error info').addClass(type).text(message).fadeIn();
