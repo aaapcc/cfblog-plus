@@ -79,6 +79,10 @@
                       <div>Admin
                         <div class="text-xs text-muted">{{ &articleSingle.createDate10 }}</div>
                       </div>
+                      <div class="post-meta-info mt-2 text-muted text-sm">
+  <span><i class="iconfont icon-yanjing"></i> {{ &articleSingle.views }} 阅读</span>
+  <span class="ms-3"><i class="iconfont icon-pinglun"></i> {{ &articleSingle.comments }} 评论</span>
+</div>
                   </div>
                 </div>
               </div>
@@ -88,7 +92,7 @@
               </div>
 
               <div class="post-tags mb-2">
-              	{{ #articleSingle.tags }}
+                {{ #articleSingle.tags }}
                 <a href="/tags/{{&.}}" rel="tag">{{&.}}</a>
                 {{ /articleSingle.tags }}
               </div>
@@ -128,19 +132,37 @@
               <h2 class="widget-header font-title text-md text-dark">最新文章
                 <div class="widget-border"></div></h2>
               <div class="list-grid list-grid-padding list-bordered">
-              	{{ #articleNewer }}	
+                {{ #articleNewer }} 
                 <div class="list-item">
                   <div class="media media-3x2 col-5">
                     <a href="{{ &url }}" class="media-content">
-                      <img src="{{ &img }}" alt="{{ &title }}"></a>
+                      <img src="{{ &img }}" alt="{{ &title }}">
+                    </a>
                   </div>
                   <div class="list-content">
                     <div class="list-body">
-                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a></div>
-                    <div class="list-footer text-muted text-xs ">{{ &createDate10 }}</div>
+                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a>
+                    </div>
+                    <div class="list-footer text-muted text-xs">{{ &createDate10 }}</div>
+                  </div>
                 </div>
                 {{ /articleNewer }}
+                
+                {{ #articleOlder }}
+                <div class="list-item">
+                  <div class="media media-3x2 col-5">
+                    <a href="{{ &url }}" class="media-content">
+                      <img src="{{ &img }}" alt="{{ &title }}">
+                    </a>
+                  </div>
+                  <div class="list-content">
+                    <div class="list-body">
+                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a>
+                    </div>
+                    <div class="list-footer text-muted text-xs">{{ &createDate10 }}</div>
+                  </div>
                 </div>
+                {{ /articleOlder }}
               </div>
             </div>
           </div>
@@ -232,6 +254,29 @@
         'text direction\u0004ltr': ['ltr']
       });</script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/nicetheme.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof tocbot !== 'undefined') {
+        tocbot.init({
+          tocSelector: '.toc',
+          contentSelector: '.post-content',
+          headingSelector: 'h1, h2, h3, h4',
+          hasInnerContainers: true,
+          scrollSmooth: true,
+          scrollSmoothOffset: -80
+        });
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof hljs !== 'undefined') {
+        document.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightBlock(block);
+        });
+      }
+    });
+  </script>
   </body>
 
 </html>
