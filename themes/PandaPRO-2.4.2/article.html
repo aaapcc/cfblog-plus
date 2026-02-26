@@ -384,22 +384,15 @@
       document.getElementById('parentId').value = parentId;
       document.getElementById('content').focus();
       document.getElementById('commentMsg').innerHTML = `正在回复 <strong>${author}</strong> 的评论`;
+      document.getElementById('cancelReply').style.display = 'inline'; // 显示取消按钮
+    }
 
-      // 取消回复
-      function cancelReply() {
-          document.getElementById('parentId').value = '0';
-          document.getElementById('commentMsg').innerHTML = '';
-          document.getElementById('cancelReply').style.display = 'none';
-          document.getElementById('content').focus();
-      }
-
-      // 修改原有的 replyTo 函数，让它显示取消按钮
-      function replyTo(parentId, author) {
-          document.getElementById('parentId').value = parentId;
-          document.getElementById('content').focus();
-          document.getElementById('commentMsg').innerHTML = `正在回复 <strong>${author}</strong> 的评论`;
-          document.getElementById('cancelReply').style.display = 'inline'; // 显示取消按钮
-      }
+    // 取消回复
+    function cancelReply() {
+      document.getElementById('parentId').value = '0';
+      document.getElementById('commentMsg').innerHTML = '';
+      document.getElementById('cancelReply').style.display = 'none';
+      document.getElementById('content').focus();
     }
 
     // 提交评论
