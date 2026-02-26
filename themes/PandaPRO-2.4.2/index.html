@@ -63,7 +63,7 @@
 
             {{ #isCategory }}
             <div class="archive-header block p-4 p-xl-4 mb-3">
-              <h3>{{ categoryName }}</h3>
+              <h3>Category : {{ categoryName }}</h3>
             </div>
             {{ /isCategory }}
 
@@ -256,18 +256,32 @@
       // 获取当前页面的路径
       var path = window.location.pathname;
       
-      // 获取所有导航菜单项
-      var menuItems = document.querySelectorAll('.navbar-site .menu-item');
+      // 获取所有导航菜单项（桌面端和移动端）
+      var desktopMenuItems = document.querySelectorAll('.navbar-site .menu-item');
+      var mobileMenuItems = document.querySelectorAll('.mobile-menu-inner .menu-item');
       
-      // 先移除所有 current-menu-item 类
-      menuItems.forEach(function(item) {
-        item.classList.remove('current-menu-item');
-      });
+      // 合并处理两个菜单
+      function removeHighlight(items) {
+        items.forEach(function(item) {
+          item.classList.remove('current-menu-item');
+        });
+      }
+      
+      function addHighlight(items, index) {
+        if (items[index]) {
+          items[index].classList.add('current-menu-item');
+        }
+      }
+      
+      // 先移除所有高亮
+      removeHighlight(desktopMenuItems);
+      removeHighlight(mobileMenuItems);
       
       // 如果是首页（/ 或 /page/ 开头）
       if (path === '/' || path.startsWith('/page/')) {
-        // 首页高亮
-        document.querySelector('.navbar-site .menu-item:first-child').classList.add('current-menu-item');
+        // 首页高亮（第一个菜单项）
+        if (desktopMenuItems[0]) desktopMenuItems[0].classList.add('current-menu-item');
+        if (mobileMenuItems[0]) mobileMenuItems[0].classList.add('current-menu-item');
       } 
       // 如果是分类页
       else if (path.startsWith('/category/')) {
@@ -275,12 +289,22 @@
         var category = path.replace('/category/', '').replace(/\/$/, '').split('/')[0];
         var decodedCategory = decodeURIComponent(category);
         
-        // 遍历菜单项，找到对应分类
-        menuItems.forEach(function(item) {
+        // 处理桌面端菜单
+        desktopMenuItems.forEach(function(item) {
           var link = item.querySelector('a');
           if (link) {
             var href = link.getAttribute('href');
-            // 同时检查编码和解码后的版本
+            if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
+              item.classList.add('current-menu-item');
+            }
+          }
+        });
+        
+        // 处理移动端菜单
+        mobileMenuItems.forEach(function(item) {
+          var link = item.querySelector('a');
+          if (link) {
+            var href = link.getAttribute('href');
             if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
               item.classList.add('current-menu-item');
             }
