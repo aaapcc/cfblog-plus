@@ -270,6 +270,23 @@
             border-radius: 3px;
             margin-right: 8px;
         }
+
+        /* 确保编辑器容器有正确的高度 */
+        #content {
+            width: 100%;
+            min-height: 500px;
+        }
+        
+        /* 修复编辑器在bootstrap环境下的显示 */
+        .editormd {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .editormd .editormd-toolbar {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -663,19 +680,23 @@
         var allArticles = [];
         
         $(function() {
-            // 初始化编辑器
+            // 初始化编辑器 - 使用与edit相同的配置
             if ($('#content').length) {
                 mdEditor = editormd("content", {
                     height: 500,
-                    path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
+                    path: "https://gh.static.aaqq.site/editor.md-1.5.0/lib/",  // 改用和edit相同的路径
+                    appendMarkdown : "",  // 初始为空
                     saveHTMLToTextarea: true,
+                    mode: "markdown",
                     tex: true,
+                    tocm: true,
                     codeFold: true,
                     emoji: true,
                     taskList: true,
                     flowChart: true,
                     sequenceDiagram: true
                 });
+                console.log("编辑器初始化成功");
             }
             
             // 初始化分类下拉框
