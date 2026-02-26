@@ -8,7 +8,8 @@
     <meta name="description" content="{{ &OPT.siteDescription }}" />
     <meta name="keywords" content="{{ &keyWords }}" />
     <link rel="icon" href="{{ &OPT.siteFavicon }}" />
-    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" />
+    <!-- <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" /> -->
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_5129704_04p2g1aekooe.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/style.css" type="text/css" media="all" />
@@ -108,30 +109,30 @@
       <div class="container">
         <div class="row gx-xl-4">
           <div class="content-wrapper col-xl-8">
-            <!-- 搜索结果头部 - 新增 -->
+            <!-- 搜索词 Begin -->
             {{ #keyword }}
-            <div class="search-header">
-              <div>
-                <span class="search-keyword">"{{ keyword }}"</span> 的搜索结果
+            <div class="archive-header block p-4 p-xl-5 mb-3">
+              <div class="archive-icon btn btn-primary btn-icon btn-md btn-rounded">
+                <span>
+                  <i class="iconfont icon-bq icon-searchlist"></i>
+                </span>
               </div>
-              <div class="search-stats">
-                {{ #total }}共找到 {{ total }} 篇相关文章{{ /total }}
-                {{ ^total }}暂无相关内容{{ /total }}
-                {{ #pageNo }} · 第 {{ pageNo }}/{{ totalPages }} 页{{ /pageNo }}
+              <div class="archive-body">
+                <h1>{{ keyword }}</h1>
+                <div>共找到 {{ total }} 篇相关文章</div>
+                {{ ^total }}<div>暂无相关内容</div>{{ /total }}
               </div>
             </div>
             {{ /keyword }}
+            <!-- 搜索词 End -->
 
             <!-- 搜索结果列表 -->
             <div class="list-home list-grid list-grid-padding">
-              
               {{ #articles.length }}
               {{ #articles }}
               <div class="list-item block" id="post-{{&id}}">
                 <div class="media media-3x2 custom-hover col-4 col-lg-3">
-                  <a href="{{ &url }}" class="media-content">
-                    <img src="{{ &img }}" alt="{{ &title }}" />
-                  </a>
+                  <a href="{{ &url }}" class="media-content"><img src="{{ &img }}" alt="{{ &title }}" /></a>
                 </div>
                 <div class="list-content">
                   <div class="list-body">
@@ -145,31 +146,23 @@
                       <span class="match-badge tag-match">标签匹配</span>
                       {{ /matchInfo.tags }}
                     </h2>
-                    
-                    <!-- 文章元信息 -->
-                    <div class="d-flex align-items-center text-muted mt-2">
-                      <span><i class="iconfont icon-shijian"></i> {{ &createDate10 }}</span>
-                      {{ #category }}
-                      <span class="ms-3"><i class="iconfont icon-fenlei"></i> {{&.}}</span>
-                      {{ /category }}
-                      {{ #tags }}
-                      <span class="ms-3"><i class="iconfont icon-biaoqian"></i> {{.}}</span>
-                      {{ /tags }}
-                    </div>
-                    
-                    <!-- 内容摘要（带高亮） -->
                     {{ #excerpt }}
-                    <div class="result-excerpt d-none d-md-block mt-3">
-                      {{{ excerpt }}}
+                    <div class="d-none d-md-block text-muted mt-md-3">
+                      <div class="h-2x ">{{{ excerpt }}}</div>
                     </div>
                     {{ /excerpt }}
-                    
-                    <!-- 如果没有摘要，显示原文摘要 -->
                     {{ ^excerpt }}
-                    <div class="d-none d-md-block text-muted mt-3">
-                      <div class="h-2x">{{ &contentText }}</div>
+                    <div class="d-none d-md-block text-muted mt-md-3">
+                      <div class="h-2x ">{{ &contentText }}</div>
                     </div>
                     {{ /excerpt }}
+                  </div>
+                  <div class="list-footer d-flex align-items-center text-xs text-dark mt-2 mt-md-3">
+                    <span>{{ &createDate10 }}</span>
+                    <div class="flex-fill"></div>
+                    {{ #category }}
+                    <span class="d-md-flex align-items-center ms-3 ms-md-5 text-muted"><i class="me-1 text-md icon-sm iconfont icon-vps"></i>{{&.}}</span>
+                    {{ /category }}
                   </div>
                 </div>
               </div>
