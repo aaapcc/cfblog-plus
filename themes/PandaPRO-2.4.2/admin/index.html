@@ -686,7 +686,7 @@
         var allArticles = [];
         
         $(function() {
-            // 初始化编辑器 - 简化版本
+                        // 初始化编辑器 - 简化版本
             if ($('#content').length) {
                 // 确保容器有高度
                 $('#content').css('height', '500px');
@@ -726,12 +726,46 @@
                                 editor.cm.refresh();
                                 editor.cm.focus();
                             }
+                            
+                            // 添加解析HTML标签按钮
+                            addParseHtmlButton(editor);
                         }, 200);
                     },
                     onchange: function() {
                         // 内容变化时，预览区域会自动更新，不需要额外操作
                     }
                 });
+            }
+            
+            // 添加解析HTML标签按钮的函数
+            function addParseHtmlButton(editor) {
+                setTimeout(function() {
+                    // 检查是否已经有这个按钮
+                    if ($('.editormd-menu li:contains("解析HTML标签")').length === 0) {
+                        // 添加分隔符和按钮
+                        $(".editormd-menu").append(
+                            '<li class="divider" unselectable="on">|</li>' +
+                            '<li>' +
+                            '<a href="javascript:;" title="解析HTML标签" unselectable="on">' +
+                            '<i class="fa fa-toggle-off" name="parseHtml" unselectable="on"> 解析HTML标签 </i>' +
+                            '</a>' +
+                            '</li>'
+                        );
+                        
+                        // 为按钮绑定点击事件
+                        $('a[title="解析HTML标签"]').click(function() {
+                            let ele = $(".editormd-menu li a i:last");
+                            if (ele.hasClass('fa-toggle-off')) {
+                                ele.removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                                editor.settings.htmlDecode = true;
+                            } else if (ele.hasClass('fa-toggle-on')) {
+                                ele.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                                editor.settings.htmlDecode = false;
+                            }
+                            editor.setMarkdown(editor.getMarkdown());
+                        });
+                    }
+                }, 500);
             }
             
             // 初始化分类下拉框
