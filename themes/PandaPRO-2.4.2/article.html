@@ -363,7 +363,7 @@
               </div>
               <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">${comment.date}<a href="javascript:;" onclick="replyTo('${comment.id}', '${comment.author}')" class="ms-auto" style="color: var(--color-muted) !important;">回复</a></div></div>
               ${replies.length ? `
-              <div class="replies ml-4 pl-3 mt-2" style="border-left: 2px solid #eee;">
+              <div class="replies ml-4 pl-3 mt-2">
                 ${replies.map(r => renderComment(r, [])).join('')}
               </div>
             ` : ''}
