@@ -1157,10 +1157,11 @@
                 dataType: 'json',
                 url: '/admin/publish/',
                 success: function(result) {
-                    showAlert(result.msg || '发布成功，请按 Ctrl+F5 强制刷新', 'success');
+                    // 改用更明显的提示
+                    alert('✅ ' + (result.msg || '发布成功！\n请按 Ctrl+F5 强制刷新前台页面'));
                 },
                 error: function() {
-                    showAlert('发布失败', 'error');
+                    alert('❌ 发布失败，请稍后重试');
                 }
             });
         }
