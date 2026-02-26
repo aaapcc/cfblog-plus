@@ -271,21 +271,46 @@
             margin-right: 8px;
         }
 
-        /* 确保编辑器容器有正确的高度 */
+        /* 强制编辑器容器高度 */
         #content {
-            width: 100%;
-            min-height: 500px;
+            height: 500px !important;
+            min-height: 500px !important;
+            width: 100% !important;
+            position: relative !important;
+            z-index: 10 !important;
         }
         
-        /* 修复编辑器在bootstrap环境下的显示 */
+        /* 强制编辑器主体高度 */
         .editormd {
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            height: 500px !important;
+            min-height: 500px !important;
+            width: 100% !important;
+            border: 1px solid #ddd !important;
+            border-radius: 4px !important;
+            position: relative !important;
+        }
+        
+        .editormd .editormd-preview-container,
+        .editormd .editormd-markdown-container,
+        .editormd .CodeMirror {
+            height: calc(500px - 40px) !important; /* 减去工具栏高度 */
+            min-height: calc(500px - 40px) !important;
         }
         
         .editormd .editormd-toolbar {
-            background: #f5f5f5;
-            border-bottom: 1px solid #ddd;
+            height: 40px !important;
+            min-height: 40px !important;
+        }
+        
+        /* 修复 CodeMirror 编辑器区域 */
+        .CodeMirror {
+            height: 100% !important;
+            font-family: monospace !important;
+        }
+        
+        .CodeMirror-scroll {
+            height: 100% !important;
+            max-height: none !important;
         }
     </style>
 </head>
@@ -680,9 +705,11 @@
         var allArticles = [];
         
         $(function() {
-            // 初始化编辑器
+                        // 初始化编辑器
             if ($('#content').length) {
-                // 先创建编辑器
+                // 先给容器设置一个明确的高度
+                $('#content').css('height', '500px');
+                
                 mdEditor = editormd("content", {
                     height: 500,
                     path: "https://gh.static.aaqq.site/editor.md-1.5.0/lib/",
@@ -696,20 +723,44 @@
                     flowChart: true,
                     sequenceDiagram: true,
                     onload: function() {
-                        // 编辑器加载完成后，强制刷新一次
                         console.log('编辑器加载完成');
-                        this.resize();
+                        var editor = this;
+                        
+                        // 强制设置编辑器高度
+                        editor.height(500);
+                        
+                        // 重新布局编辑器
+                        setTimeout(function() {
+                            editor.resize();
+                            
+                            // 强制刷新 CodeMirror 的布局
+                            if (editor.cm) {
+                                editor.cm.refresh();
+                                editor.cm.setSize('100%', 500);
+                            }
+                        }, 200);
                     }
                 });
                 
-                // 额外保险：延迟再次刷新
+                // 多次尝试刷新编辑器
                 setTimeout(function() {
                     if (mdEditor) {
                         mdEditor.resize();
-                        // 触发一个空操作来刷新编辑器
-                        mdEditor.setCursor({line: 0, ch: 0});
+                        if (mdEditor.cm) {
+                            mdEditor.cm.refresh();
+                            mdEditor.cm.setSize('100%', 500);
+                        }
                     }
                 }, 500);
+                
+                setTimeout(function() {
+                    if (mdEditor) {
+                        mdEditor.resize();
+                        if (mdEditor.cm) {
+                            mdEditor.cm.refresh();
+                        }
+                    }
+                }, 1000);
             }
             
             // 初始化分类下拉框
@@ -1299,23 +1350,29 @@
 	    });
 	</script>
 	<script>
-	// 强制刷新编辑器显示
-	$(document).ready(function() {
-	    // 当切换到写文章标签页时，强制刷新编辑器
-	    $('.menu-item[data-target="#new"]').on('click', function() {
-	        setTimeout(function() {
-	            if (mdEditor) {
-	                mdEditor.resize();
-	                console.log('编辑器已刷新');
-	            }
-	        }, 100);
-	    });
-	    
-	    // 如果编辑器已经存在但显示异常，也尝试刷新
+	// 强制编辑器显示完整高度
+	function fixEditorHeight() {
 	    if (mdEditor) {
-	        setTimeout(function() {
-	            mdEditor.resize();
-	        }, 1000);
+	        mdEditor.resize();
+	        if (mdEditor.cm) {
+	            mdEditor.cm.refresh();
+	            mdEditor.cm.setSize('100%', 500);
+	        }
+	        // 重新计算编辑器内部分区高度
+	        $('.editormd .CodeMirror').height('calc(500px - 40px)');
+	        $('.editormd .editormd-preview-container').height('calc(500px - 40px)');
+	    }
+	}
+
+	// 在切换到写文章标签页时修复高度
+	$(document).on('click', '.menu-item[data-target="#new"]', function() {
+	    setTimeout(fixEditorHeight, 300);
+	});
+
+	// 如果编辑器已经存在但显示异常，立即修复
+	$(document).ready(function() {
+	    if ($('#new.active').length) {
+	        setTimeout(fixEditorHeight, 500);
 	    }
 	});
 	</script>
