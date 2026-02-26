@@ -157,6 +157,31 @@
               </div>
             </div>
 
+            <!-- 相关文章 Begin -->
+            <div class="post-related card mt-3">
+              <div class="card-header">
+                <h2 class="d-flex align-items-center text-lg">
+                  <i class="fw-normal text-primary iconfont icon-ts-tubiao_WEB me-1"></i>相关文章</h2>
+              </div>
+              <div class="card-body">
+                <ul>
+                  {{ #articleNewer }}
+                  <li>
+                    <a href="{{ &url }}" target="_blank">
+                      <div class="h-1x">{{ &title }}</div></a>
+                  </li>
+                  {{ /articleNewer }}
+                  {{ #articleOlder }}
+                  <li>
+                    <a href="{{ &url }}" target="_blank">
+                      <div class="h-1x">{{ &title }}</div></a>
+                  </li>
+                  {{ /articleOlder }}
+                </ul>
+              </div>
+            </div>
+            <!-- 相关文章 End -->
+
           </div>
           <div class="sidebar-post col-xl-4 d-none d-xl-block ">
             
@@ -176,41 +201,19 @@
               <h2 class="widget-header font-title text-md text-dark">最新文章
                 <div class="widget-border"></div></h2>
               <div class="list-grid list-grid-padding list-bordered">
-                {{ #articleNewer }} 
+                {{ #widgetRecentlyList }}
                 <div class="list-item">
                   {{ #img }}
                   <div class="media media-3x2 col-5">
-                    <a href="{{ &url }}" class="media-content">
-                      <img src="{{ &img }}" alt="{{ &title }}">
-                    </a>
+                    <a href="{{ &url }}" class="media-content"><img src="{{ &img }}" alt="{{ &title }}"></a>
                   </div>
                   {{ /img }}
                   <div class="list-content">
                     <div class="list-body">
-                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a>
-                    </div>
-                    <div class="list-footer text-muted text-xs">{{ &createDate10 }}</div>
-                  </div>
+                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a></div>
+                    <div class="list-footer text-muted text-xs ">{{ &createDate10 }}</div></div>
                 </div>
-                {{ /articleNewer }}
-                
-                {{ #articleOlder }}
-                <div class="list-item">
-                  {{ #img }}
-                  <div class="media media-3x2 col-5">
-                    <a href="{{ &url }}" class="media-content">
-                      <img src="{{ &img }}" alt="{{ &title }}">
-                    </a>
-                  </div>
-                  {{ /img }}
-                  <div class="list-content">
-                    <div class="list-body">
-                      <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a>
-                    </div>
-                    <div class="list-footer text-muted text-xs">{{ &createDate10 }}</div>
-                  </div>
-                </div>
-                {{ /articleOlder }}
+                {{ /widgetRecentlyList }}
               </div>
             </div>
           </div>
