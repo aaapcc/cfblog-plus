@@ -231,9 +231,11 @@
               <div class="list-grid list-grid-padding list-bordered">
                 {{ #widgetRecentlyList }}
                 <div class="list-item">
+                  {{ #img }}
                   <div class="media media-3x2 col-5">
                     <a href="{{ &url }}" class="media-content"><img src="{{ &img }}" alt="{{ &title }}"></a>
                   </div>
+                  {{ /img }}
                   <div class="list-content">
                     <div class="list-body">
                       <a href="{{ &url }}" class="list-title font-title h-2x">{{ &title }}</a></div>
