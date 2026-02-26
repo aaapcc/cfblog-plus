@@ -245,6 +245,43 @@
     <script type="text/javascript">
     window.addEventListener('load',function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}});
     </script>
+    <script>
+    // 导航高亮
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取当前页面的路径
+      var path = window.location.pathname;
+      
+      // 获取所有导航菜单项
+      var menuItems = document.querySelectorAll('.navbar-site .menu-item');
+      
+      // 先移除所有 current-menu-item 类
+      menuItems.forEach(function(item) {
+        item.classList.remove('current-menu-item');
+      });
+      
+      // 如果是首页（/ 或 /page/ 开头）
+      if (path === '/' || path.startsWith('/page/')) {
+        // 首页高亮
+        document.querySelector('.navbar-site .menu-item:first-child').classList.add('current-menu-item');
+      } 
+      // 如果是分类页
+      else if (path.startsWith('/category/')) {
+        // 获取当前分类名称
+        var category = path.replace('/category/', '').replace(/\/$/, '').split('/')[0];
+        
+        // 遍历菜单项，找到对应分类
+        menuItems.forEach(function(item) {
+          var link = item.querySelector('a');
+          if (link) {
+            var href = link.getAttribute('href');
+            if (href && href.includes('/category/' + category)) {
+              item.classList.add('current-menu-item');
+            }
+          }
+        });
+      }
+    });
+    </script>
   </body>
 
 </html>
