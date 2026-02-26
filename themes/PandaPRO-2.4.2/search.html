@@ -8,8 +8,7 @@
     <meta name="description" content="{{ &OPT.siteDescription }}" />
     <meta name="keywords" content="{{ &keyWords }}" />
     <link rel="icon" href="{{ &OPT.siteFavicon }}" />
-    <!-- <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" /> -->
-    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_5129704_04p2g1aekooe.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/5129704/font_04p2g1aekooe.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/style.css" type="text/css" media="all" />
@@ -120,7 +119,6 @@
               <div class="archive-body">
                 <h1>{{ keyword }}</h1>
                 <div>共找到 {{ total }} 篇相关文章</div>
-                {{ ^total }}<div>暂无相关内容</div>{{ /total }}
               </div>
             </div>
             {{ /keyword }}
@@ -149,17 +147,17 @@
                       {{ /matchInfo.tags }}
                     </h2>
                     {{ #excerpt }}
-                    <div class="d-none d-md-block text-muted mt-md-3">
+                    <div class="d-md-block text-muted mt-md-3 mt-2">
                       <div class="h-2x ">{{{ excerpt }}}</div>
                     </div>
                     {{ /excerpt }}
                     {{ ^excerpt }}
-                    <div class="d-none d-md-block text-muted mt-md-3">
+                    <div class="d-md-block text-muted mt-md-3">
                       <div class="h-2x ">{{ &contentText }}</div>
                     </div>
                     {{ /excerpt }}
                   </div>
-                  <div class="list-footer d-flex align-items-center text-xs text-dark mt-2 mt-md-3">
+                  <div class="list-footer d-flex align-items-center text-xs text-dark mt-3 mt-md-3">
                     <span>{{ &createDate10 }}</span>
                     <div class="flex-fill"></div>
                     {{ #category }}
