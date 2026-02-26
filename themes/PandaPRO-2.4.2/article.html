@@ -119,8 +119,8 @@
             <div class="post-navigation d-flex justify-content-between mb-3">
               {{ #articleOlder }}
               <div class="nav-previous">
-                <a href="{{ articleOlder.url }}" class="btn btn-outline-primary">
-                  <i class="iconfont icon-arrow-left"></i> 上一篇：{{ articleOlder.title }}
+                <a href="{{ .url }}" class="btn btn-outline-primary">
+                  <i class="iconfont icon-arrow-left"></i> 上一篇：{{ .title }}
                 </a>
               </div>
               {{ /articleOlder }}
@@ -130,8 +130,8 @@
               
               {{ #articleNewer }}
               <div class="nav-next">
-                <a href="{{ articleNewer.url }}" class="btn btn-outline-primary">
-                  下一篇：{{ articleNewer.title }} <i class="iconfont icon-arrow-right"></i>
+                <a href="{{ .url }}" class="btn btn-outline-primary">
+                  下一篇：{{ .title }} <i class="iconfont icon-arrow-right"></i>
                 </a>
               </div>
               {{ /articleNewer }}
@@ -139,7 +139,7 @@
               <div></div>
               {{ /articleNewer }}
             </div>
-            
+
             <!-- 评论 -->
             <div id="comments" class="comments card mt-3">
               <div class="card-header">
