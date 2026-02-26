@@ -293,6 +293,31 @@
         .editormd .CodeMirror {
             font-family: monospace;
         }
+
+        /* 隐藏预览区域空内容时的滚动条 */
+        .editormd .editormd-preview {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;  /* 隐藏横向滚动条 */
+        }
+        
+        .editormd .editormd-preview-container {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;  /* 隐藏横向滚动条 */
+            word-wrap: break-word !important;  /* 长单词自动换行 */
+            word-break: break-word !important;
+        }
+        
+        /* 确保预览区域内容不会撑开宽度 */
+        .editormd .editormd-preview-container pre,
+        .editormd .editormd-preview-container code {
+            white-space: pre-wrap !important;  /* 代码块也换行 */
+            word-break: break-all !important;
+        }
+        
+        /* 隐藏空内容时的滚动条，但保留滚动功能 */
+        .editormd .editormd-preview-container:empty {
+            overflow-x: hidden !important;
+        }
     </style>
 </head>
 <body>
