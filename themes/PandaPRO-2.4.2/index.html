@@ -246,47 +246,62 @@
     window.addEventListener('load',function(){var currentYear=new Date().getFullYear();var yearElement=document.querySelector('.dqnianfen');if(yearElement){yearElement.textContent=currentYear}});
     </script>
     <script>
-      // 导航高亮
-      document.addEventListener('DOMContentLoaded', function() {
-        // 获取当前页面的路径
-        var path = window.location.pathname;
-        
-        // 获取所有导航菜单项
-        var menuItems = document.querySelectorAll('.navbar-site .menu-item');
-        
-        // 先移除所有 current-menu-item 类
-        menuItems.forEach(function(item) {
-          item.classList.remove('current-menu-item');
-        });
-        
-        // 如果是首页（/ 或 /page/ 开头）
-        if (path === '/' || path.startsWith('/page/')) {
-          // 首页高亮
-          document.querySelector('.navbar-site .menu-item:first-child').classList.add('current-menu-item');
-        } 
-        // 如果是分类页
-        else if (path.startsWith('/category/')) {
-          // 获取当前分类名称（需要解码）
-          var category = path.replace('/category/', '').replace(/\/$/, '').split('/')[0];
-          var decodedCategory = decodeURIComponent(category); // 解码，把 %E6%8A%80%E6%9C%AF%E7%B1%BB 转成 技术类
-          console.log('编码后的分类:', category);
-          console.log('解码后的分类:', decodedCategory);
-          
-          // 遍历菜单项，找到对应分类
-          menuItems.forEach(function(item) {
-            var link = item.querySelector('a');
-            if (link) {
-              var href = link.getAttribute('href');
-              
-              // 同时检查编码和解码后的版本
-              if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
-                item.classList.add('current-menu-item');
-              }
-            }
-          });
-        }
+    // 导航高亮
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取当前页面的路径
+      var path = window.location.pathname;
+      console.log('1. 当前路径:', path);
+      
+      // 获取所有导航菜单项
+      var menuItems = document.querySelectorAll('.navbar-site .menu-item');
+      console.log('2. 找到菜单项数量:', menuItems.length);
+      
+      // 先移除所有 current-menu-item 类
+      menuItems.forEach(function(item) {
+        item.classList.remove('current-menu-item');
       });
-      </script>
+      
+      // 如果是首页（/ 或 /page/ 开头）
+      if (path === '/' || path.startsWith('/page/')) {
+        console.log('3. 这是首页');
+        document.querySelector('.navbar-site .menu-item:first-child').classList.add('current-menu-item');
+      } 
+      // 如果是分类页
+      else if (path.startsWith('/category/')) {
+        console.log('3. 这是分类页');
+        
+        // 获取当前分类名称
+        var categoryPath = path.replace('/category/', '');
+        console.log('4. 去掉/category/后:', categoryPath);
+        
+        var category = categoryPath.replace(/\/$/, '').split('/')[0];
+        console.log('5. 提取分类名(编码):', category);
+        
+        var decodedCategory = decodeURIComponent(category);
+        console.log('6. 解码后的分类名:', decodedCategory);
+        
+        // 遍历菜单项，查看每个菜单的链接
+        menuItems.forEach(function(item, index) {
+          var link = item.querySelector('a');
+          if (link) {
+            var href = link.getAttribute('href');
+            console.log('7. 菜单项' + index + '链接:', href);
+            
+            // 检查是否匹配
+            var match1 = href && href.includes('/category/' + category);
+            var match2 = href && href.includes('/category/' + decodedCategory);
+            console.log('   匹配编码版:', match1);
+            console.log('   匹配解码版:', match2);
+            
+            if (match1 || match2) {
+              console.log('8. 找到匹配项:', index);
+              item.classList.add('current-menu-item');
+            }
+          }
+        });
+      }
+    });
+    </script>
   </body>
 
 </html>
