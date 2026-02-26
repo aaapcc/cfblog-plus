@@ -342,7 +342,8 @@
       });
       
       document.getElementById('commentsList').innerHTML = html || '';
-      document.querySelectorAll('.comments-count').forEach(el => {
+      let commentCounts = document.querySelectorAll('.comments-count');
+      commentCounts.forEach(el => {
           el.textContent = data.comments.length;
       });
     }
