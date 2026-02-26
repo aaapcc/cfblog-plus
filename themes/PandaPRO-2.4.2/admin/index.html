@@ -680,12 +680,12 @@
         var allArticles = [];
         
         $(function() {
-            // 初始化编辑器 - 使用与edit相同的配置
+            // 初始化编辑器
             if ($('#content').length) {
+                // 先创建编辑器
                 mdEditor = editormd("content", {
                     height: 500,
-                    path: "https://gh.static.aaqq.site/editor.md-1.5.0/lib/",  // 改用和edit相同的路径
-                    appendMarkdown : "",  // 初始为空
+                    path: "https://gh.static.aaqq.site/editor.md-1.5.0/lib/",
                     saveHTMLToTextarea: true,
                     mode: "markdown",
                     tex: true,
@@ -694,9 +694,22 @@
                     emoji: true,
                     taskList: true,
                     flowChart: true,
-                    sequenceDiagram: true
+                    sequenceDiagram: true,
+                    onload: function() {
+                        // 编辑器加载完成后，强制刷新一次
+                        console.log('编辑器加载完成');
+                        this.resize();
+                    }
                 });
-                console.log("编辑器初始化成功");
+                
+                // 额外保险：延迟再次刷新
+                setTimeout(function() {
+                    if (mdEditor) {
+                        mdEditor.resize();
+                        // 触发一个空操作来刷新编辑器
+                        mdEditor.setCursor({line: 0, ch: 0});
+                    }
+                }, 500);
             }
             
             // 初始化分类下拉框
@@ -1284,6 +1297,27 @@
 	    $(function() {
 	        initCommentManagement();
 	    });
+	</script>
+	<script>
+	// 强制刷新编辑器显示
+	$(document).ready(function() {
+	    // 当切换到写文章标签页时，强制刷新编辑器
+	    $('.menu-item[data-target="#new"]').on('click', function() {
+	        setTimeout(function() {
+	            if (mdEditor) {
+	                mdEditor.resize();
+	                console.log('编辑器已刷新');
+	            }
+	        }, 100);
+	    });
+	    
+	    // 如果编辑器已经存在但显示异常，也尝试刷新
+	    if (mdEditor) {
+	        setTimeout(function() {
+	            mdEditor.resize();
+	        }, 1000);
+	    }
+	});
 	</script>
 </body>
 </html>
