@@ -340,8 +340,6 @@
     // 渲染单条评论
     function renderComment(comment, replies) {
       return `
-        
-
         <li id="comment-${comment.id}" class="comment">
           <article id="div-comment-${comment.id}" class="comment-body">
             <div class="comment-avatar flex-avatar disabled me-2 me-md-3">
@@ -352,11 +350,11 @@
                 <div class="comment-chat bg-light">
                   <div class="comment-info d-flex flex-fill align-items-center mb-1">${comment.author}</div>
                   <div class="comment-text text-secondary">
-                    <p>${comment.date}</p>
+                    <p>${comment.content.replace(/\n/g, '<br>')}</p>
                   </div>
                 </div>
               </div>
-              <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">${comment.content.replace(/\n/g, '<br>')}</div></div>
+              <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">${comment.date}</div></div>
           </article>
         </li>
       `;
