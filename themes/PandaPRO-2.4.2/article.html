@@ -376,7 +376,7 @@
     function replyTo(parentId, author) {
       document.getElementById('parentId').value = parentId;
       document.getElementById('content').focus();
-      document.getElementById('commentMsg').innerHTML = `正在回复 ${author}`;
+      document.getElementById('commentMsg').innerHTML = `正在回复 <strong>${author}</strong> 的评论`;
     }
 
     // 提交评论
