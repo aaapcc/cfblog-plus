@@ -335,6 +335,69 @@
       });</script>
     <script type="text/javascript" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/js/nicetheme.js"></script>
     <script>
+    // 导航高亮
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取当前页面的路径
+      var path = window.location.pathname;
+      
+      // 获取所有导航菜单项（桌面端和移动端）
+      var desktopMenuItems = document.querySelectorAll('.navbar-site .menu-item');
+      var mobileMenuItems = document.querySelectorAll('.mobile-menu-inner .menu-item');
+      
+      // 合并处理两个菜单
+      function removeHighlight(items) {
+        items.forEach(function(item) {
+          item.classList.remove('current-menu-item');
+        });
+      }
+      
+      function addHighlight(items, index) {
+        if (items[index]) {
+          items[index].classList.add('current-menu-item');
+        }
+      }
+      
+      // 先移除所有高亮
+      removeHighlight(desktopMenuItems);
+      removeHighlight(mobileMenuItems);
+      
+      // 如果是首页（/ 或 /page/ 开头）
+      if (path === '/' || path.startsWith('/page/')) {
+        // 首页高亮（第一个菜单项）
+        if (desktopMenuItems[0]) desktopMenuItems[0].classList.add('current-menu-item');
+        if (mobileMenuItems[0]) mobileMenuItems[0].classList.add('current-menu-item');
+      } 
+      // 如果是分类页
+      else if (path.startsWith('/category/')) {
+        // 获取当前分类名称（解码）
+        var category = path.replace('/category/', '').replace(/\/$/, '').split('/')[0];
+        var decodedCategory = decodeURIComponent(category);
+        
+        // 处理桌面端菜单
+        desktopMenuItems.forEach(function(item) {
+          var link = item.querySelector('a');
+          if (link) {
+            var href = link.getAttribute('href');
+            if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
+              item.classList.add('current-menu-item');
+            }
+          }
+        });
+        
+        // 处理移动端菜单
+        mobileMenuItems.forEach(function(item) {
+          var link = item.querySelector('a');
+          if (link) {
+            var href = link.getAttribute('href');
+            if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
+              item.classList.add('current-menu-item');
+            }
+          }
+        });
+      }
+    });
+    </script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof tocbot !== 'undefined') {
         tocbot.init({
