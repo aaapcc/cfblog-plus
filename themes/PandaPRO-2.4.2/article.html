@@ -43,8 +43,8 @@
           <a href="/" rel="home"><img src="{{ &OPT.logo }}" class="d-inline-block logo-light nc-no-lazy" alt="{{ &OPT.siteName }}" /></a>
         </h1>
         <div class="collapse navbar-collapse">
-          <ul id="menu-%e5%af%bc%e8%88%aa" class="navbar-site navbar-nav me-auto ms-lg-5">
-            <li class="menu-item "><a href="/">首页</a></li>
+          <ul class="navbar-site navbar-nav me-auto ms-lg-5">
+            <li class="menu-item current-menu-item"><a href="/">首页</a></li>
             {{ #widgetCategoryList }}
             <li class="menu-item"><a href="/category/{{&.}}">{{&.}}</a></li>
             {{ /widgetCategoryList }}
@@ -344,20 +344,13 @@
       var desktopMenuItems = document.querySelectorAll('.navbar-site .menu-item');
       var mobileMenuItems = document.querySelectorAll('.mobile-menu-inner .menu-item');
       
-      // 合并处理两个菜单
+      // 先移除所有高亮
       function removeHighlight(items) {
         items.forEach(function(item) {
           item.classList.remove('current-menu-item');
         });
       }
       
-      function addHighlight(items, index) {
-        if (items[index]) {
-          items[index].classList.add('current-menu-item');
-        }
-      }
-      
-      // 先移除所有高亮
       removeHighlight(desktopMenuItems);
       removeHighlight(mobileMenuItems);
       
@@ -373,27 +366,43 @@
         var category = path.replace('/category/', '').replace(/\/$/, '').split('/')[0];
         var decodedCategory = decodeURIComponent(category);
         
-        // 处理桌面端菜单
-        desktopMenuItems.forEach(function(item) {
-          var link = item.querySelector('a');
-          if (link) {
-            var href = link.getAttribute('href');
-            if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
-              item.classList.add('current-menu-item');
+        // 处理桌面端和移动端菜单
+        [desktopMenuItems, mobileMenuItems].forEach(function(items) {
+          items.forEach(function(item) {
+            var link = item.querySelector('a');
+            if (link) {
+              var href = link.getAttribute('href');
+              if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
+                item.classList.add('current-menu-item');
+              }
             }
-          }
+          });
         });
+      }
+      // 如果是文章页
+      else if (path.startsWith('/article/')) {
+        // 从 Worker 传递过来的文章分类数据
+        var articleCategory = '{{ #articleSingle.category }}{{ . }}{{ /articleSingle.category }}';
         
-        // 处理移动端菜单
-        mobileMenuItems.forEach(function(item) {
-          var link = item.querySelector('a');
-          if (link) {
-            var href = link.getAttribute('href');
-            if (href && (href.includes('/category/' + category) || href.includes('/category/' + decodedCategory))) {
-              item.classList.add('current-menu-item');
-            }
-          }
-        });
+        if (articleCategory) {
+          // 处理桌面端和移动端菜单
+          [desktopMenuItems, mobileMenuItems].forEach(function(items) {
+            items.forEach(function(item) {
+              var link = item.querySelector('a');
+              if (link) {
+                var href = link.getAttribute('href');
+                // 提取菜单项的分类名
+                var match = href.match(/\/category\/([^\/]+)/);
+                if (match) {
+                  var menuCategory = decodeURIComponent(match[1]);
+                  if (menuCategory === articleCategory) {
+                    item.classList.add('current-menu-item');
+                  }
+                }
+              }
+            });
+          });
+        }
       }
     });
     </script>
