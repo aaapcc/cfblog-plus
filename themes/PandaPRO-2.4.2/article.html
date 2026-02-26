@@ -194,18 +194,16 @@
               </div>
               <div class="card-body">
                 <ul>
-                  {{ #articleNewer }}
+                  {{ #relatedArticles }}
                   <li>
-                    <a href="{{ &url }}" target="_blank">
-                      <div class="h-1x">{{ &title }}</div></a>
+                    <a href="{{ url }}" target="_blank">
+                      <div class="h-1x">{{ title }}</div>
+                    </a>
                   </li>
-                  {{ /articleNewer }}
-                  {{ #articleOlder }}
-                  <li>
-                    <a href="{{ &url }}" target="_blank">
-                      <div class="h-1x">{{ &title }}</div></a>
-                  </li>
-                  {{ /articleOlder }}
+                  {{ /relatedArticles }}
+                  {{ ^relatedArticles }}
+                  <li class="text-muted">暂无相关文章</li>
+                  {{ /relatedArticles }}
                 </ul>
               </div>
             </div>
