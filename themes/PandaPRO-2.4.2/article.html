@@ -125,7 +125,7 @@
                   <form id="commentForm" class="comment-form" onsubmit="return submitComment(event)">
                     <input type="hidden" id="parentId" value="0">
                     <div class="comment-avatar flex-avatar w-48 ">
-                      <img src="https://img.vpsr.com.cnhttps://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/images/default-avatar.png" /></div>
+                      <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/default-avatar.png" /></div>
                     <div class="comment-body">
                       <div class="comment-input mb-3">
                         <div class="mb-3">
@@ -150,23 +150,7 @@
                 <!-- 评论内容 Begin -->
                 <ul class="comment-list mt-2 mt-md-3 mt-md-5">
                   <ol class="comment-list" id="commentsList">
-                    <li id="comment-392" class="comment">
-                      <article id="div-comment-392" class="comment-body">
-                        <div class="comment-avatar flex-avatar disabled me-2 me-md-3">
-                          <img class="avatar" loading="lazy" src="https://weavatar.com/avatar/109a2c584bd9fe6541503d8a58413bc7?s=128&amp;r=G&amp;d=mm" alt="小夜博客" width="128" height="128">
-                        </div>
-                        <div class="comment-content">
-                          <div>
-                            <div class="comment-chat bg-light">
-                              <div class="comment-info d-flex flex-fill align-items-center mb-1">小夜博客</div>
-                              <div class="comment-text text-secondary">
-                                <p>声明 不是我买的</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">2022-09-19 03:04</div></div>
-                      </article>
-                    </li>
+                    
                   </ol>
                 </ul>
                 <!-- 评论内容 End -->
@@ -356,21 +340,25 @@
     // 渲染单条评论
     function renderComment(comment, replies) {
       return `
-        <div class="comment-item card mb-3 p-3" id="comment-${comment.id}">
-          <div class="comment-header d-flex justify-content-between">
-            <strong>${comment.author}</strong>
-            <small class="text-muted">${comment.date}</small>
-          </div>
-          <div class="comment-content mt-2">${comment.content.replace(/\n/g, '<br>')}</div>
-          <div class="comment-footer mt-2">
-            <a href="javascript:;" onclick="replyTo('${comment.id}', '${comment.author}')">回复</a>
-          </div>
-          ${replies.length ? `
-            <div class="replies ml-4 pl-3 mt-2" style="border-left: 2px solid #eee;">
-              ${replies.map(r => renderComment(r, [])).join('')}
+        
+
+        <li id="comment-${comment.id}" class="comment">
+          <article id="div-comment-${comment.id}" class="comment-body">
+            <div class="comment-avatar flex-avatar disabled me-2 me-md-3">
+              <img class="avatar" loading="lazy" src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/default-avatar.png" alt="{{ &OPT.siteName }}" width="128" height="128">
             </div>
-          ` : ''}
-        </div>
+            <div class="comment-content">
+              <div>
+                <div class="comment-chat bg-light">
+                  <div class="comment-info d-flex flex-fill align-items-center mb-1">${comment.author}</div>
+                  <div class="comment-text text-secondary">
+                    <p>${comment.date}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">${comment.content.replace(/\n/g, '<br>')}</div></div>
+          </article>
+        </li>
       `;
     }
 
