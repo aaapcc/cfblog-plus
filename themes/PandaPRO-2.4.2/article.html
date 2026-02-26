@@ -9,7 +9,8 @@
     <meta name="description" content="{{ &OPT.siteDescription }}" />
     <meta name="keywords" content="{{ &keyWords }}" />
     <link rel="icon" href="{{ &OPT.siteFavicon }}" />
-    <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" />
+    <!-- <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/iconfont/iconfont.css" type="text/css" media="all" /> -->
+    <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_5129704_wqcgryljl4b.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/plugins/bootstrap/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/css/reset1.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/style.css" type="text/css" media="all" />
@@ -83,7 +84,7 @@
                       </div>
                       <div>
                         <div>Admin</div>
-                        <div class="text-xs text-muted">{{ &articleSingle.createDate10 }} · {{ &articleSingle.views }} 次阅读 · <span class="comments-count">0</span> 条评论</div>
+                        <div class="text-xs text-muted">{{ &articleSingle.createDate10 }} · <i class="iconfont icon-eye"></i>{{ &articleSingle.views }}次阅读 · <i class="iconfont icon-wodepinglun"></i><span class="comments-count">0</span>条评论</div>
                       </div>
                   </div>
                 </div>
@@ -99,7 +100,7 @@
                 {{ /articleSingle.tags }}
               </div>
 
-              <div class="post-author-meta rounded-1 mt-4">
+              <!-- <div class="post-author-meta rounded-1 mt-4">
                 <div class="author-meta-bg" style="background-image:url('{{ &OPT.siteDefaultCover }}')"></div>
                 <div class="author-meta-inner d-flex flex-fill p-3 p-md-4">
                   <a href="https://www.vpshu.com/" class="flex-avatar w-56 ">
@@ -112,33 +113,34 @@
                       <a href="https://www.vpsr.com.cn" class="h6 text-white">小夜温馨提示</a></div>
                     <div class="text-white text-sm mt-2">数据才是你的生命，所有VPS均有跑路可能，每天备份才是王道。</div></div>
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <!-- 上一篇/下一篇导航 -->
-            <div class="post-navigation d-flex justify-content-between mb-3">
+            <div class="post-navigation d-flex flex-column flex-md-row mb-3 mt-3" style="gap: 0.625rem;">
               {{ #articleOlder }}
-              <div class="nav-previous">
-                <a href="{{ articleOlder.0.url }}" class="btn btn-outline-primary">
-                  <i class="iconfont icon-arrow-left"></i> 上一篇：{{ articleOlder.0.title }}
+              <div class="nav-previous w-100 w-md-50">
+                <a href="{{ articleOlder.0.url }}" class="nav-card d-block p-3 rounded block h-100">
+                  <span class="text-muted"><i class="iconfont icon-arrow-left"></i>上一篇：</span><br>{{ articleOlder.0.title }}
                 </a>
               </div>
               {{ /articleOlder }}
+
               {{ ^articleOlder }}
-              <div></div>
               {{ /articleOlder }}
-              
+
               {{ #articleNewer }}
-              <div class="nav-next">
-                <a href="{{ articleNewer.0.url }}" class="btn btn-outline-primary">
-                  下一篇：{{ articleNewer.0.title }} <i class="iconfont icon-arrow-right"></i>
+              <div class="nav-next w-100 w-md-50">
+                <a href="{{ articleNewer.0.url }}" class="nav-card d-block p-3 rounded block h-100">
+                  <span class="text-muted">下一篇<i class="iconfont icon-arrow-right"></i>：</span><br>{{ articleNewer.0.title }}
                 </a>
               </div>
               {{ /articleNewer }}
+
               {{ ^articleNewer }}
-              <div></div>
               {{ /articleNewer }}
             </div>
+
 
             <!-- 评论 -->
             <div id="comments" class="comments card mt-3">
@@ -391,7 +393,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">${comment.date}<a href="javascript:;" onclick="replyTo('${comment.id}', '${comment.author}')" class="ms-auto" style="color: var(--color-muted) !important;">回复</a></div></div>
+              <div class="d-flex flex-fill align-items-center text-xs text-muted mx-2 mt-2">${comment.date}<a href="javascript:;" onclick="replyTo('${comment.id}', '${comment.author}')" class="ms-auto" style="color: var(--color-muted) !important;"><i class="iconfont icon-reply"></i>回复</a></div></div>
               ${replies.length ? `
               <div class="mt-2">
                 ${replies.map(r => renderComment(r, [])).join('')}
