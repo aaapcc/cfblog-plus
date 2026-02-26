@@ -31,7 +31,7 @@
           <a href="/" rel="home"><img src="{{ &OPT.logo }}" class="d-inline-block logo-light nc-no-lazy" alt="{{ &OPT.siteName }}" /></a>
         </h1>
         <div class="collapse navbar-collapse">
-          <ul id="menu-%e5%af%bc%e8%88%aa" class="navbar-site navbar-nav me-auto ms-lg-5">
+          <ul class="navbar-site navbar-nav me-auto ms-lg-5">
             <li class="menu-item current-menu-item"><a href="/">首页</a></li>
             {{ #widgetCategoryList }}
             <li class="menu-item"><a href="/category/{{&.}}">{{&.}}</a></li>
@@ -60,10 +60,14 @@
       <div class="container">
         <div class="row gx-xl-4">
           <div class="content-wrapper col-xl-8">
-
             {{ #isCategory }}
-            <div class="archive-header block p-4 p-xl-4 mb-3">
-              <h3>Category : {{ categoryName }}</h3>
+            <div class="archive-header block pt-4 pb-4 px-3 mb-3">
+              <div class="archive-icon btn btn-primary btn-icon btn-md btn-rounded">
+                <span><i class="text-lg iconfont icon-fenlei"></i></span>
+              </div>
+              <div class="archive-body">
+                <h3>Category : {{ categoryName }}</h3>
+              </div>
             </div>
             {{ /isCategory }}
 
