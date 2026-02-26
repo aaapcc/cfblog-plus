@@ -342,7 +342,9 @@
       });
       
       document.getElementById('commentsList').innerHTML = html || '';
-      document.querySelector('.comments-count').textContent = data.comments.length;
+      document.querySelectorAll('.comments-count').forEach(el => {
+          el.textContent = data.comments.length;
+      });
     }
 
     // 渲染单条评论
