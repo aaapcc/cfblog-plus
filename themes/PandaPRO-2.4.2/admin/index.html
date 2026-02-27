@@ -180,25 +180,8 @@
         .alert.error { background: #f44336; }
         .alert.info { background: #2196f3; }
         
-        /* 修复编辑器样式 - 确保编辑器内的元素不受影响 */
-        .editormd, .editormd * {
-            box-sizing: content-box; /* 编辑器自己控制盒模型 */
-        }
-        
-        .editormd .editormd-toolbar {
-            background: #f5f5f5 !important;
-            border-bottom: 1px solid #ddd !important;
-        }
-        
-        .editormd .editormd-preview {
-            background: #fff !important;
-        }
-        
-        /* 确保编辑器工具栏按钮正常显示 */
-        .editormd .editormd-toolbar i {
-            font-family: "FontAwesome" !important;
-            font-size: 14px !important;
-        }
+        .text-end { text-align: right; }
+        .text-center { text-align: center; }
         
         /* 修复分类下拉框样式 */
         .bootstrap-select {
@@ -269,6 +252,25 @@
             margin-right: 8px;
         }
 
+        /* 修复编辑器样式 - 确保编辑器内的元素不受影响 */
+        .editormd, .editormd * {
+            box-sizing: content-box; /* 编辑器自己控制盒模型 */
+        }
+        
+        .editormd .editormd-toolbar {
+            background: #f5f5f5 !important;
+            border-bottom: 1px solid #ddd !important;
+        }
+        
+        .editormd .editormd-preview {
+            background: #fff !important;
+        }
+        
+        /* 确保编辑器工具栏按钮正常显示 */
+        .editormd .editormd-toolbar i {
+            font-family: "FontAwesome" !important;
+            font-size: 14px !important;
+        }
         /* 编辑器基本样式 - 极简 */
         #content {
             width: 100%;
