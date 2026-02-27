@@ -1004,7 +1004,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 5);
+                var recent = allArticles.slice(0, 2);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1252,7 +1252,9 @@
 	                            `;
 	                        });
 	                        
+	                        $('#pendingCommentsTable tbody').empty();
 	                        $('#pendingCommentsList').html(html);
+	                        console.log('渲染后的行数:', $('#pendingCommentsList tr').length);
 	                        $('#pendingCount').text(data.comments.length);
 	                        $('#pendingTabCount').text(data.comments.length);
 	                        $('#pendingCommentsCount').text(data.comments.length);
