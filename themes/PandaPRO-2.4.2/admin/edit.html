@@ -297,7 +297,7 @@
         <div class="top-nav">
             <div class="page-title">
                 <i class="fa fa-pencil"></i>
-                <span>编辑文章</span>
+                <span>编辑文章2323</span>
             </div>
             
             <div class="user-info">
@@ -446,6 +446,14 @@
                         '</li>'
                     );
                     
+                    // 调整编辑器高度
+                    setTimeout(function() {
+                        editor.resize();
+                        if (editor.cm) {
+                            editor.cm.refresh();
+                        }
+                    }, 100);
+                    
                     $('a[title="解析HTML标签"]').click(function() {
                         let ele = $(".editormd-menu li a i:last");
                         if (ele.hasClass('fa-toggle-off')) {
@@ -505,6 +513,9 @@
                             // 添加解析HTML标签按钮
                             addParseHtmlButton(editor);
                         }, 200);
+                    },
+                    onresize: function() {
+                        this.resize();
                     }
                 });
             }
