@@ -1004,7 +1004,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 3);
+                var recent = allArticles.slice(0, 5);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1218,8 +1218,12 @@
 	        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
 	        
 	        fetch('/api/admin/comments/pending')
-	            .then(res => res.json())
+	            .then(res => {
+	                console.log('请求状态:', res.status);
+	                return res.json();
+	            })
 	            .then(data => {
+	                console.log('获取到数据:', data);
 	                if (data.success) {
 	                    if (data.comments.length === 0) {
 	                        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">暂无待审核评论</td></tr>');
