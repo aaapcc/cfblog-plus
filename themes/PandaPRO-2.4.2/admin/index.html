@@ -1004,7 +1004,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 4);
+                var recent = allArticles.slice(0, 3);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1234,10 +1234,10 @@
 	                        let html = '';
 	                        data.comments.forEach(c => {
 	                            // 对内容进行转义，防止HTML标签破坏结构
-	                            let author = c.author.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-	                            let email = (c.email || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-	                            let content = c.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
-	                            let title = (c.articleTitle || c.articleId).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	                            let author = escapeHtml(c.author);
+	                            let email = escapeHtml(c.email || '-');
+	                            let content = escapeHtml(c.content).replace(/\n/g, '<br>');
+	                            let title = escapeHtml(c.articleTitle || c.articleId);
 	                            
 	                            html += `
 	                                <tr id="pending-comment-${c.id}">
@@ -1258,9 +1258,10 @@
 	                            `;
 	                        });
 	                        
-	                        $('#pendingCommentsTable tbody').empty();
-	                        $('#pendingCommentsList').html(html);
+	                        // 先清空表格，再设置新的内容
+	                        $('#pendingCommentsList').empty().html(html);
 	                        console.log('渲染后的行数:', $('#pendingCommentsList tr').length);
+	                        
 	                        $('#pendingCount').text(data.comments.length);
 	                        $('#pendingTabCount').text(data.comments.length);
 	                        $('#pendingCommentsCount').text(data.comments.length);
@@ -1275,6 +1276,17 @@
 	            .catch(() => {
 	                $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
 	            });
+	    }
+
+	    // HTML转义函数
+	    function escapeHtml(text) {
+	        if (!text) return '';
+	        return String(text)
+	            .replace(/&/g, '&amp;')
+	            .replace(/</g, '&lt;')
+	            .replace(/>/g, '&gt;')
+	            .replace(/"/g, '&quot;')
+	            .replace(/'/g, '&#039;');
 	    }
 	    
 	    // 审核评论
