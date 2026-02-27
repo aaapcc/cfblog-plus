@@ -297,7 +297,7 @@
         <div class="top-nav">
             <div class="page-title">
                 <i class="fa fa-pencil"></i>
-                <span>编辑文章38388</span>
+                <span>编辑文章</span>
             </div>
             
             <div class="user-info">
@@ -433,10 +433,42 @@
         var mdEditor = null;
         var allArticles = [];
         
+        // 添加解析HTML标签按钮的函数 - 从admin/index复制
+        function addParseHtmlButton(editor) {
+            setTimeout(function() {
+                if ($('.editormd-menu li:contains("解析HTML标签")').length === 0) {
+                    $(".editormd-menu").append(
+                        '<li class="divider" unselectable="on">|</li>' +
+                        '<li>' +
+                        '<a href="javascript:;" title="解析HTML标签" unselectable="on">' +
+                        '<i class="fa fa-toggle-off" name="parseHtml" unselectable="on"> 解析HTML标签 </i>' +
+                        '</a>' +
+                        '</li>'
+                    );
+                    
+                    $('a[title="解析HTML标签"]').click(function() {
+                        let ele = $(".editormd-menu li a i:last");
+                        if (ele.hasClass('fa-toggle-off')) {
+                            ele.removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                            editor.settings.htmlDecode = true;
+                        } else if (ele.hasClass('fa-toggle-on')) {
+                            ele.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                            editor.settings.htmlDecode = false;
+                        }
+                        editor.setMarkdown(editor.getMarkdown());
+                    });
+                }
+            }, 500);
+        }
+        
         $(function() {
             // 获取文章数据
             var articleJson = <!--{articleJson}--> || {};
             var categoryJson = <!--{categoryJson}--> || [];
+            
+            // 设置用户头像
+            var username = '{{username}}' || 'A';
+            $('#userAvatar').text(username.charAt(0).toUpperCase());
             
             // 初始化编辑器
             if ($('#content').length) {
@@ -470,6 +502,8 @@
                             if (editor.cm) {
                                 editor.cm.refresh();
                             }
+                            // 添加解析HTML标签按钮
+                            addParseHtmlButton(editor);
                         }, 200);
                     }
                 });
@@ -667,12 +701,5 @@
             }
         }
     </script>
-    <script>
-		$(function() {
-		    // 获取用户名首字母
-		    var username = '{{username}}' || 'A';
-		    $('#userAvatar').text(username.charAt(0).toUpperCase());
-		});
-	</script>
 </body>
 </html>
