@@ -1199,7 +1199,7 @@
         }
     </script>
     <script type="text/javascript">
-	    // ========== 评论管理功能 ==========
+	    	    // ========== 评论管理功能 ==========
 	    
 	    // 加载待审核评论
 	    function loadPendingComments() {
@@ -1402,6 +1402,14 @@
 	    function initCommentManagement() {
 	        // 当切换到评论管理标签页时加载待审核
 	        $('.menu-item[data-target="#comments"]').click(function() {
+	            loadPendingComments();
+	            
+	            // 确保待审核标签页是激活状态
+	            $('a[href="#pendingComments"]').tab('show');
+	        });
+	        
+	        // 当切换到待审核标签页时加载数据
+	        $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
 	            loadPendingComments();
 	        });
 	        
