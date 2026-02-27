@@ -631,6 +631,14 @@
 
         <!-- 评论管理页 - 新增 -->
         <div class="tab-pane" id="comments">
+        	<script>
+                // 如果这个标签页是激活的，直接加载数据
+                if ($('#comments').hasClass('active')) {
+                    setTimeout(function() {
+                        loadPendingComments();
+                    }, 200);
+                }
+            </script>
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fa fa-comments"></i> 评论管理</h3>
@@ -1403,14 +1411,15 @@
 	        // 当切换到评论管理标签页时加载待审核
 	        $('.menu-item[data-target="#comments"]').click(function() {
 	            loadPendingComments();
+	            // 同时确保待审核标签页是激活的
+	            $('a[href="#pendingComments"]').tab('show');
 	        });
 	        
-	        // 当待审核标签页首次显示时加载数据
-	        $('a[href="#pendingComments"]').one('shown.bs.tab', function() {
+	        // 当标签页切换时加载对应数据
+	        $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
 	            loadPendingComments();
 	        });
 	        
-	        // 当切换到全部评论标签页时加载全部评论
 	        $('a[href="#allComments"]').on('shown.bs.tab', function() {
 	            loadAllComments();
 	        });
@@ -1418,19 +1427,14 @@
 	    
 	    // 在页面加载完成后初始化评论管理
 	    $(function() {
-	        iinitCommentManagement();
+	        initCommentManagement();
 	        
 	        // 主动加载待审核评论（用于侧边栏徽章）
 	        loadPendingComments();
 	        
-	        // 如果当前就在评论管理页签，需要主动显示待审核标签页的内容
+	        // 如果当前就在评论管理页签，需要显示待审核内容
 	        if ($('#comments').hasClass('active')) {
-	            // 手动触发待审核标签页的显示事件
-	            $('a[href="#pendingComments"]').tab('show');
-	            // 延迟一点加载数据，确保标签页已切换
-	            setTimeout(function() {
-	                loadPendingComments();
-	            }, 100);
+	            loadPendingComments();
 	        }
 	    });
 	</script>
