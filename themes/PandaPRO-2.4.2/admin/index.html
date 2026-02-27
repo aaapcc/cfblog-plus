@@ -1004,7 +1004,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 3);
+                var recent = allArticles.slice(0, 2);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1258,11 +1258,12 @@
 	                            `;
 	                        });
 	                        
-	                        // 像最新文章那样操作表格
-	                        let $tbody = $('#pendingCommentsTable tbody');
-	                        $tbody.empty();
-	                        $tbody.append(html);
-	                        console.log('渲染后的行数:', $tbody.find('tr').length);
+	                        // 直接操作 tbody 的 HTML
+	                        $('#pendingCommentsList').html(html);
+	                        console.log('渲染后的行数:', $('#pendingCommentsList tr').length);
+	                        
+	                        // 强制刷新表格
+	                        $('#pendingCommentsTable').trigger('refresh');
 	                        
 	                        $('#pendingCount').text(data.comments.length);
 	                        $('#pendingTabCount').text(data.comments.length);
