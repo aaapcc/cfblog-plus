@@ -996,7 +996,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 6);
+                var recent = allArticles.slice(0, 8);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1403,9 +1403,6 @@
 	        // 当切换到评论管理标签页时加载待审核
 	        $('.menu-item[data-target="#comments"]').click(function() {
 	            loadPendingComments();
-	            
-	            // 确保待审核标签页是激活状态
-	            $('a[href="#pendingComments"]').tab('show');
 	        });
 	        
 	        // 当切换到待审核标签页时加载数据
@@ -1422,6 +1419,14 @@
 	    // 在页面加载完成后初始化评论管理
 	    $(function() {
 	        initCommentManagement();
+	        
+	        // 主动加载待审核评论（用于侧边栏徽章）
+	        loadPendingComments();
+	        
+	        // 如果当前就在评论管理页签，也要加载全部评论
+	        if ($('#comments').hasClass('active')) {
+	            loadAllComments();
+	        }
 	    });
 	</script>
 	<script>
