@@ -632,12 +632,25 @@
         <!-- 评论管理页 - 新增 -->
         <div class="tab-pane" id="comments">
         	<script>
-                // 如果这个标签页是激活的，直接加载数据
-                if ($('#comments').hasClass('active')) {
-                    setTimeout(function() {
+                // 强制激活待审核标签页并加载数据
+                setTimeout(function() {
+                    // 如果当前在评论管理页签
+                    if ($('#comments').hasClass('active')) {
+                        // 激活待审核标签页
+                        $('a[href="#pendingComments"]').tab('show');
+                        // 加载数据
                         loadPendingComments();
-                    }, 200);
-                }
+                    }
+                }, 300);
+                
+                // 监控标签页切换
+                $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
+                    loadPendingComments();
+                });
+                
+                $('a[href="#allComments"]').on('shown.bs.tab', function() {
+                    loadAllComments();
+                });
             </script>
             <div class="card">
                 <div class="card-header">
@@ -1004,7 +1017,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 3);
+                var recent = allArticles.slice(0, 1);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1459,29 +1472,10 @@
 	        });
 	    }
 	    
-	    // 在页面加载完成后初始化评论管理
+	    // 在页面加载完成后
 	    $(function() {
-	        // 当点击评论管理菜单时
-	        $('.menu-item[data-target="#comments"]').click(function() {
-	            // 先激活待审核标签页
-	            $('a[href="#pendingComments"]').tab('show');
-	            // 延迟加载数据
-	            setTimeout(loadPendingComments, 200);
-	        });
-	        
-	        // 当待审核标签页显示时加载数据
-	        $('a[href="#pendingComments"]').on('shown.bs.tab', loadPendingComments);
-	        
-	        // 当全部评论标签页显示时加载数据
-	        $('a[href="#allComments"]').on('shown.bs.tab', loadAllComments);
-	        
 	        // 主动加载待审核评论（用于侧边栏徽章）
 	        loadPendingComments();
-	        
-	        // 如果当前就在评论管理页签，手动激活待审核标签页并加载数据
-	        if ($('#comments').hasClass('active')) {
-	            $('a[href="#pendingComments"]').tab('show');
-	        }
 	    });
 	</script>
 	<script>
