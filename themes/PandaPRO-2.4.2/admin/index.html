@@ -839,20 +839,22 @@
                 $(target).addClass('active');
                 
                 // 更新顶部标题
-                var titles = {
-                    '#dashboard': '仪表盘',
-                    '#list': '文章管理',
-                    '#new': '写文章',
-                    '#config': '系统设置',
-                    '#pub': '发布'
-                };
-                var icons = {
-                    '#dashboard': 'dashboard',
-                    '#list': 'list',
-                    '#new': 'pencil',
-                    '#config': 'cog',
-                    '#pub': 'cloud-upload'
-                };
+	            var titles = {
+	                '#dashboard': '仪表盘',
+	                '#list': '文章管理',
+	                '#new': '写文章',
+	                '#config': '系统设置',
+	                '#comments': '评论管理',
+	                '#pub': '发布'
+	            };
+	            var icons = {
+	                '#dashboard': 'dashboard',
+	                '#list': 'list',
+	                '#new': 'pencil',
+	                '#config': 'cog',
+	                '#comments': 'comments',
+	                '#pub': 'cloud-upload'
+	            };
                 $('.page-title span').text(titles[target]);
                 $('.page-title i').attr('class', 'fa fa-' + icons[target]);
             });
