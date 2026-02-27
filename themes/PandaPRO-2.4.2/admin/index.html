@@ -371,9 +371,7 @@
                 </a>
                 
                 <div class="user-dropdown" id="userDropdown">
-                    <div class="user-avatar" onclick="toggleUserMenu()">
-                        A
-                    </div>
+                    <div class="user-avatar" onclick="toggleUserMenu()" id="userAvatar"></div>
                     <div class="dropdown-menu" id="userMenu">
                         <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> 退出登录</a>
                     </div>
@@ -1489,5 +1487,12 @@
 	    setTimeout(fixEditorHeight, 200);
 	});
 	</script>
+    <script>
+        $(function() {
+            // 获取用户名首字母
+            var username = '{{username}}' || 'A';
+            $('#userAvatar').text(username.charAt(0).toUpperCase());
+        });
+    </script>
 </body>
 </html>
