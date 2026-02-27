@@ -297,7 +297,7 @@
         <div class="top-nav">
             <div class="page-title">
                 <i class="fa fa-pencil"></i>
-                <span>编辑文章2323</span>
+                <span>编辑文章</span>
             </div>
             
             <div class="user-info">
@@ -433,40 +433,32 @@
         var mdEditor = null;
         var allArticles = [];
         
-        // 添加解析HTML标签按钮的函数 - 从admin/index复制
+        // 添加解析HTML标签按钮的函数
         function addParseHtmlButton(editor) {
-            setTimeout(function() {
-                if ($('.editormd-menu li:contains("解析HTML标签")').length === 0) {
-                    $(".editormd-menu").append(
-                        '<li class="divider" unselectable="on">|</li>' +
-                        '<li>' +
-                        '<a href="javascript:;" title="解析HTML标签" unselectable="on">' +
-                        '<i class="fa fa-toggle-off" name="parseHtml" unselectable="on"> 解析HTML标签 </i>' +
-                        '</a>' +
-                        '</li>'
-                    );
-                    
-                    // 调整编辑器高度
-                    setTimeout(function() {
-                        editor.resize();
-                        if (editor.cm) {
-                            editor.cm.refresh();
-                        }
-                    }, 100);
-                    
-                    $('a[title="解析HTML标签"]').click(function() {
-                        let ele = $(".editormd-menu li a i:last");
-                        if (ele.hasClass('fa-toggle-off')) {
-                            ele.removeClass('fa-toggle-off').addClass('fa-toggle-on');
-                            editor.settings.htmlDecode = true;
-                        } else if (ele.hasClass('fa-toggle-on')) {
-                            ele.removeClass('fa-toggle-on').addClass('fa-toggle-off');
-                            editor.settings.htmlDecode = false;
-                        }
-                        editor.setMarkdown(editor.getMarkdown());
-                    });
-                }
-            }, 500);
+            // 检查是否已经有这个按钮
+            if ($('.editormd-menu li:contains("解析HTML标签")').length === 0) {
+                $(".editormd-menu").append(
+                    '<li class="divider" unselectable="on">|</li>' +
+                    '<li>' +
+                    '<a href="javascript:;" title="解析HTML标签" unselectable="on">' +
+                    '<i class="fa fa-toggle-off" name="parseHtml" unselectable="on"> 解析HTML标签 </i>' +
+                    '</a>' +
+                    '</li>'
+                );
+                
+                // 为按钮绑定点击事件
+                $('a[title="解析HTML标签"]').click(function() {
+                    let ele = $(".editormd-menu li a i:last");
+                    if (ele.hasClass('fa-toggle-off')) {
+                        ele.removeClass('fa-toggle-off').addClass('fa-toggle-on');
+                        editor.settings.htmlDecode = true;
+                    } else if (ele.hasClass('fa-toggle-on')) {
+                        ele.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                        editor.settings.htmlDecode = false;
+                    }
+                    editor.setMarkdown(editor.getMarkdown());
+                });
+            }
         }
         
         $(function() {
@@ -505,17 +497,20 @@
                     },
                     onload: function() {
                         var editor = this;
+                        
+                        // 延迟一下让编辑器完全初始化
                         setTimeout(function() {
                             editor.resize();
                             if (editor.cm) {
                                 editor.cm.refresh();
                             }
+                            
                             // 添加解析HTML标签按钮
                             addParseHtmlButton(editor);
                         }, 200);
                     },
-                    onresize: function() {
-                        this.resize();
+                    onchange: function() {
+                        // 内容变化时的处理
                     }
                 });
             }
