@@ -297,7 +297,7 @@
         <div class="top-nav">
             <div class="page-title">
                 <i class="fa fa-pencil"></i>
-                <span>编辑文章</span>
+                <span>编辑文章2121</span>
             </div>
             
             <div class="user-info">
@@ -500,13 +500,16 @@
                         
                         // 延迟一下让编辑器完全初始化
                         setTimeout(function() {
-                            editor.resize();
-                            if (editor.cm) {
-                                editor.cm.refresh();
-                            }
-                            
-                            // 添加解析HTML标签按钮
+                            // 先添加解析HTML标签按钮
                             addParseHtmlButton(editor);
+                            
+                            // 再调整高度，确保按钮添加后重新计算
+                            setTimeout(function() {
+                                editor.resize();
+                                if (editor.cm) {
+                                    editor.cm.refresh();
+                                }
+                            }, 100);
                         }, 200);
                     },
                     onchange: function() {
