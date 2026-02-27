@@ -649,11 +649,11 @@
         // 保存编辑
         function saveEdit() {
             if (!$('#title').val()) {
-                showAlert('请输入标题', 'error');
+                alert('请输入标题', 'error');
                 return;
             }
             if (!$('#category').val() || $('#category').val().length === 0) {
-                showAlert('请选择分类', 'error');
+                alert('请选择分类', 'error');
                 return;
             }
             
@@ -664,10 +664,10 @@
                 contentType: 'application/json',
                 data: JSON.stringify($('#editForm').serializeArray()),
                 success: function(result) {
-                    showAlert(result.msg || '保存成功', 'success');
+                    alert(result.msg || '保存成功', 'success');
                 },
                 error: function() {
-                    showAlert('保存失败', 'error');
+                    alert('保存失败', 'error');
                 }
             });
         }
@@ -681,13 +681,13 @@
                 dataType: 'json',
                 url: '/admin/delete/' + $('#id').val() + '/',
                 success: function(result) {
-                    showAlert(result.msg || '删除成功', 'success');
+                    alert(result.msg || '删除成功', 'success');
                     setTimeout(function() {
                         window.location.href = '/admin/';
                     }, 1500);
                 },
                 error: function() {
-                    showAlert('删除失败', 'error');
+                    alert('删除失败', 'error');
                 }
             });
         }
