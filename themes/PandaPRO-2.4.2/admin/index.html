@@ -996,7 +996,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 4);
+                var recent = allArticles.slice(0, 1);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1440,26 +1440,20 @@
 	        
 	        // 点击评论管理菜单时
 	        $('.menu-item[data-target="#comments"]').click(function() {
+	            // 让 Bootstrap 自动处理标签页切换
 	            setTimeout(function() {
-	                $('a[href="#pendingComments"]').tab('show');
 	                loadPendingComments();
-	                $('#pendingCommentsTable').closest('.tab-pane').css('display', 'block');
-	                $('#pendingCommentsTable').show();
 	            }, 100);
 	        });
 	        
 	        // 待审核标签页显示时
 	        $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
 	            loadPendingComments();
-	            // 确保正确的标签页显示
-	            $('#pendingComments').addClass('active').siblings().removeClass('active');
 	        });
 	        
 	        // 全部评论标签页显示时
 	        $('a[href="#allComments"]').on('shown.bs.tab', function() {
 	            loadAllComments();
-	            // 确保正确的标签页显示
-	            $('#allComments').addClass('active').siblings().removeClass('active');
 	        });
 	    });
 	</script>
