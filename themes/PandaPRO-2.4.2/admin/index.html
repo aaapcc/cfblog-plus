@@ -1332,8 +1332,7 @@
 	                        });
 	                    }
 	                })
-	                .catch(() => {
-					});
+	                .catch(err => console.log('获取评论失败:', err))
 	                .finally(() => {
 	                    processed++;
 	                    if (processed === allArticles.length) {
