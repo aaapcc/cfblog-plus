@@ -324,7 +324,7 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" alt="Logo">
-           	<p>[{{username}}]</p>
+            <p>[{{username}}]</p>
             <h3>{{siteName}}管理后台</h3>
         </div>
         <div class="sidebar-menu">
@@ -436,8 +436,8 @@
                 <div class="card-header">
                     <h3><i class="fa fa-list"></i> 文章列表</h3>=
                     <button class="btn btn-primary btn-sm" id="gotoWriteArticle">
-					    <i class="fa fa-plus"></i> 写新文章
-					</button>
+                        <i class="fa fa-plus"></i> 写新文章
+                    </button>
                 </div>
                 <div class="table-container">
                     <table class="table" id="articleList">
@@ -499,14 +499,14 @@
                         <label class="col-sm-1 col-form-label text-end">更新频率</label>
                         <div class="col-sm-3">
                             <select class="form-control" id="changefreq" name="changefreq">
-							    <option value="daily">每天</option>
-							    <option value="hourly">每小时</option>
-							    <option value="weekly">每周</option>
-							    <option value="monthly">每月</option>
-							    <option value="yearly">每年</option>
-							    <option value="never">从不</option>
-							    <option value="always">总是</option>
-							</select>
+                                <option value="daily">每天</option>
+                                <option value="hourly">每小时</option>
+                                <option value="weekly">每周</option>
+                                <option value="monthly">每月</option>
+                                <option value="yearly">每年</option>
+                                <option value="never">从不</option>
+                                <option value="always">总是</option>
+                            </select>
                         </div>
                         
                         <label class="col-sm-1 col-form-label text-end">权重</label>
@@ -1066,11 +1066,11 @@
                     type: 'POST',
                     dataType: 'json',
                     success: function(result) {
-                        showAlert(result.msg || '删除成功', 'success');
+                        alert(result.msg || '删除成功', 'success');
                         loadAllData();
                     },
                     error: function() {
-                        showAlert('删除失败', 'error');
+                        alert('删除失败', 'error');
                     }
                 });
             }
@@ -1078,11 +1078,11 @@
         
         function saveAddNew() {
             if (!$('#title').val()) {
-                showAlert('请输入标题', 'error');
+                alert('请输入标题', 'error');
                 return;
             }
             if (!$('#category').val() || $('#category').val().length === 0) {
-                showAlert('请选择分类', 'error');
+                alert('请选择分类', 'error');
                 return;
             }
             
@@ -1099,7 +1099,7 @@
                 data: JSON.stringify($('#addNewForm').serializeArray()),
                 success: function(result) {
                     if (result.msg) {
-                        showAlert(result.msg, 'success');
+                        alert(result.msg, 'success');
                         if (result.id) {
                             $('#id').val(result.id);
                             $('#labelNew').text('编辑文章 - ' + result.id);
@@ -1108,22 +1108,22 @@
                     }
                 },
                 error: function() {
-                    showAlert('保存失败', 'error');
+                    alert('保存失败', 'error');
                 }
             });
         }
         
         function saveConfig() {
             if (!isJSON($('#WidgetCategory').val())) {
-                showAlert('分类格式错误', 'error');
+                alert('分类格式错误', 'error');
                 return;
             }
             if (!isJSON($('#WidgetMenu').val())) {
-                showAlert('菜单格式错误', 'error');
+                alert('菜单格式错误', 'error');
                 return;
             }
             if (!isJSON($('#WidgetLink').val())) {
-                showAlert('链接格式错误', 'error');
+                alert('链接格式错误', 'error');
                 return;
             }
             
@@ -1134,17 +1134,17 @@
                 contentType: 'application/json',
                 data: JSON.stringify($('#configForm').serializeArray()),
                 success: function(result) {
-                    showAlert(result.msg || '保存成功', 'success');
+                    alert(result.msg || '保存成功', 'success');
                 },
                 error: function() {
-                    showAlert('保存失败', 'error');
+                    alert('保存失败', 'error');
                 }
             });
         }
         
         function importBlog() {
             if (!isJSON($('#importJson').val())) {
-                showAlert('导入格式错误', 'error');
+                alert('导入格式错误', 'error');
                 return;
             }
             
@@ -1155,11 +1155,11 @@
                 contentType: 'application/json',
                 data: JSON.stringify($('#importForm').serializeArray()),
                 success: function(result) {
-                    showAlert(result.msg || '导入成功', 'success');
+                    alert(result.msg || '导入成功', 'success');
                     loadAllData();
                 },
                 error: function() {
-                    showAlert('导入失败', 'error');
+                    alert('导入失败', 'error');
                 }
             });
         }
@@ -1212,283 +1212,283 @@
         }
     </script>
     <script type="text/javascript">
-	    	    // ========== 评论管理功能 ==========
-	    
-	    // 加载待审核评论
-	    function loadPendingComments() {
+        // ========== 评论管理功能 ==========
+        
+        // 加载待审核评论
+        function loadPendingComments() {
 
-	        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
-	        
-	        fetch('/api/admin/comments/pending')
-	            .then(res => {
-	                return res.json();
-	            })
-	            .then(data => {
-	                if (data.success) {
-	                    if (data.comments.length === 0) {
-	                        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">暂无待审核评论</td></tr>');
-	                        $('#pendingCount').text('0');
-	                        $('#pendingTabCount').text('');
-	                        $('#pendingCommentsCount').text('');
-	                    } else {
-	                        let html = '';
-	                        data.comments.forEach(c => {
-	                            // 对内容进行转义，防止HTML标签破坏结构
-	                            let author = escapeHtml(c.author);
-	                            let email = escapeHtml(c.email || '-');
-	                            let content = escapeHtml(c.content).replace(/\n/g, '<br>');
-	                            let title = escapeHtml(c.articleTitle || c.articleId);
-	                            
-	                            html += `
-	                                <tr id="pending-comment-${c.id}">
-	                                    <td><a href="${c.articleUrl}" target="_blank">${title}</a></td>
-	                                    <td>${author}</td>
-	                                    <td>${email}</td>
-	                                    <td>${content}</td>
-	                                    <td>${c.date}</td>
-	                                    <td>
-	                                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
-	                                            <i class="fa fa-check"></i> 通过
-	                                        </button>
-	                                        <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
-	                                            <i class="fa fa-trash"></i> 删除
-	                                        </button>
-	                                    </td>
-	                                </tr>
-	                            `;
-	                        });
-	                        
-	                        // 直接操作 tbody 的 HTML
-	                        $('#pendingCommentsList').html(html);
-	                        
-	                        // 强制刷新表格
-	                        $('#pendingCommentsTable').trigger('refresh');
-	                        
-	                        $('#pendingCount').text(data.comments.length);
-	                        $('#pendingTabCount').text(data.comments.length);
-	                        $('#pendingCommentsCount').text(data.comments.length);
-	                    }
-	                    
-	                    // 加载完待审核后，再加载一次全部评论来更新统计数字
-	                    loadCommentStats();
-	                } else {
-	                    $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
-	                }
-	            })
-	            .catch(() => {
-	                $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
-	            });
-	    }
+            $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
+            
+            fetch('/api/admin/comments/pending')
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        if (data.comments.length === 0) {
+                            $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">暂无待审核评论</td></tr>');
+                            $('#pendingCount').text('0');
+                            $('#pendingTabCount').text('');
+                            $('#pendingCommentsCount').text('');
+                        } else {
+                            let html = '';
+                            data.comments.forEach(c => {
+                                // 对内容进行转义，防止HTML标签破坏结构
+                                let author = escapeHtml(c.author);
+                                let email = escapeHtml(c.email || '-');
+                                let content = escapeHtml(c.content).replace(/\n/g, '<br>');
+                                let title = escapeHtml(c.articleTitle || c.articleId);
+                                
+                                html += `
+                                    <tr id="pending-comment-${c.id}">
+                                        <td><a href="${c.articleUrl}" target="_blank">${title}</a></td>
+                                        <td>${author}</td>
+                                        <td>${email}</td>
+                                        <td>${content}</td>
+                                        <td>${c.date}</td>
+                                        <td>
+                                            <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
+                                                <i class="fa fa-check"></i> 通过
+                                            </button>
+                                            <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
+                                                <i class="fa fa-trash"></i> 删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            
+                            // 直接操作 tbody 的 HTML
+                            $('#pendingCommentsList').html(html);
+                            
+                            // 强制刷新表格
+                            $('#pendingCommentsTable').trigger('refresh');
+                            
+                            $('#pendingCount').text(data.comments.length);
+                            $('#pendingTabCount').text(data.comments.length);
+                            $('#pendingCommentsCount').text(data.comments.length);
+                        }
+                        
+                        // 加载完待审核后，再加载一次全部评论来更新统计数字
+                        loadCommentStats();
+                    } else {
+                        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
+                    }
+                })
+                .catch(() => {
+                    $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载失败</td></tr>');
+                });
+        }
 
-	    // HTML转义函数
-	    function escapeHtml(text) {
-	        if (!text) return '';
-	        return String(text)
-	            .replace(/&/g, '&amp;')
-	            .replace(/</g, '&lt;')
-	            .replace(/>/g, '&gt;')
-	            .replace(/"/g, '&quot;')
-	            .replace(/'/g, '&#039;');
-	    }
-	    
-	    // 审核评论
-	    function reviewComment(articleId, commentId, action) {
-	        let actionText = action === 'approve' ? '通过' : '删除';
-	        if (!confirm(`确定要${actionText}这条评论吗？`)) return;
-	        
-	        fetch('/api/admin/comments/review', {
-	            method: 'POST',
-	            headers: { 'Content-Type': 'application/json' },
-	            body: JSON.stringify({ articleId, commentId, action })
-	        })
-	        .then(res => res.json())
-	        .then(data => {
-	            if (data.success) {
-	                showAlert(data.message, 'success');
-	                $(`#pending-comment-${commentId}`).fadeOut(300, function() {
-	                    $(this).remove();
-	                    loadPendingComments(); // 重新加载计数
-	                });
-	                $(`#all-comment-${commentId}`).fadeOut(300, function() {
-	                    $(this).remove();
-	                });
-	            } else {
-	                showAlert(data.message, 'error');
-	            }
-	        })
-	        .catch(() => {
-	            showAlert('操作失败', 'error');
-	        });
-	    }
-	    
-	    // 加载评论统计数字
-	    function loadCommentStats() {
-	        if (!allArticles || allArticles.length === 0) return;
-	        
-	        let pendingCount = 0;
-	        let approvedCount = 0;
-	        let spamCount = 0;
-	        let processed = 0;
-	        
-	        allArticles.forEach(article => {
-	            fetch(`/api/admin/comments/article/${article.id}`)
-	                .then(res => res.json())
-	                .then(data => {
-	                    if (data.success && data.comments && data.comments.length) {
-	                        data.comments.forEach(comment => {
-	                            if (comment.approved) {
-	                                approvedCount++;
-	                            } else {
-	                                pendingCount++;
-	                            }
-	                        });
-	                    }
-	                })
-	                .catch(err => console.log('获取评论失败:', err))
-	                .finally(() => {
-	                    processed++;
-	                    if (processed === allArticles.length) {
-	                        $('#pendingCount').text(pendingCount);
-	                        $('#approvedCount').text(approvedCount);
-	                        $('#spamCount').text(spamCount);
-	                        $('#pendingTabCount').text(pendingCount);
-	                        $('#pendingCommentsCount').text(pendingCount);
-	                    }
-	                });
-	        });
-	    }
-	    
-	    // 加载全部评论
-	    function loadAllComments() {
-	        $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载中...</td></tr>');
-	        
-	        // 使用新的快速接口
-	        fetch('/api/admin/comments/all-fast')
-	            .then(res => res.json())
-	            .then(data => {
-	                if (data.success) {
-	                    renderAllComments(data.comments || []);
-	                    // 更新统计数字
-	                    updateCommentStatsFast(data.comments || []);
-	                    // 确保全部评论标签页显示
-	                    $('#allComments').addClass('active').siblings().removeClass('active');
-	                } else {
-	                    $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
-	                }
-	            })
-	            .catch(() => {
-	                $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
-	            });
-	    }
+        // HTML转义函数
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+        
+        // 审核评论
+        function reviewComment(articleId, commentId, action) {
+            let actionText = action === 'approve' ? '通过' : '删除';
+            if (!confirm(`确定要${actionText}这条评论吗？`)) return;
+            
+            fetch('/api/admin/comments/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ articleId, commentId, action })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    $(`#pending-comment-${commentId}`).fadeOut(300, function() {
+                        $(this).remove();
+                        loadPendingComments(); // 重新加载计数
+                    });
+                    $(`#all-comment-${commentId}`).fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            })
+            .catch(() => {
+                showAlert('操作失败', 'error');
+            });
+        }
+        
+        // 加载评论统计数字
+        function loadCommentStats() {
+            if (!allArticles || allArticles.length === 0) return;
+            
+            let pendingCount = 0;
+            let approvedCount = 0;
+            let spamCount = 0;
+            let processed = 0;
+            
+            allArticles.forEach(article => {
+                fetch(`/api/admin/comments/article/${article.id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.comments && data.comments.length) {
+                            data.comments.forEach(comment => {
+                                if (comment.approved) {
+                                    approvedCount++;
+                                } else {
+                                    pendingCount++;
+                                }
+                            });
+                        }
+                    })
+                    .catch(err => console.log('获取评论失败:', err))
+                    .finally(() => {
+                        processed++;
+                        if (processed === allArticles.length) {
+                            $('#pendingCount').text(pendingCount);
+                            $('#approvedCount').text(approvedCount);
+                            $('#spamCount').text(spamCount);
+                            $('#pendingTabCount').text(pendingCount);
+                            $('#pendingCommentsCount').text(pendingCount);
+                        }
+                    });
+            });
+        }
+        
+        // 加载全部评论
+        function loadAllComments() {
+            $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载中...</td></tr>');
+            
+            // 使用新的快速接口
+            fetch('/api/admin/comments/all-fast')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        renderAllComments(data.comments || []);
+                        // 更新统计数字
+                        updateCommentStatsFast(data.comments || []);
+                        // 确保全部评论标签页显示
+                        $('#allComments').addClass('active').siblings().removeClass('active');
+                    } else {
+                        $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
+                    }
+                })
+                .catch(() => {
+                    $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
+                });
+        }
 
 
-	    
-	    // 快速更新统计数字
-	    function updateCommentStatsFast(comments) {
-	        let pendingCount = comments.filter(c => !c.approved).length;
-	        let approvedCount = comments.filter(c => c.approved).length;
-	        
-	        $('#pendingCount').text(pendingCount);
-	        $('#approvedCount').text(approvedCount);
-	        $('#spamCount').text('0');
-	        $('#pendingTabCount').text(pendingCount);
-	        $('#pendingCommentsCount').text(pendingCount);
-	    }
-	    
-	    // 渲染全部评论
-	    function renderAllComments(comments) {
-	        if (comments.length === 0) {
-	            $('#allCommentsList').html('<tr><td colspan="7" class="text-center">暂无评论</td></tr>');
-	            return;
-	        }
-	        
-	        // 按时间倒序（最新的在前面）
-	        comments.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-	        
-	        let html = '';
-	        comments.forEach(c => {
-	            let statusText = c.approved ? '已审核' : '待审核';
-	            let statusClass = c.approved ? 'label-success' : 'label-warning';
-	            let actionButtons = '';
-	            
-	            if (!c.approved) {
-	                actionButtons += `
-	                    <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
-	                        <i class="fa fa-check"></i> 通过
-	                    </button>
-	                `;
-	            }
-	            actionButtons += `
-	                <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
-	                    <i class="fa fa-trash"></i> 删除
-	                </button>
-	            `;
-	            
-	            html += `
-	                <tr id="all-comment-${c.id}">
-	                    <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
-	                    <td>${c.author}</td>
-	                    <td>${c.email || '-'}</td>
-	                    <td>${c.content.replace(/\n/g, '<br>')}</td>
-	                    <td>${c.date}</td>
-	                    <td><span class="label ${statusClass}">${statusText}</span></td>
-	                    <td>${actionButtons}</td>
-	                </tr>
-	            `;
-	        });
-	        
-	        $('#allCommentsList').html(html);
-	    }
-	    
-	    // 在页面加载完成后
-	    $(function() {
-	        // 主动加载待审核评论（用于侧边栏徽章）
-	        loadPendingComments();
-	        
-	        // 点击待审核按钮
-	        $('#tabPendingBtn').click(function() {
-	            $(this).addClass('active').siblings().removeClass('active');
-	            $('#pendingComments').show();
-	            $('#allComments').hide();
-	            loadPendingComments();
-	        });
-	        
-	        // 点击全部评论按钮
-	        $('#tabAllBtn').click(function() {
-	            $(this).addClass('active').siblings().removeClass('active');
-	            $('#allComments').show();
-	            $('#pendingComments').hide();
-	            loadAllComments();
-	        });
-	        
-	        // 点击评论管理菜单时
-	        $('.menu-item[data-target="#comments"]').click(function() {
-	            // 确保待审核是激活状态
-	            $('#tabPendingBtn').addClass('active').siblings().removeClass('active');
-	            $('#pendingComments').show();
-	            $('#allComments').hide();
-	            setTimeout(function() {
-	                loadPendingComments();
-	            }, 100);
-	        });
-	    });
-	</script>
-	<script>
-	// 简化的刷新函数
-	function fixEditorHeight() {
-	    if (mdEditor) {
-	        mdEditor.resize();
-	        if (mdEditor.cm) {
-	            mdEditor.cm.refresh();
-	        }
-	    }
-	}
+        
+        // 快速更新统计数字
+        function updateCommentStatsFast(comments) {
+            let pendingCount = comments.filter(c => !c.approved).length;
+            let approvedCount = comments.filter(c => c.approved).length;
+            
+            $('#pendingCount').text(pendingCount);
+            $('#approvedCount').text(approvedCount);
+            $('#spamCount').text('0');
+            $('#pendingTabCount').text(pendingCount);
+            $('#pendingCommentsCount').text(pendingCount);
+        }
+        
+        // 渲染全部评论
+        function renderAllComments(comments) {
+            if (comments.length === 0) {
+                $('#allCommentsList').html('<tr><td colspan="7" class="text-center">暂无评论</td></tr>');
+                return;
+            }
+            
+            // 按时间倒序（最新的在前面）
+            comments.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+            
+            let html = '';
+            comments.forEach(c => {
+                let statusText = c.approved ? '已审核' : '待审核';
+                let statusClass = c.approved ? 'label-success' : 'label-warning';
+                let actionButtons = '';
+                
+                if (!c.approved) {
+                    actionButtons += `
+                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
+                            <i class="fa fa-check"></i> 通过
+                        </button>
+                    `;
+                }
+                actionButtons += `
+                    <button class="btn btn-danger btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'delete')">
+                        <i class="fa fa-trash"></i> 删除
+                    </button>
+                `;
+                
+                html += `
+                    <tr id="all-comment-${c.id}">
+                        <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
+                        <td>${c.author}</td>
+                        <td>${c.email || '-'}</td>
+                        <td>${c.content.replace(/\n/g, '<br>')}</td>
+                        <td>${c.date}</td>
+                        <td><span class="label ${statusClass}">${statusText}</span></td>
+                        <td>${actionButtons}</td>
+                    </tr>
+                `;
+            });
+            
+            $('#allCommentsList').html(html);
+        }
+        
+        // 在页面加载完成后
+        $(function() {
+            // 主动加载待审核评论（用于侧边栏徽章）
+            loadPendingComments();
+            
+            // 点击待审核按钮
+            $('#tabPendingBtn').click(function() {
+                $(this).addClass('active').siblings().removeClass('active');
+                $('#pendingComments').show();
+                $('#allComments').hide();
+                loadPendingComments();
+            });
+            
+            // 点击全部评论按钮
+            $('#tabAllBtn').click(function() {
+                $(this).addClass('active').siblings().removeClass('active');
+                $('#allComments').show();
+                $('#pendingComments').hide();
+                loadAllComments();
+            });
+            
+            // 点击评论管理菜单时
+            $('.menu-item[data-target="#comments"]').click(function() {
+                // 确保待审核是激活状态
+                $('#tabPendingBtn').addClass('active').siblings().removeClass('active');
+                $('#pendingComments').show();
+                $('#allComments').hide();
+                setTimeout(function() {
+                    loadPendingComments();
+                }, 100);
+            });
+        });
+    </script>
+    <script>
+    // 简化的刷新函数
+    function fixEditorHeight() {
+        if (mdEditor) {
+            mdEditor.resize();
+            if (mdEditor.cm) {
+                mdEditor.cm.refresh();
+            }
+        }
+    }
 
-	// 切换到写文章标签页时刷新
-	$(document).on('click', '.menu-item[data-target="#new"]', function() {
-	    setTimeout(fixEditorHeight, 200);
-	});
-	</script>
+    // 切换到写文章标签页时刷新
+    $(document).on('click', '.menu-item[data-target="#new"]', function() {
+        setTimeout(fixEditorHeight, 200);
+    });
+    </script>
     <script>
         $(function() {
             // 获取用户名首字母
