@@ -661,15 +661,15 @@
                     </div>
                 </div>
                 
-                <!-- 评论列表标签页 -->
+                <!-- 评论列表标签页 - 自定义切换 -->
                 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-                    <li class="active"><a href="#pendingComments" data-toggle="tab">待审核 <span class="badge" id="pendingTabCount">0</span></a></li>
-                    <li><a href="#allComments" data-toggle="tab">全部评论</a></li>
+                    <li class="active" id="tabPendingBtn"><a href="javascript:void(0)">待审核 <span class="badge" id="pendingTabCount">0</span></a></li>
+                    <li id="tabAllBtn"><a href="javascript:void(0)">全部评论</a></li>
                 </ul>
                 
                 <div class="tab-content">
                     <!-- 待审核评论列表 -->
-                    <div class="tab-pane active" id="pendingComments">
+                    <div class="tab-pane active" id="pendingComments" style="display: block;">
                         <div class="table-container">
                             <table class="table" id="pendingCommentsTable">
                                 <thead>
@@ -690,26 +690,26 @@
                     </div>
                     
                     <!-- 全部评论列表 -->
-					<div class="tab-pane" id="allComments">
-					    <div class="table-container">
-					        <table class="table" id="allCommentsTable">
-					            <thead>
-					                <tr>
-					                    <th>文章</th>
-					                    <th>昵称</th>
-					                    <th>邮箱</th>
-					                    <th>评论内容</th>
-					                    <th>时间</th>
-					                    <th>状态</th>
-					                    <th>操作</th>
-					                </tr>
-					            </thead>
-					            <tbody id="allCommentsList">
-					                <tr><td colspan="7" class="text-center">加载中...</td></tr>
-					            </tbody>
-					        </table>
-					    </div>
-					</div>
+                    <div class="tab-pane" id="allComments" style="display: none;">
+                        <div class="table-container">
+                            <table class="table" id="allCommentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>文章</th>
+                                        <th>昵称</th>
+                                        <th>邮箱</th>
+                                        <th>评论内容</th>
+                                        <th>时间</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allCommentsList">
+                                    <tr><td colspan="7" class="text-center">加载中...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -996,7 +996,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 1);
+                var recent = allArticles.slice(0, 4);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1438,22 +1438,31 @@
 	        // 主动加载待审核评论（用于侧边栏徽章）
 	        loadPendingComments();
 	        
-	        // 点击评论管理菜单时
-	        $('.menu-item[data-target="#comments"]').click(function() {
-	            // 让 Bootstrap 自动处理标签页切换
-	            setTimeout(function() {
-	                loadPendingComments();
-	            }, 100);
-	        });
-	        
-	        // 待审核标签页显示时
-	        $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
+	        // 点击待审核按钮
+	        $('#tabPendingBtn').click(function() {
+	            $(this).addClass('active').siblings().removeClass('active');
+	            $('#pendingComments').show();
+	            $('#allComments').hide();
 	            loadPendingComments();
 	        });
 	        
-	        // 全部评论标签页显示时
-	        $('a[href="#allComments"]').on('shown.bs.tab', function() {
+	        // 点击全部评论按钮
+	        $('#tabAllBtn').click(function() {
+	            $(this).addClass('active').siblings().removeClass('active');
+	            $('#allComments').show();
+	            $('#pendingComments').hide();
 	            loadAllComments();
+	        });
+	        
+	        // 点击评论管理菜单时
+	        $('.menu-item[data-target="#comments"]').click(function() {
+	            // 确保待审核是激活状态
+	            $('#tabPendingBtn').addClass('active').siblings().removeClass('active');
+	            $('#pendingComments').show();
+	            $('#allComments').hide();
+	            setTimeout(function() {
+	                loadPendingComments();
+	            }, 100);
 	        });
 	    });
 	</script>
