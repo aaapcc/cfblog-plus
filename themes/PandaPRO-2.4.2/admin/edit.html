@@ -14,7 +14,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fb; }
         
-        /* 侧边栏 - 完全从admin/index复制 */
+        /* 侧边栏 */
         .sidebar {
             position: fixed; left: 0; top: 0; bottom: 0; width: 260px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -49,12 +49,8 @@
         }
         
         .menu-item i { width: 24px; margin-right: 10px; }
-        .menu-item .badge {
-            background: #ffd700; color: #333; margin-left: auto;
-            font-size: 11px; padding: 2px 6px; border-radius: 10px;
-        }
         
-        /* 主内容区 - 留出侧边栏位置 */
+        /* 主内容区 */
         .main-content { margin-left: 260px; padding: 20px; }
         
         /* 顶部导航 */
@@ -76,21 +72,21 @@
         }
         .user-dropdown { position: relative; }
         .dropdown-menu {
-            position: absolute; right: 0; left: -100px; top: 45px; background: white;
+            position: absolute; right: 0; top: 45px; background: white;
             border-radius: 5px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             width: 150px; display: none; z-index: 1000;
         }
         .dropdown-menu.show { display: block; }
         .dropdown-menu a {
             padding: 10px 15px; display: block; color: #333;
-            text-decoration: none; transition: all 0.3s;
+            text-decoration: none;
         }
         .dropdown-menu a:hover { background: #f5f7fb; color: #667eea; }
         
         /* 卡片样式 */
         .card {
             background: white; border-radius: 10px; padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         
         .card-header {
@@ -112,12 +108,10 @@
         .btn-primary:hover { background: #5a6fd8; }
         .btn-default { background: #f0f2f5; color: #666; }
         .btn-default:hover { background: #e4e6e9; }
-        .btn-danger { background: #f44336; color: white; }
-        .btn-danger:hover { background: #d32f2f; }
         .btn-warning { background: #ff9800; color: white; }
         .btn-warning:hover { background: #f57c00; }
         
-        /* 表单样式 */
+        /* 表单样式 - 保持和admin/index一致 */
         .form-group { margin-bottom: 15px; }
         .form-group label {
             display: block; margin-bottom: 5px; color: #555;
@@ -142,17 +136,13 @@
         .col-sm-12 { width: 100%; }
         
         .text-end { text-align: right; }
-        .text-center { text-align: center; }
         
         /* 修复编辑器样式 */
         .editormd, .editormd * { box-sizing: content-box; }
-        .editormd .editormd-toolbar { background: #f5f5f5 !important; border-bottom: 1px solid #ddd !important; }
-        .editormd .editormd-preview { background: #fff !important; }
-        .editormd .editormd-toolbar i { font-family: "FontAwesome" !important; font-size: 14px !important; }
+        .editormd .editormd-toolbar { background: #f5f5f5 !important; }
         
         /* 修复下拉框 */
         .bootstrap-select { width: 100% !important; }
-        .bootstrap-select .dropdown-toggle { background: white !important; border: 1px solid #ddd !important; border-radius: 5px !important; }
         
         /* 操作按钮区 */
         .action-bar {
@@ -168,15 +158,14 @@
         }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(0%); opacity: 1; }
         }
         .alert.success { background: #4caf50; }
         .alert.error { background: #f44336; }
-        .alert.info { background: #2196f3; }
     </style>
 </head>
 <body>
-    <!-- 侧边栏 - 完全从admin/index复制 -->
+    <!-- 侧边栏 -->
     <div class="sidebar">
         <div class="sidebar-header">
             <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" alt="Logo">
@@ -184,29 +173,27 @@
             <h3>{{siteName}}管理后台</h3>
         </div>
         <div class="sidebar-menu">
-            <div class="menu-item" data-target="/admin/#dashboard">
+            <div class="menu-item" onclick="location.href='/admin/'">
                 <i class="fa fa-dashboard"></i>
                 <span>仪表盘</span>
             </div>
-            <div class="menu-item" data-target="/admin/#list">
+            <div class="menu-item" onclick="location.href='/admin/'">
                 <i class="fa fa-list"></i>
                 <span>文章管理</span>
-                <span class="badge" id="articleCount">0</span>
             </div>
-            <div class="menu-item active" data-target="/admin/#new">
+            <div class="menu-item active" onclick="location.href='/admin/new'">
                 <i class="fa fa-pencil"></i>
                 <span>写文章</span>
             </div>
-            <div class="menu-item" data-target="/admin/#config">
+            <div class="menu-item" onclick="location.href='/admin/#config'">
                 <i class="fa fa-cog"></i>
                 <span>系统设置</span>
             </div>
-            <div class="menu-item" data-target="/admin/#comments">
+            <div class="menu-item" onclick="location.href='/admin/#comments'">
                 <i class="fa fa-comments"></i>
                 <span>评论管理</span>
-                <span class="badge" id="pendingCommentsCount">0</span>
             </div>
-            <div class="menu-item" data-target="/admin/#pub">
+            <div class="menu-item" onclick="location.href='/admin/#pub'">
                 <i class="fa fa-cloud-upload"></i>
                 <span>发布</span>
             </div>
@@ -223,12 +210,11 @@
             </div>
             
             <div class="user-info">
-                <!-- 网站前台入口 -->
                 <a href="/" target="_blank" class="btn btn-default btn-sm">
                     <i class="fa fa-external-link"></i> 网站前台
                 </a>
                 
-                <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown">
                     <div class="user-avatar" onclick="toggleUserMenu()">
                         A
                     </div>
@@ -242,46 +228,46 @@
         <!-- 编辑表单 -->
         <div class="card">
             <div class="card-header">
-                <h3><i class="fa fa-edit"></i> 编辑文章 - <span id="articleId"></span></h3>
+                <h3><i class="fa fa-edit"></i> 编辑文章</h3>
             </div>
             
-            <form id="editForm">
+            <form id="editForm" class="form-horizontal">
                 <input type="hidden" name="id" id="id">
                 
-                <!-- 第1行：标题 -->
+                <!-- 标题 -->
                 <div class="form-group row">
-                    <label class="col-sm-1 col-form-label text-end">标题 <span style="color: red;">*</span></label>
+                    <label class="col-sm-1 text-end">标题 <span style="color:red;">*</span></label>
                     <div class="col-sm-11">
                         <input type="text" class="form-control" name="title" id="title" placeholder="输入文章标题" required>
                     </div>
                 </div>
                 
-                <!-- 第2行：特色图片、永久链接、创建日期 -->
+                <!-- 特色图片、永久链接、创建日期 -->
                 <div class="form-group row">
-                    <label class="col-sm-1 col-form-label text-end">特色图片</label>
+                    <label class="col-sm-1 text-end">特色图片</label>
                     <div class="col-sm-3">
                         <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
                     </div>
                     
-                    <label class="col-sm-1 col-form-label text-end">永久链接</label>
+                    <label class="col-sm-1 text-end">永久链接</label>
                     <div class="col-sm-3">
                         <input type="text" class="form-control" name="link" id="link" placeholder="url-slug">
                     </div>
                     
-                    <label class="col-sm-1 col-form-label text-end">创建日期</label>
+                    <label class="col-sm-1 text-end">创建日期</label>
                     <div class="col-sm-3">
                         <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
                     </div>
                 </div>
                 
-                <!-- 第3行：分类、更新频率、权重 -->
+                <!-- 分类、更新频率、权重 -->
                 <div class="form-group row">
-                    <label class="col-sm-1 col-form-label text-end">分类</label>
+                    <label class="col-sm-1 text-end">分类</label>
                     <div class="col-sm-3">
-                        <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true" data-none-selected-text="选择分类" title="选择分类"></select>
+                        <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true"></select>
                     </div>
                     
-                    <label class="col-sm-1 col-form-label text-end">更新频率</label>
+                    <label class="col-sm-1 text-end">更新频率</label>
                     <div class="col-sm-3">
                         <select class="form-control" id="changefreq" name="changefreq">
                             <option value="daily">每天</option>
@@ -294,20 +280,20 @@
                         </select>
                     </div>
                     
-                    <label class="col-sm-1 col-form-label text-end">权重</label>
+                    <label class="col-sm-1 text-end">权重</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" name="priority" id="priority" value="0.5" placeholder="0.5">
+                        <input type="text" class="form-control" name="priority" id="priority" value="0.5">
                     </div>
                 </div>
                 
-                <!-- 第4行：标签、是否置顶、是否隐藏 -->
+                <!-- 标签、是否置顶、是否隐藏 -->
                 <div class="form-group row">
-                    <label class="col-sm-1 col-form-label text-end">标签</label>
+                    <label class="col-sm-1 text-end">标签</label>
                     <div class="col-sm-3">
                         <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
                     </div>
                     
-                    <label class="col-sm-1 col-form-label text-end">是否置顶</label>
+                    <label class="col-sm-1 text-end">是否置顶</label>
                     <div class="col-sm-3">
                         <select class="form-control" id="istop" name="istop">
                             <option value="0">否</option>
@@ -316,7 +302,7 @@
                         <input type="hidden" id="top_timestamp" name="top_timestamp" value="0">
                     </div>
                     
-                    <label class="col-sm-1 col-form-label text-end">是否隐藏</label>
+                    <label class="col-sm-1 text-end">是否隐藏</label>
                     <div class="col-sm-3">
                         <select class="form-control" id="hidden" name="hidden">
                             <option value="0">否</option>
@@ -325,7 +311,7 @@
                     </div>
                 </div>
                 
-                <!-- 编辑器区域 -->
+                <!-- 编辑器 -->
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <div id="content"></div>
@@ -354,142 +340,64 @@
     <script src="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/js/bootstrap-select.min.js"></script>
     
     <script type="text/javascript">
-        // 全局变量
-        var mdEditor = null;
-        var articleJson = <!--{articleJson}--> || {};
-        var categoryJson = <!--{categoryJson}--> || [];
-        var menuJson = <!--{menuJson}--> || [];
-        var linkJson = <!--{linkJson}--> || [];
-        
         $(function() {
-            // 初始化编辑器
-            if ($('#content').length) {
-                $('#content').css('height', '500px');
-                
-                mdEditor = editormd("content", {
-                    width: "100%",
-                    height: 500,
-                    path: "https://gh.static.aaqq.site/editor.md-1.5.0/lib/",
-                    theme: "default",
-                    previewTheme: "default",
-                    editorTheme: "default",
-                    markdown: articleJson.contentMD || "",
-                    codeFold: true,
-                    saveHTMLToTextarea: true,
-                    searchReplace: true,
-                    htmlDecode: "style,script,iframe|on*",
-                    emoji: true,
-                    taskList: true,
-                    tex: true,
-                    flowChart: true,
-                    sequenceDiagram: true,
-                    imageUpload: false,
-                    toolbarIcons: function() {
-                        return editormd.toolbarModes['full'];
-                    },
-                    onload: function() {
-                        var editor = this;
-                        setTimeout(function() {
-                            editor.resize();
-                            if (editor.cm) {
-                                editor.cm.refresh();
-                            }
-                        }, 200);
-                    }
-                });
-            }
+            // 获取后台数据 - 保持原有的数据接收方式
+            var articleJson = <!--{articleJson}-->;  // 保持原样
+            var categoryJson = <!--{categoryJson}-->;  // 保持原样
             
-            // 表单赋值
-            if (articleJson.id) {
-                $('#id').val(articleJson.id);
-                $('#articleId').text(articleJson.id);
-                $('#title').val(articleJson.title || '');
-                $('#img').val(articleJson.img || '');
-                $('#link').val(articleJson.link || '');
-                
-                // 处理日期
-                if (articleJson.createDate) {
-                    $('#createDate').val(articleJson.createDate.replace(' ', 'T').substring(0, 16));
-                } else {
-                    $('#createDate').val(new Date().toISOString().slice(0,16));
+            // 初始化编辑器 - 完全使用原来的方式
+            var mdEditor = editormd("content", {
+                width: "100%",
+                height: 640,
+                path: "https://gh.static.aaqq.site/editor.md-1.5.0/lib/",
+                appendMarkdown: articleJson.contentMD,
+                saveHTMLToTextarea: true,
+                mode: "markdown",
+                tex: true,
+                tocm: true,
+                codeFold: true,
+                onload: function() {
+                    // 确保编辑器正确显示
+                    this.resize();
                 }
-                
-                $('#tags').val(articleJson.tags ? articleJson.tags.join(',') : '');
-                $('#priority').val(articleJson.priority || '0.5');
-                
-                // 置顶和隐藏
-                $('#istop').val(articleJson.istop || '0');
-                $('#hidden').val(articleJson.hidden || '0');
-                if (articleJson.istop == '1') {
-                    $('#top_timestamp').val(articleJson.top_timestamp || new Date().getTime());
-                }
-            }
+            });
             
-            // 初始化分类下拉框
-            initCategorySelect();
+            // 表单赋值 - 完全使用原来的方式
+            $('#id').val(articleJson.id);
+            $('#title').val(articleJson.title);
+            $('#img').val(articleJson.img);
+            $('#link').val(articleJson.link);
+            $('#createDate').val(articleJson.createDate.replace(" ", "T"));
+            $('#tags').val(articleJson.tags);
+            $('#priority').val(articleJson.priority === undefined ? "0.5" : articleJson.priority);
+            $('#changefreq').selectpicker('val', articleJson.changefreq === undefined ? "daily" : articleJson.changefreq);
             
-            // 设置更新频率
-            if (articleJson.changefreq) {
-                $('#changefreq').val(articleJson.changefreq);
+            // 分类下拉框赋值 - 完全使用原来的方式
+            var category = $('#category');
+            category.empty();
+            for (var i = 0; i < categoryJson.length; i++) {
+                category.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
             }
+            category.selectpicker('refresh');
+            category.selectpicker('val', articleJson.category);
             
             // 置顶逻辑
             $("#istop").change(function() {
                 $("#top_timestamp").val($(this).val() == "1" ? new Date().getTime() : "0");
             });
-            
-            // 侧边栏菜单点击事件 - 跳转到对应页面
-            $('.menu-item').click(function() {
-                var target = $(this).data('target');
-                if (target) {
-                    window.location.href = target;
-                }
-            });
-            
-            // 点击其他地方关闭下拉菜单
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.user-dropdown').length) {
-                    $('#userMenu').removeClass('show');
-                }
-            });
+            $("#istop").trigger('change');
         });
         
-        // 初始化分类下拉框
-        function initCategorySelect() {
-            var category = $('#category');
-            category.empty();
-            
-            for (var i = 0; i < categoryJson.length; i++) {
-                category.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
-            }
-            
-            category.selectpicker('refresh');
-            
-            // 设置已选中的分类
-            if (articleJson.category && articleJson.category.length) {
-                category.selectpicker('val', articleJson.category);
-            }
-        }
-        
-        // 保存编辑
+        // 保存编辑 - 保持原来的函数
         function saveEdit() {
-            if (!$('#title').val()) {
-                showAlert('请输入标题', 'error');
-                return;
-            }
-            if (!$('#category').val() || $('#category').val().length === 0) {
-                showAlert('请选择分类', 'error');
-                return;
-            }
-            
             $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: '/admin/saveEdit/',
-                contentType: 'application/json',
-                data: JSON.stringify($('#editForm').serializeArray()),
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/admin/saveEdit/",
+                data: JSON.stringify($("#editForm").serializeArray()),
                 success: function(result) {
-                    showAlert(result.msg || '保存成功', 'success');
+                    showAlert(result.msg, 'success');
                 },
                 error: function() {
                     showAlert('保存失败', 'error');
@@ -497,18 +405,20 @@
             });
         }
         
-        // 删除文章
+        // 删除文章 - 保持原来的函数
         function deleteArticle() {
-            if (!confirm('确定要删除这篇文章吗？删除后重新发布才能生效')) return;
+            if (!confirm("确定删除吗?删除后重新发布才能生效")) return;
             
             $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: '/admin/delete/' + $('#id').val() + '/',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: "/admin/delete/" + $('#id').val(),
+                data: [{"id": $('#id').val()}],
                 success: function(result) {
-                    showAlert(result.msg || '删除成功', 'success');
+                    showAlert(result.msg, 'success');
                     setTimeout(function() {
-                        window.location.href = '/admin/';
+                        location.href = '/admin/';
                     }, 1500);
                 },
                 error: function() {
@@ -520,7 +430,7 @@
         // 显示提示
         function showAlert(message, type) {
             var alert = $('#alertMessage');
-            alert.removeClass('success error info').addClass(type).text(message).fadeIn();
+            alert.removeClass('success error').addClass(type).text(message).fadeIn();
             setTimeout(function() {
                 alert.fadeOut();
             }, 3000);
@@ -536,6 +446,13 @@
                 window.location.href = '/admin/logout/';
             }
         }
+        
+        // 点击其他地方关闭下拉菜单
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.user-dropdown').length) {
+                $('#userMenu').removeClass('show');
+            }
+        });
     </script>
 </body>
 </html>
