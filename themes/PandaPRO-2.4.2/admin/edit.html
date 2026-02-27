@@ -236,9 +236,7 @@
                 </a>
                 
                 <div class="user-dropdown" id="userDropdown">
-                    <div class="user-avatar" onclick="toggleUserMenu()">
-                        {{username|first|upper|default:'A'}}
-                    </div>
+                    <div class="user-avatar" onclick="toggleUserMenu()"></div>
                     <div class="dropdown-menu" id="userMenu">
                         <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> 退出登录</a>
                     </div>
@@ -599,5 +597,12 @@
             }
         }
     </script>
+    <script>
+		$(function() {
+		    // 获取用户名首字母
+		    var username = '{{username}}' || 'A';
+		    $('#userAvatar').text(username.charAt(0).toUpperCase());
+		});
+	</script>
 </body>
 </html>
