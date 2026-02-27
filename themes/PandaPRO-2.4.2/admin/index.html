@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理后台</title>
-    <link rel="icon" type="image/x-icon" href="https://gh.static.aaqq.site/cfblog/themes/JustNews/gdtool/zhaopp/cfblog/favicon.ico" />
+    <title>管理后台 - {{siteName}}</title>
+    <link rel="icon" href="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/ico/hnbc-icon-192.png" />
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://gh.static.aaqq.site/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://gh.static.aaqq.site/editor.md-1.5.0/css/editormd.css" />
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
-    
-    <!-- 只在最必要的地方添加自定义样式，避免覆盖编辑器样式 -->
     <style>
         /* 布局相关，不干扰编辑器 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -213,7 +211,7 @@
             border-radius: 5px !important;
         }
 
-                /* 评论管理样式 */
+        /* 评论管理样式 */
         .comment-item {
             border: 1px solid #eee;
             border-radius: 8px;
@@ -324,8 +322,8 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" alt="Logo">
-            <h3>欢迎进入管理后台</h3>
            	<p>{{username}}</p>
+            <h3>{{siteName}}管理后台</h3>
         </div>
         <div class="sidebar-menu">
             <div class="menu-item active" data-target="#dashboard">
