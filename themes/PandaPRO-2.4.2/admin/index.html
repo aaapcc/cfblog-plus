@@ -1004,7 +1004,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 2);
+                var recent = allArticles.slice(0, 4);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1233,12 +1233,18 @@
 	                    } else {
 	                        let html = '';
 	                        data.comments.forEach(c => {
+	                            // 对内容进行转义，防止HTML标签破坏结构
+	                            let author = c.author.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	                            let email = (c.email || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	                            let content = c.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+	                            let title = (c.articleTitle || c.articleId).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	                            
 	                            html += `
 	                                <tr id="pending-comment-${c.id}">
-	                                    <td><a href="${c.articleUrl}" target="_blank">${c.articleTitle || c.articleId}</a></td>
-	                                    <td>${c.author}</td>
-	                                    <td>${c.email || '-'}</td>
-	                                    <td>${c.content.replace(/\n/g, '<br>')}</td>
+	                                    <td><a href="${c.articleUrl}" target="_blank">${title}</a></td>
+	                                    <td>${author}</td>
+	                                    <td>${email}</td>
+	                                    <td>${content}</td>
 	                                    <td>${c.date}</td>
 	                                    <td>
 	                                        <button class="btn btn-success btn-xs" onclick="reviewComment('${c.articleId}', '${c.id}', 'approve')">
