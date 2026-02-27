@@ -10,9 +10,82 @@
     <link rel="stylesheet" href="https://gh.static.aaqq.site/editor.md-1.5.0/css/editormd.css" />
     <link rel="stylesheet" href="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
     <style>
-        /* 直接从admin/index复制的样式 */
+        /* 布局相关 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fb; padding: 20px; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fb; }
+        
+        /* 侧边栏 - 完全从admin/index复制 */
+        .sidebar {
+            position: fixed; left: 0; top: 0; bottom: 0; width: 260px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 30px 20px; text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header img {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3); margin-bottom: 10px;
+        }
+        
+        .sidebar-header h3 { font-size: 16px; font-weight: 300; margin: 0; }
+        
+        .sidebar-menu { padding: 20px 0; }
+        
+        .menu-item {
+            padding: 12px 25px; cursor: pointer; display: flex; align-items: center;
+            color: rgba(255,255,255,0.8); border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover { background: rgba(255,255,255,0.1); color: white; }
+        .menu-item.active {
+            background: rgba(255,255,255,0.15); color: white;
+            border-left-color: #ffd700;
+        }
+        
+        .menu-item i { width: 24px; margin-right: 10px; }
+        .menu-item .badge {
+            background: #ffd700; color: #333; margin-left: auto;
+            font-size: 11px; padding: 2px 6px; border-radius: 10px;
+        }
+        
+        /* 主内容区 - 留出侧边栏位置 */
+        .main-content { margin-left: 260px; padding: 20px; }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background: white; border-radius: 10px; padding: 15px 25px;
+            margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        
+        .page-title { font-size: 18px; color: #333; }
+        .page-title i { color: #667eea; margin-right: 10px; }
+        
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; cursor: pointer;
+        }
+        .user-dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; right: 0; left: -100px; top: 45px; background: white;
+            border-radius: 5px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 150px; display: none; z-index: 1000;
+        }
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu a {
+            padding: 10px 15px; display: block; color: #333;
+            text-decoration: none; transition: all 0.3s;
+        }
+        .dropdown-menu a:hover { background: #f5f7fb; color: #667eea; }
         
         /* 卡片样式 */
         .card {
@@ -28,16 +101,6 @@
         
         .card-header h3 { font-size: 16px; margin: 0; }
         .card-header h3 i { color: #667eea; margin-right: 8px; }
-        
-        /* 顶部导航 */
-        .top-nav {
-            background: white; border-radius: 10px; padding: 15px 25px;
-            margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        
-        .page-title { font-size: 18px; color: #333; }
-        .page-title i { color: #667eea; margin-right: 10px; }
         
         /* 按钮样式 */
         .btn {
@@ -96,133 +159,194 @@
             display: flex; gap: 10px; justify-content: center;
             margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;
         }
+        
+        /* 提示框 */
+        .alert {
+            position: fixed; top: 20px; right: 20px; padding: 12px 20px;
+            border-radius: 5px; color: white; z-index: 9999;
+            display: none; animation: slideIn 0.3s;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .alert.success { background: #4caf50; }
+        .alert.error { background: #f44336; }
+        .alert.info { background: #2196f3; }
     </style>
 </head>
 <body>
-    <!-- 顶部导航 -->
-    <div class="top-nav">
-        <div class="page-title">
-            <i class="fa fa-pencil"></i>
-            <span>编辑文章</span>
+    <!-- 侧边栏 - 完全从admin/index复制 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://gh.static.aaqq.site/cfblog/themes/PandaPRO-2.4.2/img/author.jpg" alt="Logo">
+            <p>[{{username}}]</p>
+            <h3>{{siteName}}管理后台</h3>
         </div>
-        
-        <div>
-            <a href="/admin/" class="btn btn-default">
-                <i class="fa fa-arrow-left"></i> 返回文章列表
-            </a>
+        <div class="sidebar-menu">
+            <div class="menu-item" data-target="/admin/#dashboard">
+                <i class="fa fa-dashboard"></i>
+                <span>仪表盘</span>
+            </div>
+            <div class="menu-item" data-target="/admin/#list">
+                <i class="fa fa-list"></i>
+                <span>文章管理</span>
+                <span class="badge" id="articleCount">0</span>
+            </div>
+            <div class="menu-item active" data-target="/admin/#new">
+                <i class="fa fa-pencil"></i>
+                <span>写文章</span>
+            </div>
+            <div class="menu-item" data-target="/admin/#config">
+                <i class="fa fa-cog"></i>
+                <span>系统设置</span>
+            </div>
+            <div class="menu-item" data-target="/admin/#comments">
+                <i class="fa fa-comments"></i>
+                <span>评论管理</span>
+                <span class="badge" id="pendingCommentsCount">0</span>
+            </div>
+            <div class="menu-item" data-target="/admin/#pub">
+                <i class="fa fa-cloud-upload"></i>
+                <span>发布</span>
+            </div>
         </div>
     </div>
     
-    <!-- 编辑表单 -->
-    <div class="card">
-        <div class="card-header">
-            <h3><i class="fa fa-edit"></i> 编辑文章 - <span id="articleId"></span></h3>
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="page-title">
+                <i class="fa fa-pencil"></i>
+                <span>编辑文章</span>
+            </div>
+            
+            <div class="user-info">
+                <!-- 网站前台入口 -->
+                <a href="/" target="_blank" class="btn btn-default btn-sm">
+                    <i class="fa fa-external-link"></i> 网站前台
+                </a>
+                
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-avatar" onclick="toggleUserMenu()">
+                        A
+                    </div>
+                    <div class="dropdown-menu" id="userMenu">
+                        <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> 退出登录</a>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <form id="editForm">
-            <input type="hidden" name="id" id="id">
-            
-            <!-- 第1行：标题 -->
-            <div class="form-group row">
-                <label class="col-sm-1 col-form-label text-end">标题 <span style="color: red;">*</span></label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" name="title" id="title" placeholder="输入文章标题" required>
-                </div>
+        <!-- 编辑表单 -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fa fa-edit"></i> 编辑文章 - <span id="articleId"></span></h3>
             </div>
             
-            <!-- 第2行：特色图片、永久链接、创建日期 -->
-            <div class="form-group row">
-                <label class="col-sm-1 col-form-label text-end">特色图片</label>
-                <div class="col-sm-3">
-                    <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
+            <form id="editForm">
+                <input type="hidden" name="id" id="id">
+                
+                <!-- 第1行：标题 -->
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label text-end">标题 <span style="color: red;">*</span></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" name="title" id="title" placeholder="输入文章标题" required>
+                    </div>
                 </div>
                 
-                <label class="col-sm-1 col-form-label text-end">永久链接</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" name="link" id="link" placeholder="url-slug">
+                <!-- 第2行：特色图片、永久链接、创建日期 -->
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label text-end">特色图片</label>
+                    <div class="col-sm-3">
+                        <input type="url" class="form-control" name="img" id="img" placeholder="https://...">
+                    </div>
+                    
+                    <label class="col-sm-1 col-form-label text-end">永久链接</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="link" id="link" placeholder="url-slug">
+                    </div>
+                    
+                    <label class="col-sm-1 col-form-label text-end">创建日期</label>
+                    <div class="col-sm-3">
+                        <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
+                    </div>
                 </div>
                 
-                <label class="col-sm-1 col-form-label text-end">创建日期</label>
-                <div class="col-sm-3">
-                    <input type="datetime-local" class="form-control" id="createDate" name="createDate" required>
-                </div>
-            </div>
-            
-            <!-- 第3行：分类、更新频率、权重 -->
-            <div class="form-group row">
-                <label class="col-sm-1 col-form-label text-end">分类</label>
-                <div class="col-sm-3">
-                    <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true" data-none-selected-text="选择分类" title="选择分类"></select>
-                </div>
-                
-                <label class="col-sm-1 col-form-label text-end">更新频率</label>
-                <div class="col-sm-3">
-                    <select class="form-control" id="changefreq" name="changefreq">
-                        <option value="daily">每天</option>
-                        <option value="hourly">每小时</option>
-                        <option value="weekly">每周</option>
-                        <option value="monthly">每月</option>
-                        <option value="yearly">每年</option>
-                        <option value="never">从不</option>
-                        <option value="always">总是</option>
-                    </select>
-                </div>
-                
-                <label class="col-sm-1 col-form-label text-end">权重</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" name="priority" id="priority" value="0.5" placeholder="0.5">
-                </div>
-            </div>
-            
-            <!-- 第4行：标签、是否置顶、是否隐藏 -->
-            <div class="form-group row">
-                <label class="col-sm-1 col-form-label text-end">标签</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
+                <!-- 第3行：分类、更新频率、权重 -->
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label text-end">分类</label>
+                    <div class="col-sm-3">
+                        <select class="selectpicker" multiple name="category[]" id="category" data-live-search="true" data-none-selected-text="选择分类" title="选择分类"></select>
+                    </div>
+                    
+                    <label class="col-sm-1 col-form-label text-end">更新频率</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="changefreq" name="changefreq">
+                            <option value="daily">每天</option>
+                            <option value="hourly">每小时</option>
+                            <option value="weekly">每周</option>
+                            <option value="monthly">每月</option>
+                            <option value="yearly">每年</option>
+                            <option value="never">从不</option>
+                            <option value="always">总是</option>
+                        </select>
+                    </div>
+                    
+                    <label class="col-sm-1 col-form-label text-end">权重</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="priority" id="priority" value="0.5" placeholder="0.5">
+                    </div>
                 </div>
                 
-                <label class="col-sm-1 col-form-label text-end">是否置顶</label>
-                <div class="col-sm-3">
-                    <select class="form-control" id="istop" name="istop">
-                        <option value="0">否</option>
-                        <option value="1">是</option>
-                    </select>
-                    <input type="hidden" id="top_timestamp" name="top_timestamp" value="0">
+                <!-- 第4行：标签、是否置顶、是否隐藏 -->
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label text-end">标签</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
+                    </div>
+                    
+                    <label class="col-sm-1 col-form-label text-end">是否置顶</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="istop" name="istop">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                        <input type="hidden" id="top_timestamp" name="top_timestamp" value="0">
+                    </div>
+                    
+                    <label class="col-sm-1 col-form-label text-end">是否隐藏</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="hidden" name="hidden">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <label class="col-sm-1 col-form-label text-end">是否隐藏</label>
-                <div class="col-sm-3">
-                    <select class="form-control" id="hidden" name="hidden">
-                        <option value="0">否</option>
-                        <option value="1">是</option>
-                    </select>
+                <!-- 编辑器区域 -->
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div id="content"></div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- 编辑器区域 -->
-            <div class="form-group row">
-                <div class="col-sm-12">
-                    <div id="content"></div>
+                
+                <!-- 操作按钮 -->
+                <div class="action-bar">
+                    <button type="button" class="btn btn-primary" onclick="saveEdit()">
+                        <i class="fa fa-save"></i> 保存文章
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="deleteArticle()">
+                        <i class="fa fa-trash"></i> 删除文章
+                    </button>
                 </div>
-            </div>
-            
-            <!-- 操作按钮 -->
-            <div class="action-bar">
-                <button type="button" class="btn btn-primary" onclick="saveEdit()">
-                    <i class="fa fa-save"></i> 保存文章
-                </button>
-                <button type="button" class="btn btn-warning" onclick="deleteArticle()">
-                    <i class="fa fa-trash"></i> 删除文章
-                </button>
-                <a href="/admin/" class="btn btn-default">
-                    <i class="fa fa-times"></i> 取消
-                </a>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     
     <!-- 提示框 -->
-    <div class="alert" id="alertMessage" style="display:none; position:fixed; top:20px; right:20px; padding:12px 20px; border-radius:5px; color:white; z-index:9999; animation:slideIn 0.3s;"></div>
+    <div class="alert" id="alertMessage"></div>
     
     <script src="https://gh.lib.aaqq.site/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://gh.lib.aaqq.site/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -230,9 +354,12 @@
     <script src="https://gh.lib.aaqq.site/bootstrap-select/1.9.4/js/bootstrap-select.min.js"></script>
     
     <script type="text/javascript">
+        // 全局变量
         var mdEditor = null;
         var articleJson = <!--{articleJson}--> || {};
         var categoryJson = <!--{categoryJson}--> || [];
+        var menuJson = <!--{menuJson}--> || [];
+        var linkJson = <!--{linkJson}--> || [];
         
         $(function() {
             // 初始化编辑器
@@ -310,6 +437,21 @@
             $("#istop").change(function() {
                 $("#top_timestamp").val($(this).val() == "1" ? new Date().getTime() : "0");
             });
+            
+            // 侧边栏菜单点击事件 - 跳转到对应页面
+            $('.menu-item').click(function() {
+                var target = $(this).data('target');
+                if (target) {
+                    window.location.href = target;
+                }
+            });
+            
+            // 点击其他地方关闭下拉菜单
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.user-dropdown').length) {
+                    $('#userMenu').removeClass('show');
+                }
+            });
         });
         
         // 初始化分类下拉框
@@ -378,22 +520,22 @@
         // 显示提示
         function showAlert(message, type) {
             var alert = $('#alertMessage');
-            alert.removeClass().addClass(type).text(message).fadeIn();
-            
-            var colors = {
-                success: '#4caf50',
-                error: '#f44336',
-                info: '#2196f3'
-            };
-            alert.css('background', colors[type] || colors.info);
-            
+            alert.removeClass('success error info').addClass(type).text(message).fadeIn();
             setTimeout(function() {
                 alert.fadeOut();
             }, 3000);
         }
         
-        // 动画样式
-        $('<style>.alert { display: none; } @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }</style>').appendTo('head');
+        // 用户菜单
+        function toggleUserMenu() {
+            $('#userMenu').toggleClass('show');
+        }
+        
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.location.href = '/admin/logout/';
+            }
+        }
     </script>
 </body>
 </html>
