@@ -996,7 +996,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 8);
+                var recent = allArticles.slice(0, 6);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1405,8 +1405,8 @@
 	            loadPendingComments();
 	        });
 	        
-	        // 当切换到待审核标签页时加载数据
-	        $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
+	        // 当待审核标签页首次显示时加载数据
+	        $('a[href="#pendingComments"]').one('shown.bs.tab', function() {
 	            loadPendingComments();
 	        });
 	        
@@ -1418,14 +1418,19 @@
 	    
 	    // 在页面加载完成后初始化评论管理
 	    $(function() {
-	        initCommentManagement();
+	        iinitCommentManagement();
 	        
 	        // 主动加载待审核评论（用于侧边栏徽章）
 	        loadPendingComments();
 	        
-	        // 如果当前就在评论管理页签，也要加载全部评论
+	        // 如果当前就在评论管理页签，需要主动显示待审核标签页的内容
 	        if ($('#comments').hasClass('active')) {
-	            loadAllComments();
+	            // 手动触发待审核标签页的显示事件
+	            $('a[href="#pendingComments"]').tab('show');
+	            // 延迟一点加载数据，确保标签页已切换
+	            setTimeout(function() {
+	                loadPendingComments();
+	            }, 100);
 	        }
 	    });
 	</script>
