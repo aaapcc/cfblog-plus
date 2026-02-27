@@ -181,6 +181,16 @@
         .alert.success { background: #4caf50; }
         .alert.error { background: #f44336; }
         .alert.info { background: #2196f3; }
+
+        /* 确保表单组有合适的间距 */
+		.form-group {
+		    margin-bottom: 15px;
+		}
+
+		/* 修复行内表单组的间距 */
+		.form-group.row {
+		    margin-bottom: 15px;
+		}
     </style>
 </head>
 <body>
@@ -400,8 +410,38 @@
                             if (editor.cm) {
                                 editor.cm.refresh();
                             }
+                            addParseHtmlButton(editor);
                         }, 200);
                     }
+
+                    // 添加解析HTML标签按钮的函数
+					function addParseHtmlButton(editor) {
+					    setTimeout(function() {
+					        if ($('.editormd-menu li:contains("解析HTML标签")').length === 0) {
+					            $(".editormd-menu").append(
+					                '<li class="divider" unselectable="on">|</li>' +
+					                '<li>' +
+					                '<a href="javascript:;" title="解析HTML标签" unselectable="on">' +
+					                '<i class="fa fa-toggle-off" name="parseHtml" unselectable="on"> 解析HTML标签 </i>' +
+					                '</a>' +
+					                '</li>'
+					            );
+					            
+					            $('a[title="解析HTML标签"]').click(function() {
+					                let ele = $(".editormd-menu li a i:last");
+					                if (ele.hasClass('fa-toggle-off')) {
+					                    ele.removeClass('fa-toggle-off').addClass('fa-toggle-on');
+					                    editor.settings.htmlDecode = true;
+					                } else if (ele.hasClass('fa-toggle-on')) {
+					                    ele.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+					                    editor.settings.htmlDecode = false;
+					                }
+					                editor.setMarkdown(editor.getMarkdown());
+					            });
+					        }
+					    }, 500);
+					}
+
                 });
             }
             
