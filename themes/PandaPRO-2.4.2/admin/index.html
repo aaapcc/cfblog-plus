@@ -1324,37 +1324,33 @@
 	    function loadAllComments() {
 	        $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载中...</td></tr>');
 	        
-	        if (!allArticles || allArticles.length === 0) {
-	            $('#allCommentsList').html('<tr><td colspan="7" class="text-center">请先刷新页面</td></tr>');
-	            return;
-	        }
+	        // 使用新的快速接口
+	        fetch('/api/admin/comments/all-fast')
+	            .then(res => res.json())
+	            .then(data => {
+	                if (data.success) {
+	                    renderAllComments(data.comments || []);
+	                    // 更新统计数字
+	                    updateCommentStatsFast(data.comments || []);
+	                } else {
+	                    $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
+	                }
+	            })
+	            .catch(() => {
+	                $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
+	            });
+	    }
+	    
+	    // 快速更新统计数字
+	    function updateCommentStatsFast(comments) {
+	        let pendingCount = comments.filter(c => !c.approved).length;
+	        let approvedCount = comments.filter(c => c.approved).length;
 	        
-	        let allComments = [];
-	        let processed = 0;
-	        
-	        allArticles.forEach(article => {
-	            fetch(`/api/admin/comments/article/${article.id}`)
-	                .then(res => res.json())
-	                .then(data => {
-	                    if (data.success && data.comments && data.comments.length) {
-	                        data.comments.forEach(comment => {
-	                            allComments.push({
-	                                ...comment,
-	                                articleTitle: article.title,
-	                                articleUrl: `/article/${article.id}.html`
-	                            });
-	                        });
-	                    }
-	                })
-	                .catch(err => console.log('获取评论失败:', err))
-	                .finally(() => {
-	                    processed++;
-	                    if (processed === allArticles.length) {
-	                        renderAllComments(allComments);
-	                        loadCommentStats();
-	                    }
-	                });
-	        });
+	        $('#pendingCount').text(pendingCount);
+	        $('#approvedCount').text(approvedCount);
+	        $('#spamCount').text('0');
+	        $('#pendingTabCount').text(pendingCount);
+	        $('#pendingCommentsCount').text(pendingCount);
 	    }
 	    
 	    // 渲染全部评论
