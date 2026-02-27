@@ -631,27 +631,6 @@
 
         <!-- 评论管理页 - 新增 -->
         <div class="tab-pane" id="comments">
-        	<script>
-                // 强制激活待审核标签页并加载数据
-                setTimeout(function() {
-                    // 如果当前在评论管理页签
-                    if ($('#comments').hasClass('active')) {
-                        // 激活待审核标签页
-                        $('a[href="#pendingComments"]').tab('show');
-                        // 加载数据
-                        loadPendingComments();
-                    }
-                }, 300);
-                
-                // 监控标签页切换
-                $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
-                    loadPendingComments();
-                });
-                
-                $('a[href="#allComments"]').on('shown.bs.tab', function() {
-                    loadAllComments();
-                });
-            </script>
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fa fa-comments"></i> 评论管理</h3>
@@ -1017,7 +996,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 1);
+                var recent = allArticles.slice(0, 2);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1474,6 +1453,9 @@
 	    
 	    // 在页面加载完成后
 	    $(function() {
+	        // 初始化评论管理事件
+	        initCommentManagement();
+	        
 	        // 主动加载待审核评论（用于侧边栏徽章）
 	        loadPendingComments();
 	    });
