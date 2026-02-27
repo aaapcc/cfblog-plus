@@ -996,7 +996,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 1);
+                var recent = allArticles.slice(0, 4);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1363,6 +1363,8 @@
 	                    renderAllComments(data.comments || []);
 	                    // 更新统计数字
 	                    updateCommentStatsFast(data.comments || []);
+	                    // 确保全部评论标签页显示
+	                    $('#allComments').addClass('active').siblings().removeClass('active');
 	                } else {
 	                    $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
 	                }
@@ -1371,6 +1373,8 @@
 	                $('#allCommentsList').html('<tr><td colspan="7" class="text-center">加载失败</td></tr>');
 	            });
 	    }
+
+
 	    
 	    // 快速更新统计数字
 	    function updateCommentStatsFast(comments) {
@@ -1447,13 +1451,15 @@
 	        // 待审核标签页显示时
 	        $('a[href="#pendingComments"]').on('shown.bs.tab', function() {
 	            loadPendingComments();
-	            $('#pendingCommentsTable').closest('.tab-pane').css('display', 'block');
-	            $('#pendingCommentsTable').show();
+	            // 确保正确的标签页显示
+	            $('#pendingComments').addClass('active').siblings().removeClass('active');
 	        });
 	        
 	        // 全部评论标签页显示时
 	        $('a[href="#allComments"]').on('shown.bs.tab', function() {
 	            loadAllComments();
+	            // 确保正确的标签页显示
+	            $('#allComments').addClass('active').siblings().removeClass('active');
 	        });
 	    });
 	</script>
