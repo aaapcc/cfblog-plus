@@ -335,7 +335,7 @@
                 <span>文章管理</span>
                 <span class="badge" id="articleCount">0</span>
             </div>
-            <div class="menu-item" data-target="#new" onclick="location.href='/admin/new'">
+            <div class="menu-item" data-target="#new" onclick="location.href='/admin/#new'">
                 <i class="fa fa-pencil"></i>
                 <span>写文章</span>
             </div>
@@ -863,7 +863,11 @@
             // 页面加载时根据 hash 切换标签页
             if (location.hash) {
                 var target = location.hash;
+                // 如果是 #new 就直接切换到写文章标签页
                 $(`.menu-item[data-target="${target}"]`).click();
+            } else {
+                // 默认显示仪表盘
+                $('.menu-item[data-target="#dashboard"]').click();
             }
 
             // 点击其他地方关闭下拉菜单
