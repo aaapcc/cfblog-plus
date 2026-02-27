@@ -1004,7 +1004,7 @@
             tbody.empty();
             
             if (allArticles && allArticles.length) {
-                var recent = allArticles.slice(0, 6);
+                var recent = allArticles.slice(0, 3);
                 $.each(recent, function(i, article) {
                     tbody.append('<tr>' +
                         '<td>' + article.id + '</td>' +
@@ -1211,6 +1211,10 @@
 	    
 	    // 加载待审核评论
 	    function loadPendingComments() {
+	    	console.log('loadPendingComments 被调用');
+	        console.log('当前激活的标签页:', $('.tab-pane.active').attr('id'));
+	        console.log('pendingCommentsList 是否存在:', $('#pendingCommentsList').length);
+
 	        $('#pendingCommentsList').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
 	        
 	        fetch('/api/admin/comments/pending')
